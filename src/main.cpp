@@ -1,10 +1,11 @@
 //
 // sdl/imgui
+#include <SDL.h>
+#include <SDL_image.h>
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer.h"
 #include <stdio.h>
-#include <SDL.h>
 #include <string>
 
 //const int DEFAULT_COUNT = 500;
@@ -16,6 +17,8 @@ const int WINDOW_HEIGHT = 720;
 SDL_Renderer* renderer;
 SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
+
+SDL_Texture* playerTexture;
 
 int setup();
 void gameLoop();
@@ -31,6 +34,11 @@ int main(int, char**)
     }
     else {
         printf("Oh noooo");
+    }
+
+    playerTexture = IMG_LoadTexture(renderer, "assets/player.png");
+    if (playerTexture == NULL) {
+        printf("Couldn't load player texture. %s", IMG_GetError());
     }
 
     gameLoop();
@@ -68,8 +76,11 @@ void gameLoop() {
         // simulate gamestate
 
         // render
-        SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderClear(renderer);
+
+        SDL_Rect rect = { 250, 250, 150, 150 };
+        SDL_RenderCopyEx(renderer, playerTexture, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
 
         showImGui();
 
@@ -117,11 +128,18 @@ int setup() {
     if (renderer == nullptr)
     {
         SDL_Log("Error creating SDL_Renderer!");
-        return 0;
+        return 1;
     }
     //SDL_RendererInfo info;
     //SDL_GetRendererInfo(renderer, &info);
     //SDL_Log("Current SDL_Renderer: %s", info.name);
+
+    // SDL_Image
+    int imgFlags = IMG_INIT_PNG;
+    if (!(IMG_Init(imgFlags) & imgFlags)) {
+        printf("SDL_image Error: %s\n", IMG_GetError());
+        return 2;
+    }
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
