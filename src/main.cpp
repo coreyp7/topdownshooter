@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <string>
 
+#include "Player.h"
+#include "Direction.h"
+
 //const int DEFAULT_COUNT = 500;
 const int DEFAULT_COUNT = 1500;
 const int WINDOW_WIDTH = 1280;
@@ -19,6 +22,7 @@ SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 SDL_Texture* playerTexture;
+Player player = Player(SDL_Rect{250, 250, 50, 50});
 
 int setup();
 void gameLoop();
@@ -71,16 +75,44 @@ void gameLoop() {
             if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
                 quit = true; // idk why this is here but it was in the imgui example so will leave it
             }
+            if (event.type == SDL_KEYDOWN) {
+                if (event.key.keysym.sym == SDLK_w) {
+                    player.startMoving(UP);
+                }
+                if (event.key.keysym.sym == SDLK_s) {
+                    player.startMoving(DOWN);
+                }
+                if (event.key.keysym.sym == SDLK_a) {
+                    player.startMoving(LEFT);
+                }
+                if (event.key.keysym.sym == SDLK_d) {
+                    player.startMoving(RIGHT);
+                }
+            }
+            if (event.type == SDL_KEYUP) {
+                if (event.key.keysym.sym == SDLK_w) {
+                    player.stopMoving(UP);
+                }
+                if (event.key.keysym.sym == SDLK_s) {
+                    player.stopMoving(DOWN);
+                }
+                if (event.key.keysym.sym == SDLK_a) {
+                    player.stopMoving(LEFT);
+                }
+                if (event.key.keysym.sym == SDLK_d) {
+                    player.stopMoving(RIGHT);
+                }
+            }
         }
 
         // simulate gamestate
+        player.simulate();
 
         // render
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        SDL_Rect rect = { 250, 250, 150, 150 };
-        SDL_RenderCopyEx(renderer, playerTexture, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyEx(renderer, playerTexture, NULL, &player.pos, 0, NULL, SDL_FLIP_NONE);
 
         showImGui();
 
