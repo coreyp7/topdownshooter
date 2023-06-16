@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "InputManager.h"
 #include "Player.h"
 #include "Direction.h"
 
@@ -22,7 +23,9 @@ SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 SDL_Texture* playerTexture;
+
 Player player = Player(SDL_Rect{250, 250, 50, 50});
+InputManager inputManager = InputManager(&player);
 
 int setup();
 void gameLoop();
@@ -64,49 +67,20 @@ void gameLoop() {
 
     int quit = false;
     SDL_Event event;
+    std::vector<SDL_Event> events;
 
     while (!quit) {
         // capture inputs
         while (SDL_PollEvent(&event)) {
             ImGui_ImplSDL2_ProcessEvent(&event);
+            inputManager.handleEvent(event);
             if (event.type == SDL_QUIT) {
                 quit = true;
-            }
-            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
-                quit = true; // idk why this is here but it was in the imgui example so will leave it
-            }
-            if (event.type == SDL_KEYDOWN) {
-                if (event.key.keysym.sym == SDLK_w) {
-                    player.startMoving(UP);
-                }
-                if (event.key.keysym.sym == SDLK_s) {
-                    player.startMoving(DOWN);
-                }
-                if (event.key.keysym.sym == SDLK_a) {
-                    player.startMoving(LEFT);
-                }
-                if (event.key.keysym.sym == SDLK_d) {
-                    player.startMoving(RIGHT);
-                }
-            }
-            if (event.type == SDL_KEYUP) {
-                if (event.key.keysym.sym == SDLK_w) {
-                    player.stopMoving(UP);
-                }
-                if (event.key.keysym.sym == SDLK_s) {
-                    player.stopMoving(DOWN);
-                }
-                if (event.key.keysym.sym == SDLK_a) {
-                    player.stopMoving(LEFT);
-                }
-                if (event.key.keysym.sym == SDLK_d) {
-                    player.stopMoving(RIGHT);
-                }
             }
         }
 
         // simulate gamestate
-        player.simulate();
+        player.simulate(); // TODO: add delta time
 
         // render
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
