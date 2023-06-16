@@ -17,6 +17,7 @@ SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 int setup();
+void gameLoop();
 
 // Main code
 int main(int, char**)
@@ -30,7 +31,9 @@ int main(int, char**)
         printf("Oh noooo");
     }
 
-    // Cleanup your shit
+    gameLoop();
+
+    // Cleanup
     ImGui_ImplSDLRenderer_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
@@ -40,6 +43,33 @@ int main(int, char**)
     SDL_Quit();
 
     return 0;
+}
+
+// @refactor: put rendering into separate rendering module, START ORGANIZING YOUR SHIT
+void gameLoop() {
+
+    int quit = false;
+    SDL_Event event;
+
+    while (!quit) {
+        // capture inputs
+        while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL2_ProcessEvent(&event);
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            }
+            if (event.type == SDL_WINDOWEVENT && event.window.event == SDL_WINDOWEVENT_CLOSE && event.window.windowID == SDL_GetWindowID(window)) {
+                quit = true; // idk why this is here but it was in the imgui example so will leave it
+            }
+        }
+
+        // simulate gamestate
+
+        // render
+        SDL_RenderClear(renderer);
+        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+        SDL_RenderPresent(renderer);
+    }
 }
 
 /* Setup required for sdl and imgui.
