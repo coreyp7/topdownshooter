@@ -5,6 +5,7 @@
 #include "imgui_impl_sdlrenderer.h"
 #include <stdio.h>
 #include <SDL.h>
+#include <string>
 
 //const int DEFAULT_COUNT = 500;
 const int DEFAULT_COUNT = 1500;
@@ -18,6 +19,7 @@ ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 int setup();
 void gameLoop();
+void showImGui();
 
 // Main code
 int main(int, char**)
@@ -68,8 +70,28 @@ void gameLoop() {
         // render
         SDL_RenderClear(renderer);
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+
+        showImGui();
+
         SDL_RenderPresent(renderer);
     }
+}
+
+// Parameters are all the stuff ImGui needs to display not in scope.
+void showImGui() {
+    ImGui_ImplSDLRenderer_NewFrame();
+    ImGui_ImplSDL2_NewFrame();
+    ImGui::NewFrame();
+
+    //bool show = true;
+    //ImGui::ShowDemoWindow(&show);
+
+    ImGui::Begin("Info");
+    ImGui::Text("Test text");
+    ImGui::End();
+
+    ImGui::Render();
+    ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 }
 
 /* Setup required for sdl and imgui.
