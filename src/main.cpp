@@ -24,7 +24,7 @@ ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 SDL_Texture* playerTexture;
 
-Player player = Player(SDL_Rect{250, 250, 50, 50});
+Player player = Player(SDL_FRect{250, 250, 50, 50});
 InputManager inputManager = InputManager(&player);
 
 int setup();
@@ -68,6 +68,8 @@ void gameLoop() {
     int quit = false;
     SDL_Event event;
     std::vector<SDL_Event> events;
+    Uint32 lastPhysicsUpdate = 0;
+    float dt = 0;
 
     while (!quit) {
         // capture inputs
@@ -80,13 +82,17 @@ void gameLoop() {
         }
 
         // simulate gamestate
-        player.simulate(); // TODO: add delta time
+        dt = (SDL_GetTicks() - lastPhysicsUpdate) / 1000.f;
+        player.simulate(dt);
+        lastPhysicsUpdate = SDL_GetTicks();
+        //printf("(%i,%i)", player.xVel, player.yVel);
+        //printf("(%i, %i)", player.pos.x, player.pos.y);
 
         // render
         SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
         SDL_RenderClear(renderer);
 
-        SDL_RenderCopyEx(renderer, playerTexture, NULL, &player.pos, 0, NULL, SDL_FLIP_NONE);
+        SDL_RenderCopyExF(renderer, playerTexture, NULL, &player.pos, 0, NULL, SDL_FLIP_NONE);
 
         showImGui();
 

@@ -6,18 +6,18 @@ class Player
 {
 public:
 
-	const int MOVE_SPEED = 5;
+	const int MOVE_SPEED = 450;
 
 	int xVel, yVel;
 
-	SDL_Rect pos; // center of box? not sure yet
+	SDL_FRect pos; // center of box? not sure yet
 
 
-	Player(SDL_Rect pos);
+	Player(SDL_FRect pos);
 
 	void startMoving(Direction direction);
 	void stopMoving(Direction direction);
 
-	void simulate(); // TODO pass dt to this
+	void simulate(float dt); // TODO pass dt to this
 };
 

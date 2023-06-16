@@ -1,6 +1,7 @@
 #include "Player.h"
+#include <stdio.h>
 
-Player::Player(SDL_Rect pos) {
+Player::Player(SDL_FRect pos) {
 	this->pos = pos;
 	xVel = 0;
 	yVel = 0;
@@ -19,6 +20,7 @@ void Player::startMoving(Direction direction) {
 		break;
 	case RIGHT:
 		xVel = MOVE_SPEED;
+		printf("right xvel applied");
 		break;
 	}
 }
@@ -40,7 +42,10 @@ void Player::stopMoving(Direction direction) {
 	}
 }
 
-void Player::simulate() {
-	pos.x += xVel;
-	pos.y += yVel;
+void Player::simulate(float dt) {
+	pos.x += xVel * dt;
+	pos.y += yVel * dt;
+	printf("(%f,%f)", xVel * dt, yVel * dt);
+	/*pos.x += xVel;
+	pos.y += yVel;*/
 }
