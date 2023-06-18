@@ -1,0 +1,31 @@
+#include "Renderer.h"
+
+Renderer::Renderer(SDL_Window* window, SDL_Renderer* renderer) {
+    // Setup SDL & window/renderer
+    this->window = window;
+    this->renderer = renderer;
+}
+
+Renderer::~Renderer() {
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+}
+
+void Renderer::setup() {
+    playerTexture = IMG_LoadTexture(renderer, "assets/player.png");
+    if (playerTexture == NULL) {
+        printf("Couldn't load player texture. %s", IMG_GetError());
+    }
+}
+
+void Renderer::renderPlayer(Player* player) {
+    SDL_RenderCopyExF(renderer, playerTexture, NULL, &player->pos, 0, NULL, SDL_FLIP_NONE);
+}
+
+void Renderer::renderPresent() {
+    SDL_RenderPresent(renderer);
+
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
+}

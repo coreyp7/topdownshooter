@@ -20,7 +20,6 @@ void Player::startMoving(Direction direction) {
 		break;
 	case RIGHT:
 		xVel = MOVE_SPEED;
-		printf("right xvel applied");
 		break;
 	}
 }
@@ -45,7 +44,4 @@ void Player::stopMoving(Direction direction) {
 void Player::simulate(float dt) {
 	pos.x += xVel * dt;
 	pos.y += yVel * dt;
-	printf("(%f,%f)", xVel * dt, yVel * dt);
-	/*pos.x += xVel;
-	pos.y += yVel;*/
 }

@@ -9,6 +9,7 @@
 #include <string>
 
 #include "InputManager.h"
+#include "Renderer.h"
 #include "Player.h"
 #include "Direction.h"
 
@@ -18,14 +19,13 @@ const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 
 // Globals because this just a demo project to implement a QuadTree.
-SDL_Renderer* renderer;
-SDL_Window* window;
+//SDL_Renderer* renderer;
+//SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
-
-SDL_Texture* playerTexture;
 
 Player player = Player(SDL_FRect{250, 250, 50, 50});
 InputManager inputManager = InputManager(&player);
+Renderer* renderManager;
 
 int setup();
 void gameLoop();
@@ -36,28 +36,23 @@ int main(int, char**)
 {
     // Sets up SDL and imgui
     int result = setup();
-    if (result == 0) {
-        printf("All setup! :)");
-    }
-    else {
-        printf("Oh noooo");
+    if (result != 0) {
+        printf("%i", result);
+        return result;
     }
 
-    playerTexture = IMG_LoadTexture(renderer, "assets/player.png");
-    if (playerTexture == NULL) {
-        printf("Couldn't load player texture. %s", IMG_GetError());
-    }
+    // Loads assets to be ready for rendering
+    renderManager->setup();
 
     gameLoop();
 
-    // Cleanup
+    // Cleanup imgui
     ImGui_ImplSDLRenderer_Shutdown();
     ImGui_ImplSDL2_Shutdown();
     ImGui::DestroyContext();
 
-    SDL_DestroyRenderer(renderer);
-    SDL_DestroyWindow(window);
-    SDL_Quit();
+    // TODO: check that this is working.
+    renderManager->~Renderer();
 
     return 0;
 }
@@ -85,18 +80,11 @@ void gameLoop() {
         dt = (SDL_GetTicks() - lastPhysicsUpdate) / 1000.f;
         player.simulate(dt);
         lastPhysicsUpdate = SDL_GetTicks();
-        //printf("(%i,%i)", player.xVel, player.yVel);
-        //printf("(%i, %i)", player.pos.x, player.pos.y);
 
-        // render
-        SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-        SDL_RenderClear(renderer);
-
-        SDL_RenderCopyExF(renderer, playerTexture, NULL, &player.pos, 0, NULL, SDL_FLIP_NONE);
-
+        // Rendering
+        renderManager->renderPlayer(&player);
         showImGui();
-
-        SDL_RenderPresent(renderer);
+        renderManager->renderPresent();
     }
 }
 
@@ -135,8 +123,8 @@ int setup() {
 
     // Create window with SDL_Renderer graphics context
     SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-    window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+    SDL_Window* window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
+    SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
     if (renderer == nullptr)
     {
         SDL_Log("Error creating SDL_Renderer!");
@@ -167,6 +155,10 @@ int setup() {
     // Setup Platform/Renderer backends
     ImGui_ImplSDL2_InitForSDLRenderer(window, renderer);
     ImGui_ImplSDLRenderer_Init(renderer);
+
+    // Render manager will hold pointers to these. It will handle
+    // cleaning itself up.
+    renderManager = new Renderer(window, renderer);
 
     return 0;
 }
