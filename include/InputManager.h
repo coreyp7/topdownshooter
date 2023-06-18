@@ -14,6 +14,10 @@ public:
 
 private:
 	std::vector<SDL_Event> events;
+
+	// NOTE: this should be the GameState instead.
 	Player* player;
+
+	void handleMovementEvent(SDL_Event event);
 };
 

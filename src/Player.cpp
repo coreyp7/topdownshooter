@@ -45,3 +45,7 @@ void Player::simulate(float dt) {
 	pos.x += xVel * dt;
 	pos.y += yVel * dt;
 }
+
+void Player::shootBullet(Uint8 x, Uint8 y) {
+	printf("Shoot bullet at (%i,%i)");
+}

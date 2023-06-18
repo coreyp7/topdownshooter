@@ -80,6 +80,8 @@ void gameLoop() {
         dt = (SDL_GetTicks() - lastPhysicsUpdate) / 1000.f;
         player.simulate(dt);
         lastPhysicsUpdate = SDL_GetTicks();
+        // NOTE: when it gets more complicated than a player object, then it should 
+        // go into a GameState manager thing instead.
 
         // Rendering
         renderManager->renderPlayer(&player);

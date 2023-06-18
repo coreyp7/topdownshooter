@@ -17,6 +17,7 @@ public:
 
 	void startMoving(Direction direction);
 	void stopMoving(Direction direction);
+	void shootBullet(Uint8 x, Uint8 y);
 
 	void simulate(float dt); // TODO pass dt to this
 };
