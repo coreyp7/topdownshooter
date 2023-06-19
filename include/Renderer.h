@@ -25,5 +25,7 @@ private:
 	SDL_Texture* playerTexture;
 
 	void renderPlayer(Player* player);
+
+	void renderProjectiles(std::vector<Projectile*>* projectiles);
 };
 

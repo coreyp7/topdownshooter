@@ -30,10 +30,22 @@ void Renderer::showBackbufferClear() {
 // specific things below this.
 void Renderer::renderGameState(GameState* gameState) {
     renderPlayer(gameState->getPlayer());
+    renderProjectiles(gameState->getProjectiles());
 }
 
 // Helper functions.
 
 void Renderer::renderPlayer(Player* player) {
-    SDL_RenderCopyExF(renderer, playerTexture, NULL, &player->pos, 0, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyExF(renderer, playerTexture, NULL, 
+        &player->pos, 0, NULL, SDL_FLIP_NONE);
+}
+
+void Renderer::renderProjectiles(
+    std::vector<Projectile*>* projectiles) {
+    SDL_FRect frect;
+    for (int i = 0; i < projectiles->size(); i++) {
+        frect = projectiles->at(i)->pos;
+        SDL_RenderCopyExF(renderer, playerTexture, NULL,
+            &frect, 0, NULL, SDL_FLIP_NONE);
+    }
 }

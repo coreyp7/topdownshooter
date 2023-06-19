@@ -1,7 +1,7 @@
 #include "InputManager.h"
 
-InputManager::InputManager(Player* player) {
-	this->player = player;
+InputManager::InputManager(GameState* gameState) {
+	this->gameState = gameState;
 }
 
 void InputManager::handleEvent(SDL_Event event) {
@@ -13,43 +13,44 @@ void InputManager::handleEvent(SDL_Event event) {
 	
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == 1) { // left click
-			player->shootBullet(event.button.x, event.button.y);
+			gameState->playerShootBullet(event.button.x, event.button.y);
 		}
-		printf("%i", event.button.button);
 	}
 
 }
 
+//@TODO: call gameState function instead of calling a player
+// function to move the player.
 void InputManager::handleMovementEvent(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN) {
 		switch (event.key.keysym.sym) {
 		case SDLK_w:
-			player->startMoving(UP);
+			gameState->getPlayer()->startMoving(UP);
 			break;
 		case SDLK_s:
-			player->startMoving(DOWN);
+			gameState->getPlayer()->startMoving(DOWN);
 			break;
 		case SDLK_a:
-			player->startMoving(LEFT);
+			gameState->getPlayer()->startMoving(LEFT);
 			break;
 		case SDLK_d:
-			player->startMoving(RIGHT);
+			gameState->getPlayer()->startMoving(RIGHT);
 			break;
 		}
 	}
 	else if (event.type == SDL_KEYUP) {
 		switch (event.key.keysym.sym) {
 		case SDLK_w:
-			player->stopMoving(UP);
+			gameState->getPlayer()->stopMoving(UP);
 			break;
 		case SDLK_s:
-			player->stopMoving(DOWN);
+			gameState->getPlayer()->stopMoving(DOWN);
 			break;
 		case SDLK_a:
-			player->stopMoving(LEFT);
+			gameState->getPlayer()->stopMoving(LEFT);
 			break;
 		case SDLK_d:
-			player->stopMoving(RIGHT);
+			gameState->getPlayer()->stopMoving(RIGHT);
 			break;
 		}
 	}

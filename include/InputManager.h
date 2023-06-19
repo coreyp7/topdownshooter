@@ -1,7 +1,8 @@
 #pragma once
 #include <SDL.h>
 #include <vector>
-#include "Player.h"
+#include "GameState.h"
+
 /**
 Handles SDL events and calls functions in the Player apprpriate
 to the proccessed user inputs.
@@ -9,15 +10,16 @@ to the proccessed user inputs.
 class InputManager
 {
 public:
-	InputManager(Player* player);
+	InputManager(GameState* gameState);
 	void handleEvent(SDL_Event event);
 
 private:
 	std::vector<SDL_Event> events;
 
 	// NOTE: this should be the GameState instead.
-	Player* player;
+	GameState* gameState;
 
 	void handleMovementEvent(SDL_Event event);
+
 };
 
