@@ -130,9 +130,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libs\imgui_sdl_renderer_vs\imgui_vs.vcxproj">
@@ -140,9 +142,11 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Direction.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\Renderer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

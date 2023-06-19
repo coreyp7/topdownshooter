@@ -19,13 +19,21 @@ void Renderer::setup() {
     }
 }
 
-void Renderer::renderPlayer(Player* player) {
-    SDL_RenderCopyExF(renderer, playerTexture, NULL, &player->pos, 0, NULL, SDL_FLIP_NONE);
-}
-
-void Renderer::renderPresent() {
+void Renderer::showBackbufferClear() {
     SDL_RenderPresent(renderer);
 
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
+}
+
+// Renders entire game state. Utilizes functions for rendering
+// specific things below this.
+void Renderer::renderGameState(GameState* gameState) {
+    renderPlayer(gameState->getPlayer());
+}
+
+// Helper functions.
+
+void Renderer::renderPlayer(Player* player) {
+    SDL_RenderCopyExF(renderer, playerTexture, NULL, &player->pos, 0, NULL, SDL_FLIP_NONE);
 }

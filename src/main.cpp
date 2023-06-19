@@ -8,6 +8,7 @@
 #include <stdio.h>
 #include <string>
 
+#include "GameState.h"
 #include "InputManager.h"
 #include "Renderer.h"
 #include "Player.h"
@@ -25,11 +26,42 @@ ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 Player player = Player(SDL_FRect{250, 250, 50, 50});
 InputManager inputManager = InputManager(&player);
+GameState gameState = GameState(&player);
 Renderer* renderManager;
 
 int setup();
 void gameLoop();
 void showImGui();
+
+void gameLoop() {
+
+    int quit = false;
+    SDL_Event event;
+    std::vector<SDL_Event> events;
+    Uint32 lastPhysicsUpdate = 0;
+    float dt = 0;
+
+    while (!quit) {
+
+        // capture user inputs
+        while (SDL_PollEvent(&event)) {
+            ImGui_ImplSDL2_ProcessEvent(&event);
+            inputManager.handleEvent(event);
+            if (event.type == SDL_QUIT) {
+                quit = true;
+            }
+        }
+
+        // Simulate gamestate
+        gameState.simulate();
+
+        // Render current gamestate
+        //renderManager->renderPlayer(&player);
+        renderManager->renderGameState(&gameState);
+        showImGui();
+        renderManager->showBackbufferClear();
+    }
+}
 
 // Main code
 int main(int, char**)
@@ -55,39 +87,6 @@ int main(int, char**)
     renderManager->~Renderer();
 
     return 0;
-}
-
-// @refactor: put rendering into separate rendering module, START ORGANIZING YOUR SHIT
-void gameLoop() {
-
-    int quit = false;
-    SDL_Event event;
-    std::vector<SDL_Event> events;
-    Uint32 lastPhysicsUpdate = 0;
-    float dt = 0;
-
-    while (!quit) {
-        // capture inputs
-        while (SDL_PollEvent(&event)) {
-            ImGui_ImplSDL2_ProcessEvent(&event);
-            inputManager.handleEvent(event);
-            if (event.type == SDL_QUIT) {
-                quit = true;
-            }
-        }
-
-        // simulate gamestate
-        dt = (SDL_GetTicks() - lastPhysicsUpdate) / 1000.f;
-        player.simulate(dt);
-        lastPhysicsUpdate = SDL_GetTicks();
-        // NOTE: when it gets more complicated than a player object, then it should 
-        // go into a GameState manager thing instead.
-
-        // Rendering
-        renderManager->renderPlayer(&player);
-        showImGui();
-        renderManager->renderPresent();
-    }
 }
 
 // Parameters are all the stuff ImGui needs to display not in scope.
