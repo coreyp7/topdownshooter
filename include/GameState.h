@@ -4,6 +4,7 @@
 #include "Projectile.h"
 #include <stdio.h>
 #include <vector>
+#include <cmath>
 
 class GameState {
 

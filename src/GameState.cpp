@@ -34,11 +34,20 @@ std::vector<Projectile*>* GameState::getProjectiles() {
 
 void GameState::playerShootBullet(int x, int y) {
 	printf("Shoot bullet at (%i,%i)\n", x, y);
-	float xVel, yVel;
-	xVel = x - player->pos.x;
-	yVel = y - player->pos.y;
+	float xVec, yVec;
+	xVec = x - player->pos.x;
+	yVec = y - player->pos.y;
 
-	Projectile* newProj = new Projectile(player->pos, xVel, yVel);
+  float vectorMagnitude = sqrt( (xVec*xVec) + (yVec*yVec) );
+  float xUnitVector = xVec / vectorMagnitude;
+  float yUnitVector = yVec / vectorMagnitude;
+  xUnitVector *= player->PROJECTILE_SPEED;
+  yUnitVector *= player->PROJECTILE_SPEED;
+
+	//Projectile* newProj = new Projectile(player->pos, xVel, yVel);
+	Projectile* newProj = new Projectile(player->pos, xUnitVector, yUnitVector);
+	newProj->pos.w = 5;
+	newProj->pos.h = 5;
 	projectiles.push_back(newProj);
 }
 

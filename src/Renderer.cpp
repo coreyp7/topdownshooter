@@ -29,8 +29,8 @@ void Renderer::showBackbufferClear() {
 // Renders entire game state. Utilizes functions for rendering
 // specific things below this.
 void Renderer::renderGameState(GameState* gameState) {
-    renderPlayer(gameState->getPlayer());
     renderProjectiles(gameState->getProjectiles());
+    renderPlayer(gameState->getPlayer());
 }
 
 // Helper functions.
