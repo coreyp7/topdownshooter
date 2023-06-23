@@ -18,6 +18,7 @@ public:
 	Player* getPlayer();
 	std::vector<Projectile*>* getProjectiles();
 
+  // Shoots projectile from player to the specified point.
 	void playerShootBullet(int x, int y);
 
 private:

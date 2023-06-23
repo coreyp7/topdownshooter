@@ -11,5 +11,7 @@ public:
 	SDL_FRect pos;
 
 	float xVel, yVel;
+
+  const float SIZE = 8;
 };
 

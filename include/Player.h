@@ -11,6 +11,7 @@ public:
   const int PROJECTILE_SPEED = 500;//this should just be regular member in
                                    //player object, so we can change on powerup
                                    //pickups, weapons, etc.
+  //const int PROJECTILE_SPEED = 5;
   const int HITBOX_RADIUS = 25;
 
 	int xVel, yVel;

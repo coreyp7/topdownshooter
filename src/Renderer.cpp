@@ -58,7 +58,7 @@ void Renderer::renderProjectiles(
 //Draws circle given point and radius.
 //For debugging only (probably).
 //void Renderer::raster_circle(float x0, float y0, float radius)
-void Renderer::raster_circle(SDL_FPoint center, float radius)
+void Renderer::raster_circle(SDL_FPoint center, float radius) //@move: could be moved to some kind of debug class/file or something.
 {   
     int x0 = center.x;
     int y0 = center.y;
