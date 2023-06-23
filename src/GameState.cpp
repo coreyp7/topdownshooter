@@ -38,7 +38,6 @@ void GameState::playerShootBullet(int x, int y) {
 	2. normalize that vector into a unit vector
   3. multiply unit vector by radius.
   4. Add the multiplied unit vector to the player's position.
-
   This gives us the point to spawn the projectile at. 
 	*/
 	printf("Shoot bullet at (%i,%i)\n", x, y);
@@ -63,8 +62,6 @@ void GameState::playerShootBullet(int x, int y) {
 
 	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel);
 	projectiles.push_back(newProj);
-
-
 }
 
 // All the specific private stuff will be down here.
