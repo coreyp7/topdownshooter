@@ -1,9 +1,9 @@
 #include "Projectile.h"
 
-Projectile::Projectile(SDL_FRect pos, float xVel, float yVel) {
+Projectile::Projectile(SDL_FPoint pos, float xVel, float yVel) {
 	this->xVel = xVel;
 	this->yVel = yVel;
-	this->pos = pos;
+	this->pos = SDL_FRect{pos.x, pos.y, 15, 15};
 }
 
 Projectile::~Projectile() {

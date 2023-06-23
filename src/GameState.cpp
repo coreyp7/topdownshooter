@@ -38,11 +38,11 @@ void GameState::playerShootBullet(int x, int y) {
 	xVec = x - player->pos.x;
 	yVec = y - player->pos.y;
 
-  float vectorMagnitude = sqrt( (xVec*xVec) + (yVec*yVec) );
-  float xUnitVector = xVec / vectorMagnitude;
-  float yUnitVector = yVec / vectorMagnitude;
-  xUnitVector *= player->PROJECTILE_SPEED;
-  yUnitVector *= player->PROJECTILE_SPEED;
+	float vectorMagnitude = sqrt( (xVec*xVec) + (yVec*yVec) );
+	float xUnitVector = xVec / vectorMagnitude;
+	float yUnitVector = yVec / vectorMagnitude;
+	xUnitVector *= player->PROJECTILE_SPEED;
+	yUnitVector *= player->PROJECTILE_SPEED;
 
 	//Projectile* newProj = new Projectile(player->pos, xVel, yVel);
 	Projectile* newProj = new Projectile(player->pos, xUnitVector, yUnitVector);

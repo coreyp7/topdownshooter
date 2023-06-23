@@ -36,8 +36,13 @@ void Renderer::renderGameState(GameState* gameState) {
 // Helper functions.
 
 void Renderer::renderPlayer(Player* player) {
+    SDL_FPoint center = player->pos;
+    int radius = player->HITBOX_RADIUS;
+    center.x -= radius;
+    center.y -= radius;
+    SDL_FRect topLeft = {center.x, center.y, radius*2, radius*2};
     SDL_RenderCopyExF(renderer, playerTexture, NULL, 
-        &player->pos, 0, NULL, SDL_FLIP_NONE);
+        &topLeft, 0, NULL, SDL_FLIP_NONE);
 }
 
 void Renderer::renderProjectiles(

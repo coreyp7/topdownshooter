@@ -3,7 +3,7 @@
 class Projectile
 {
 public:
-	Projectile(SDL_FRect pos, float xVel, float yVel);
+	Projectile(SDL_FPoint pos, float xVel, float yVel);
 	~Projectile();
 
 	void simulate(float dt);

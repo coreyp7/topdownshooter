@@ -24,7 +24,8 @@ const int WINDOW_HEIGHT = 720;
 //SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
-Player player = Player(SDL_FRect{250, 250, 50, 50});
+//Player player = Player(SDL_FRect{250, 250, 50, 50});
+Player player = Player(SDL_FPoint{250, 250});
 GameState gameState = GameState(&player);
 InputManager inputManager = InputManager(&gameState);
 Renderer* renderManager;

@@ -1,7 +1,7 @@
 #include "Player.h"
 #include <stdio.h>
 
-Player::Player(SDL_FRect pos) {
+Player::Player(SDL_FPoint pos) {
 	this->pos = pos;
 	xVel = 0;
 	yVel = 0;
