@@ -19,16 +19,7 @@ void GameState::simulate() {
 
 	// Simulate entire game for dt seconds.
 	player->simulate(dt);
-  if(player->pos.x > camera.x + camera.w - 300){
-    //camera.x = player->pos.x + 300;
-    float newRight;
-    newRight = player->pos.x + 300;
-    camera.x = newRight - camera.w;
-  } else if(player->pos.x < camera.x + 300){
-    float newLeft;
-    newLeft = player->pos.x - 300;
-    camera.x = newLeft;
-  }
+  moveCameraWithPlayer();
 
 	for (int i = 0; i < projectiles.size(); i++) {
 		projectiles[i]->simulate(dt);
@@ -47,6 +38,34 @@ std::vector<Projectile*>* GameState::getProjectiles() {
 
 SDL_FRect GameState::getCamera(){
   return camera;
+}
+
+void GameState::moveCameraWithPlayer(){
+  int offset = 150;
+
+  // x axis
+  if(player->pos.x > camera.x + camera.w - offset){
+    float newRight;
+    newRight = player->pos.x + offset;
+    camera.x = newRight - camera.w;
+  } else if(player->pos.x < camera.x + offset){
+    float newLeft;
+    newLeft = player->pos.x - offset;
+    camera.x = newLeft;
+  }
+
+  // y axis
+  if(player->pos.y > camera.y + camera.h - offset){
+    // bottom
+    float newBottom;
+    newBottom = player->pos.y + offset;
+    camera.y = newBottom - camera.h;
+  } else if(player->pos.y < camera.y + offset){
+    // top
+    float newTop;
+    newTop = player->pos.y - offset;
+    camera.y = newTop;
+  }
 }
 
 // Param should be the position in the window the player clicked.

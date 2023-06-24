@@ -11,7 +11,8 @@ public:
 
   // @hardcoded: this should be a regular member that can change on powerup
   // pickup
-  const int PROJECTILE_SPEED = 500;
+  //const int PROJECTILE_SPEED = 500;
+  const int PROJECTILE_SPEED = 1000;
   //const int PROJECTILE_SPEED = 5;
   const int HITBOX_RADIUS = 25;
 

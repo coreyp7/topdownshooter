@@ -31,4 +31,6 @@ private:
 
   SDL_FRect camera;
 
+  // Updates camera position depending on player's position.
+  void moveCameraWithPlayer();
 };
