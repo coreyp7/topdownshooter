@@ -41,7 +41,9 @@ void Renderer::showBackbufferClear() {
 void Renderer::renderGameState(GameState* gameState) {
     //Setup camera for this frame, from gamestate
     this->camera = gameState->getCamera();
+    SDL_FRect bg = {0, 0, 3840, 2160};
 
+    renderTextureRelativeToCamera(testbg, &bg);
     renderProjectiles(gameState->getProjectiles());
     renderPlayer(gameState->getPlayer());
 }
@@ -61,7 +63,7 @@ void Renderer::renderTextureRelativeToCamera(
       dstrect->x - camera.x, dstrect->y - camera.y, dstrect->w, dstrect->h
     };
 
-    SDL_RenderCopyExF(renderer, playerTexture, NULL, &relativeToCamera, 0, NULL, SDL_FLIP_NONE);
+    SDL_RenderCopyExF(renderer, texture, NULL, &relativeToCamera, 0, NULL, SDL_FLIP_NONE);
 }
 
 void Renderer::drawPointRelativeToCamera(int x, int y){
