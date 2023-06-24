@@ -3,8 +3,8 @@
 class Projectile
 {
 public:
-  // Create projectile at position, where position is the center of the
-  // projectile.
+	// Create projectile at position, where position is the center of the
+	// projectile.
 	Projectile(SDL_FPoint pos, float xVel, float yVel);
 
 	~Projectile();
@@ -15,6 +15,6 @@ public:
 
 	float xVel, yVel;
 
-  const float SIZE = 8;
+	const float SIZE = 8;
 };
 

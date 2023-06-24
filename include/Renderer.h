@@ -11,6 +11,8 @@ public:
 	Renderer(SDL_Window* window, SDL_Renderer* renderer);
 	~Renderer();
 
+	// Renders the entire GameState.
+	// Everything starts here.
 	void renderGameState(GameState* gameState);
 
 	// Swaps back buffer to front and clears backbuffer (black).
@@ -23,22 +25,27 @@ private:
 	SDL_Renderer* renderer;
 
 	SDL_Texture* playerTexture;
-  SDL_Texture* testbg;
+	SDL_Texture* testbg;
 
-  // Updated every frame from gamestate for rendering.
-  // Used in like every function so keeping here for convenience.
-  SDL_FRect camera;
+	// Updated every frame from gamestate for rendering.
+	// Used in like every function so keeping here for convenience.
+	SDL_FRect camera;
 
-  // Makes rendering relative to camera alot easier. Textures only.
-  void renderTextureRelativeToCamera(SDL_Texture* texture, SDL_FRect* dstrect);
-
-  // Drawing debug stuff easily
-  void drawPointRelativeToCamera(int x, int y);
-
-  void renderPlayer(Player* player);
+	void renderPlayer(Player* player);
 
 	void renderProjectiles(std::vector<Projectile*>* projectiles);
 
 	void raster_circle(SDL_FPoint center, float radius);
+
+	// "Helper" functions, which are really useful when creating new functions to
+	// render specific things. These aren't called directly in renderGameState, 
+	// but are extremely helpful for the functions that are. //
+
+	// Makes rendering relative to camera alot easier. Textures only.
+	void renderTextureRelativeToCamera(SDL_Texture* texture, SDL_FRect* dstrect);
+
+	// Drawing debug stuff easily
+	void drawPointRelativeToCamera(int x, int y);
+
 };
 

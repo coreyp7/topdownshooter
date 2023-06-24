@@ -10,7 +10,7 @@ void InputManager::handleEvent(SDL_Event event) {
 	if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
 		handleMovementEvent(event);
 	}
-	
+
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == 1) { // left click
 			gameState->playerShootBullet(event.button.x, event.button.y);
