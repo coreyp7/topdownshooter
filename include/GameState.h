@@ -17,6 +17,7 @@ public:
 
 	Player* getPlayer();
 	std::vector<Projectile*>* getProjectiles();
+  SDL_FRect getCamera();
 
   // Shoots projectile from player to the specified point.
 	void playerShootBullet(int x, int y);
@@ -27,5 +28,7 @@ private:
 	float dt;
 	float lastUpdate;
 	std::vector<Projectile*> projectiles;
+
+  SDL_FRect camera;
 
 };

@@ -5,6 +5,8 @@ GameState::GameState(Player* player) {
 
 	dt = 0;
 	lastUpdate = 0;
+  camera = {0, 0, 1280, 720};//@hardcoded: this should be set from main or
+                             //something; constructor params probably.
 }
 
 GameState::~GameState() {
@@ -17,6 +19,17 @@ void GameState::simulate() {
 
 	// Simulate entire game for dt seconds.
 	player->simulate(dt);
+  if(player->pos.x > camera.x + camera.w - 300){
+    //camera.x = player->pos.x + 300;
+    float newRight;
+    newRight = player->pos.x + 300;
+    camera.x = newRight - camera.w;
+  } else if(player->pos.x < camera.x + 300){
+    float newLeft;
+    newLeft = player->pos.x - 300;
+    camera.x = newLeft;
+  }
+
 	for (int i = 0; i < projectiles.size(); i++) {
 		projectiles[i]->simulate(dt);
 	}
@@ -32,6 +45,13 @@ std::vector<Projectile*>* GameState::getProjectiles() {
 	return &projectiles;
 }
 
+SDL_FRect GameState::getCamera(){
+  return camera;
+}
+
+// Param should be the position in the window the player clicked.
+// This function will shoot it in worldspace (using camera). 
+// Don't worry about camera shit when calling this.
 void GameState::playerShootBullet(int x, int y) {
 	/* 
 	1. get vector from center of player circle to the point (x/y params).
@@ -40,11 +60,17 @@ void GameState::playerShootBullet(int x, int y) {
   4. Add the multiplied unit vector to the player's position.
   This gives us the point to spawn the projectile at. 
 	*/
-	printf("Shoot bullet at (%i,%i)\n", x, y);
+
+  // Change position to be in world space instead of relative to window.
+  int xWorldPos = x + camera.x;
+  int yWorldPos = y + camera.y;
+
+	printf("Shoot bullet at (%i,%i) in global worldspace.\n", xWorldPos, yWorldPos);
   //1
 	float xVec, yVec;
-	xVec = x - player->pos.x;
-	yVec = y - player->pos.y;
+	xVec = xWorldPos - player->pos.x;
+	yVec = yWorldPos - player->pos.y;
+
   //2: normalize into unit vector
 	float vectorMagnitude = sqrt( (xVec*xVec) + (yVec*yVec) );
 	float xUnitVector = xVec / vectorMagnitude;

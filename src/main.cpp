@@ -137,7 +137,7 @@ int setup() {
     //SDL_Log("Current SDL_Renderer: %s", info.name);
 
     // SDL_Image
-    int imgFlags = IMG_INIT_PNG;
+    int imgFlags = IMG_INIT_PNG || IMG_INIT_JPG;
     if (!(IMG_Init(imgFlags) & imgFlags)) {
         printf("SDL_image Error: %s\n", IMG_GetError());
         return 2;

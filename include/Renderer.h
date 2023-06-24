@@ -23,8 +23,19 @@ private:
 	SDL_Renderer* renderer;
 
 	SDL_Texture* playerTexture;
+  SDL_Texture* testbg;
 
-	void renderPlayer(Player* player);
+  // Updated every frame from gamestate for rendering.
+  // Used in like every function so keeping here for convenience.
+  SDL_FRect camera;
+
+  // Makes rendering relative to camera alot easier. Textures only.
+  void renderTextureRelativeToCamera(SDL_Texture* texture, SDL_FRect* dstrect);
+
+  // Drawing debug stuff easily
+  void drawPointRelativeToCamera(int x, int y);
+
+  void renderPlayer(Player* player);
 
 	void renderProjectiles(std::vector<Projectile*>* projectiles);
 

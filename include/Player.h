@@ -8,10 +8,11 @@ public:
 
   // @hardcoded: change these to be static and editable by imgui for testing
 	const int MOVE_SPEED = 450;
-  //const int PROJECTILE_SPEED = 500;//this should just be regular member in
-                                   //player object, so we can change on powerup
-                                   //pickups, weapons, etc.
-  const int PROJECTILE_SPEED = 5;
+
+  // @hardcoded: this should be a regular member that can change on powerup
+  // pickup
+  const int PROJECTILE_SPEED = 500;
+  //const int PROJECTILE_SPEED = 5;
   const int HITBOX_RADIUS = 25;
 
 	int xVel, yVel;
