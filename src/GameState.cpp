@@ -7,6 +7,7 @@ GameState::GameState(Player* player) {
 	lastUpdate = 0;
 	camera = { 0, 0, 1280, 720 };//@hardcoded: this should be set from main or
 	//something; constructor params probably.
+	qTree = new QuadTree(0, 0, 3840, 2160); //@hardcoded
 }
 
 GameState::~GameState() {
@@ -21,8 +22,11 @@ void GameState::simulate() {
 	player->simulate(dt);
 	moveCameraWithPlayer();
 
+	qTree->~QuadTree(); // @todo: have quadtree maintain itself
+	qTree = new QuadTree(0, 0, 3840, 2160);
 	for (int i = 0; i < projectiles.size(); i++) {
 		projectiles[i]->simulate(dt);
+		qTree->insert(projectiles[i]);
 	}
 
 	lastUpdate = SDL_GetTicks();
@@ -38,6 +42,10 @@ std::vector<Projectile*>* GameState::getProjectiles() {
 
 SDL_FRect GameState::getCamera() {
 	return camera;
+}
+
+QuadTree* GameState::getQuadTree() {
+	return qTree;
 }
 
 void GameState::moveCameraWithPlayer() {
@@ -109,6 +117,8 @@ void GameState::playerShootBullet(int x, int y) {
 
 	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel);
 	projectiles.push_back(newProj);
+
+	//qTree->insert(new)
 }
 
 // All the specific private stuff will be down here.

@@ -47,5 +47,9 @@ private:
 	// Drawing debug stuff easily
 	void drawPointRelativeToCamera(int x, int y);
 
+	void drawRectRelativeToCamera(SDL_FRect rect);
+
+	void drawQuadTree(QuadTree* qTree);
+
 };
 

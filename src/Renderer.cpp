@@ -46,6 +46,8 @@ void Renderer::renderGameState(GameState* gameState) {
 	renderTextureRelativeToCamera(testbg, &bg);
 	renderProjectiles(gameState->getProjectiles());
 	renderPlayer(gameState->getPlayer());
+
+	drawQuadTree(gameState->getQuadTree());
 }
 
 ///
@@ -133,5 +135,50 @@ void Renderer::raster_circle(SDL_FPoint center, float radius) //@move: could be 
 		drawPointRelativeToCamera(x0 - y, y0 + x);
 		drawPointRelativeToCamera(x0 + y, y0 - x);
 		drawPointRelativeToCamera(x0 - y, y0 - x);
+	}
+}
+
+void Renderer::drawRectRelativeToCamera(SDL_FRect rect) {
+	rect.x -= camera.x;
+	rect.y -= camera.y;
+	SDL_RenderDrawRectF(renderer, &rect);
+}
+
+// Render this QuadTree and all of its children.
+// Also draws all contained entities.
+void Renderer::drawQuadTree(QuadTree* qTree) {
+	//SDL_FRect rect = { x,y,width,height };
+	SDL_FRect rect = { qTree->x, qTree->y, qTree->width, qTree->height };
+
+	/*SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+	SDL_RenderDrawRect(renderer, &rect);
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);*/
+	//renderer->drawRectRelativeToCamera(rect);
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	drawRectRelativeToCamera(rect);
+
+	if (qTree->isLeaf) {
+		for (int i = 0; i < qTree->points.size(); i++) {
+			//SDL_RenderDrawRectF(renderer, points[i]->rect);
+			//SDL_RenderDrawRectF(renderer, &points[i]->pos);
+			//renderer->drawRectRelativeToCamera(rect);
+			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+			drawRectRelativeToCamera(qTree->points[i]->pos);
+			/*
+			Corey note:
+			write drawrect function and then recursively call this on all this quadtree node's children
+			should work :0
+			*/
+		}
+	}
+	else {
+		/*qTree->nw->draw(renderer);
+		qTree->ne->draw(renderer);
+		qTree->sw->draw(renderer);
+		qTree->se->draw(renderer);*/
+		drawQuadTree(qTree->nw);
+		drawQuadTree(qTree->ne);
+		drawQuadTree(qTree->sw);
+		drawQuadTree(qTree->se);
 	}
 }

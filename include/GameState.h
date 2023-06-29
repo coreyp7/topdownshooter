@@ -1,10 +1,12 @@
 #pragma once
 #include <SDL.h>
-#include "Player.h"
-#include "Projectile.h"
 #include <stdio.h>
 #include <vector>
 #include <cmath>
+
+#include "Player.h"
+#include "Projectile.h"
+#include "QuadTree.h"
 
 class GameState {
 
@@ -18,6 +20,7 @@ public:
 	Player* getPlayer();
 	std::vector<Projectile*>* getProjectiles();
 	SDL_FRect getCamera();
+	QuadTree* getQuadTree();
 
 	// Shoots projectile from player to the specified point.
 	void playerShootBullet(int x, int y);
@@ -30,6 +33,8 @@ private:
 	std::vector<Projectile*> projectiles;
 
 	SDL_FRect camera;
+
+	QuadTree* qTree;
 
 	// Updates camera position depending on player's position.
 	void moveCameraWithPlayer();

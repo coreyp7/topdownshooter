@@ -135,6 +135,7 @@
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -147,6 +148,7 @@
     <ClInclude Include="include\Direction.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Renderer.h" />
     <ClInclude Include="include\Projectile.h" />
   </ItemGroup>
