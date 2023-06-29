@@ -23,10 +23,20 @@ void GameState::simulate() {
 	moveCameraWithPlayer();
 
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself
-	qTree = new QuadTree(0, 0, 3840, 2160);
+	qTree = new QuadTree(0, 0, 3840, 2160); // @hardcoded: !!!!!!!!!!!!!!!!
+	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
 	for (int i = 0; i < projectiles.size(); i++) {
 		projectiles[i]->simulate(dt);
-		qTree->insert(projectiles[i]);
+		if (!checkCollision(&qTreeRect, &projectiles[i]->pos)) {
+			/*projectiles[i]->~Projectile();*/
+			// Delete if its outside the quadtree (and thus, the entire level)
+			printf("Deleted projectile at (%f,%f)\n", projectiles[i]->pos.x, projectiles[i]->pos.y);
+			delete projectiles[i];
+			projectiles.erase(projectiles.begin() + i);
+		}
+		else {
+			qTree->insert(projectiles[i]);
+		}
 	}
 
 	lastUpdate = SDL_GetTicks();
@@ -119,6 +129,18 @@ void GameState::playerShootBullet(int x, int y) {
 	projectiles.push_back(newProj);
 
 	//qTree->insert(new)
+}
+
+bool GameState::checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
+	/*SDL_FRect rect1 = *entity1->rect;
+	SDL_FRect rect2 = *entity2->rect;*/
+	SDL_FRect rect1 = *entity1; // TODO: change this function to match the params instead of this shit
+	SDL_FRect rect2 = *entity2;
+
+	bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
+	bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
+
+	return xCollision && yCollision;
 }
 
 // All the specific private stuff will be down here.

@@ -3,6 +3,8 @@
 // Set defaults to static limit stuff (these are good values I've found).
 int QuadTree::LIMIT = 4;
 int QuadTree::DEPTH_LIMIT = 5;
+//int QuadTree::LIMIT = 1;
+//int QuadTree::DEPTH_LIMIT = 7;
 
 QuadTree::QuadTree(float x, float y, float width, float height) {
 	nw = nullptr;

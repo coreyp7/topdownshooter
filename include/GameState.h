@@ -38,4 +38,6 @@ private:
 
 	// Updates camera position depending on player's position.
 	void moveCameraWithPlayer();
+
+	bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2);
 };
