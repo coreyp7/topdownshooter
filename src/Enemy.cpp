@@ -52,3 +52,7 @@ SDL_FRect Enemy::getFRect() {
 SDL_FPoint Enemy::getPosition() {
 	return SDL_FPoint{ rect.x + rect.w / 2, rect.y + rect.h / 2 };
 }
+
+EntityType Enemy::getEntityType() {
+	return ENEMY;
+}

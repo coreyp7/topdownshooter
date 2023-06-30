@@ -1,9 +1,16 @@
 #pragma once
 #include <SDL.h>
+#include "EntityType.h"
 class Entity
 {
 public:
-	//virtual int getId() = 0;
+	//static Uint16 ID_COUNTER; // this really needs to go somewhere else
+	int id;
+
+	Entity();
+	~Entity();
+
+	virtual EntityType getEntityType() = 0;
 
 	virtual SDL_FRect getFRect() = 0; // TODO: this should return a pointer
 

@@ -33,5 +33,6 @@ public:
 
 	SDL_FRect getFRect();
 	SDL_FPoint getPosition();
+	EntityType getEntityType();
 };
 

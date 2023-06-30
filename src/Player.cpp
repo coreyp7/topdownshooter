@@ -54,3 +54,7 @@ SDL_FRect Player::getFRect() {
 SDL_FPoint Player::getPosition() {
 	return pos;
 }
+
+EntityType Player::getEntityType() {
+	return PLAYER;
+}

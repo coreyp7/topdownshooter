@@ -16,6 +16,9 @@ GameState::GameState(Player* player) {
 	enemies.push_back(new Enemy(200, 200, 75, 75));
 	enemies.push_back(new Enemy(300, 200, 75, 75));
 	enemies.push_back(new Enemy(400, 200, 75, 75));
+	entityIdMap.insert({ enemies[0]->id, enemies[0] });
+	entityIdMap.insert({ enemies[1]->id, enemies[1] });
+	entityIdMap.insert({ enemies[2]->id, enemies[2] });
 }
 
 GameState::~GameState() {
@@ -38,7 +41,34 @@ void GameState::simulate() {
 	simulateEnemies();
 	simulateProjectiles();
 
+	resolveCollisions();
+
 	lastUpdate = SDL_GetTicks();
+}
+
+void GameState::resolveCollisions() {
+std::vector<std::tuple<Uint16, Uint16>> collisions;
+
+// TODO: fil collisions with ids obtained from quadtree work.
+
+  for(int i=0; i<collisions.size(); i++){
+    std::tuple<Uint16, Uint16> currentCollisionIds = collisions[i];
+	Uint16 entity1Id = std::get<0>(currentCollisionIds);
+	Uint16 entity2Id = std::get<1>(currentCollisionIds);
+	Entity* entity1 = entityIdMap.find(entity1Id)->second;
+	Entity* entity2 = entityIdMap.find(entity2Id)->second;
+	
+	/*std::tuple<Entity*, Entity*> orderedEntities;
+	if (entity1->getEntityType() > entity2->getEntityType()) {
+
+	}*/
+	// In future, this will be more complicated, but for now, just have it resolve
+	// enemies colliding with other enemies.
+	if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == ENEMY) {
+		// resolve their collision
+		printf("Enemy %i collided with %i\n", entity1Id, entity2Id);
+	}
+  }
 }
 
 void GameState::simulateEnemies() {

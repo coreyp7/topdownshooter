@@ -138,6 +138,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\Entity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libs\imgui_sdl_renderer_vs\imgui_vs.vcxproj">
@@ -147,6 +148,7 @@
   <ItemGroup>
     <ClInclude Include="include\Enemy.h" />
     <ClInclude Include="include\Entity.h" />
+    <ClInclude Include="include\EntityType.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\Direction.h" />
     <ClInclude Include="include\Player.h" />

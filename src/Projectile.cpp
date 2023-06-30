@@ -22,3 +22,7 @@ SDL_FRect Projectile::getFRect() {
 SDL_FPoint Projectile::getPosition() {
 	return SDL_FPoint{ pos.x + SIZE / 2, pos.y + SIZE / 2 };
 }
+
+EntityType Projectile::getEntityType() {
+	return PROJECTILE;
+}

@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include "Entity.h"
+#include "EntityType.h"
 
 class Enemy : public Entity {
 public:
@@ -15,4 +16,5 @@ public:
 	// Entity stuff
 	SDL_FRect getFRect();
 	SDL_FPoint getPosition();
+	EntityType getEntityType();
 };

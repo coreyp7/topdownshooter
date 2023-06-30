@@ -24,5 +24,6 @@ public:
 
 	SDL_FPoint getPosition();
 
+	EntityType getEntityType();
 };
 

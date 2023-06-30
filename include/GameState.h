@@ -2,12 +2,15 @@
 #include <SDL.h>
 #include <stdio.h>
 #include <vector>
+#include <unordered_map>
+#include <tuple>
 #include <cmath>
 
 #include "Player.h"
 #include "Projectile.h"
 #include "QuadTree.h"
 #include "Enemy.h"
+#include "EntityType.h"
 
 class GameState {
 
@@ -35,6 +38,9 @@ private:
 	std::vector<Projectile*> projectiles;
 	std::vector<Enemy*> enemies;
 
+	std::unordered_map<Uint16, Entity*> entityIdMap;
+
+
 	SDL_FRect camera;
 
 	QuadTree* qTree;
@@ -48,4 +54,6 @@ private:
 	void simulateEnemies();
 
 	bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2);
+
+	void resolveCollisions();
 };
