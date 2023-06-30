@@ -8,6 +8,14 @@ GameState::GameState(Player* player) {
 	camera = { 0, 0, 1280, 720 };//@hardcoded: this should be set from main or
 	//something; constructor params probably.
 	qTree = new QuadTree(0, 0, 3840, 2160); //@hardcoded
+
+	// Here I'm hardcoding test enemies.
+	// Later, this would either:
+	// - be spawned in dynamically like a hoarde type game
+	// - loaded into a level ala a tile in the tilemap
+	enemies.push_back(new Enemy(200, 200, 75, 75));
+	enemies.push_back(new Enemy(300, 200, 75, 75));
+	enemies.push_back(new Enemy(400, 200, 75, 75));
 }
 
 GameState::~GameState() {
@@ -22,9 +30,24 @@ void GameState::simulate() {
 	player->simulate(dt);
 	moveCameraWithPlayer();
 
+	// Update QuadTree (for now, deleting it and rebuilding it every frame).
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself
 	qTree = new QuadTree(0, 0, 3840, 2160); // @hardcoded: !!!!!!!!!!!!!!!!
 	qTree->insert(player);
+
+	simulateEnemies();
+	simulateProjectiles();
+
+	lastUpdate = SDL_GetTicks();
+}
+
+void GameState::simulateEnemies() {
+	for (int i = 0; i < enemies.size(); i++) {
+		enemies[i]->simulate(dt);
+	}
+}
+
+void GameState::simulateProjectiles() {
 	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
 	for (int i = 0; i < projectiles.size(); i++) {
 		projectiles[i]->simulate(dt);
@@ -40,8 +63,6 @@ void GameState::simulate() {
 			// TODO: check for collisions with this
 		}
 	}
-
-	lastUpdate = SDL_GetTicks();
 }
 
 Player* GameState::getPlayer() {
@@ -50,6 +71,10 @@ Player* GameState::getPlayer() {
 
 std::vector<Projectile*>* GameState::getProjectiles() {
 	return &projectiles;
+}
+
+std::vector<Enemy*>* GameState::getEnemies() {
+	return &enemies;
 }
 
 SDL_FRect GameState::getCamera() {

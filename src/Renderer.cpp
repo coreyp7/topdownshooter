@@ -27,6 +27,12 @@ void Renderer::setup() {
 	if (testbg == NULL) {
 		printf("bg not loaded %s", IMG_GetError());
 	}
+
+	enemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
+	if (enemyTexture == NULL) {
+		printf("enemytexture not loaded %s", IMG_GetError());
+	}
+
 }
 
 void Renderer::showBackbufferClear() {
@@ -44,6 +50,7 @@ void Renderer::renderGameState(GameState* gameState) {
 	SDL_FRect bg = { 0, 0, 3840, 2160 };
 
 	renderTextureRelativeToCamera(testbg, &bg);
+	renderEnemies(gameState->getEnemies());
 	renderProjectiles(gameState->getProjectiles());
 	renderPlayer(gameState->getPlayer());
 
@@ -53,6 +60,14 @@ void Renderer::renderGameState(GameState* gameState) {
 ///
 ///////////////// Helper functions. /////////////////
 ///
+
+void Renderer::renderEnemies(std::vector<Enemy*>* enemies) {
+	SDL_FRect currRect;
+	for (int i = 0; i < enemies->size(); i++) {
+		currRect = enemies->at(i)->getFRect();
+		renderTextureRelativeToCamera(enemyTexture, &currRect);
+	}
+}
 
 // Used to easily render an SDL_Texture at its position relative to the camera.
 // NOTE: this assumes that you don't need to rotate or anything like that.

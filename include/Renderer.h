@@ -25,6 +25,7 @@ private:
 	SDL_Renderer* renderer;
 
 	SDL_Texture* playerTexture;
+	SDL_Texture* enemyTexture;
 	SDL_Texture* testbg;
 
 	// Updated every frame from gamestate for rendering.
@@ -34,6 +35,8 @@ private:
 	void renderPlayer(Player* player);
 
 	void renderProjectiles(std::vector<Projectile*>* projectiles);
+
+	void renderEnemies(std::vector<Enemy*>* enemies);
 
 	void raster_circle(SDL_FPoint center, float radius);
 

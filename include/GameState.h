@@ -7,6 +7,7 @@
 #include "Player.h"
 #include "Projectile.h"
 #include "QuadTree.h"
+#include "Enemy.h"
 
 class GameState {
 
@@ -21,6 +22,7 @@ public:
 	std::vector<Projectile*>* getProjectiles();
 	SDL_FRect getCamera();
 	QuadTree* getQuadTree();
+	std::vector<Enemy*>* getEnemies();
 
 	// Shoots projectile from player to the specified point.
 	void playerShootBullet(int x, int y);
@@ -31,6 +33,7 @@ private:
 	float dt;
 	float lastUpdate;
 	std::vector<Projectile*> projectiles;
+	std::vector<Enemy*> enemies;
 
 	SDL_FRect camera;
 
@@ -38,6 +41,11 @@ private:
 
 	// Updates camera position depending on player's position.
 	void moveCameraWithPlayer();
+
+	// Also adds all of the projectiles to the QuadTree
+	void simulateProjectiles();
+
+	void simulateEnemies();
 
 	bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2);
 };
