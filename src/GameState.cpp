@@ -24,11 +24,11 @@ void GameState::simulate() {
 
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself
 	qTree = new QuadTree(0, 0, 3840, 2160); // @hardcoded: !!!!!!!!!!!!!!!!
+	qTree->insert(player);
 	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
 	for (int i = 0; i < projectiles.size(); i++) {
 		projectiles[i]->simulate(dt);
 		if (!checkCollision(&qTreeRect, &projectiles[i]->pos)) {
-			/*projectiles[i]->~Projectile();*/
 			// Delete if its outside the quadtree (and thus, the entire level)
 			printf("Deleted projectile at (%f,%f)\n", projectiles[i]->pos.x, projectiles[i]->pos.y);
 			delete projectiles[i];
@@ -36,6 +36,8 @@ void GameState::simulate() {
 		}
 		else {
 			qTree->insert(projectiles[i]);
+
+			// TODO: check for collisions with this
 		}
 	}
 

@@ -163,7 +163,8 @@ void Renderer::drawQuadTree(QuadTree* qTree) {
 			//SDL_RenderDrawRectF(renderer, &points[i]->pos);
 			//renderer->drawRectRelativeToCamera(rect);
 			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-			drawRectRelativeToCamera(qTree->points[i]->pos);
+			/*drawRectRelativeToCamera(qTree->points[i]->pos);*/
+			drawRectRelativeToCamera(qTree->points[i]->getFRect());
 			/*
 			Corey note:
 			write drawrect function and then recursively call this on all this quadtree node's children

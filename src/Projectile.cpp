@@ -14,3 +14,7 @@ void Projectile::simulate(float dt) {
 	pos.x += xVel * dt;
 	pos.y += yVel * dt;
 }
+
+SDL_FRect Projectile::getFRect() {
+	return this->pos;
+}

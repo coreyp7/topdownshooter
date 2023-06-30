@@ -45,3 +45,8 @@ void Player::simulate(float dt) {
 	pos.x += xVel * dt;
 	pos.y += yVel * dt;
 }
+
+SDL_FRect Player::getFRect() {
+	SDL_FRect rect = {pos.x - HITBOX_RADIUS, pos.y - HITBOX_RADIUS, HITBOX_RADIUS*2, HITBOX_RADIUS*2};
+	return rect;
+}

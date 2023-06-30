@@ -1,8 +1,9 @@
 #pragma once
 #include <SDL.h> // ONLY USED FOR SDL_Rect
 #include "Direction.h"
+#include "Entity.h"
 
-class Player
+class Player : public Entity
 {
 public:
 
@@ -29,5 +30,7 @@ public:
 	void stopMoving(Direction direction);
 
 	void simulate(float dt); // TODO pass dt to this
+
+	SDL_FRect getFRect();
 };
 

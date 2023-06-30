@@ -2,7 +2,8 @@
 #include <SDL.h> // using only for certain structs
 #include <vector>
 #include <set>
-#include "Projectile.h"
+//#include "Entity.h"
+#include "Entity.h"
 
 class Renderer;  // forward declaration that should only be needed for debugging quadtree.
 
@@ -28,7 +29,7 @@ public:
 
   // Entities inside this QuadTree.
   // NOTE: only contains entities if isLeaf==true.
-	std::vector<Projectile*> points;
+	std::vector<Entity*> points;
 
 	// Position of this QuadTree square (from top left).
 	int x, y, width, height;
@@ -40,12 +41,12 @@ public:
 	QuadTree(float x, float y, float width, float height);
 	~QuadTree();
 
-	void insert(Projectile* point);
+	void insert(Entity* point);
 
 	// For confirming if a point belongs in this QuadTree (square).
   // TODO: should probably change this to be 'contains' or something
   // less stupid.
-	bool insideOf(Projectile* point);
+	bool insideOf(Entity* point);
 
 	// Will draw this entire QuadTree and all of its children.
 	// (Will also draw the points).
@@ -55,12 +56,12 @@ public:
 	//void update();
 
   // Obtain list of all leaf nodes which thie provided entity is inside of.
-  std::vector<QuadTree*> getLeafs(Projectile* dot);
+  std::vector<QuadTree*> getLeafs(Entity* dot);
 
   // Counts amount of collisions with an entity. 
   // Will increment collisions/comparisons as the entities are checked.
-  void getCollisionsWithEntity(Projectile* entity, int* collisions, int* comparisons);
+  void getCollisionsWithEntity(Entity* entity, int* collisions, int* comparisons);
 
   // AABB collision.
-  bool checkCollision(Projectile* entity1, Projectile* entity2);
+  bool checkCollision(Entity* entity1, Entity* entity2);
 };

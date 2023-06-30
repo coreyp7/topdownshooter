@@ -29,7 +29,7 @@ QuadTree::~QuadTree() {
 	}
 }
 
-void QuadTree::insert(Projectile* point) {
+void QuadTree::insert(Entity* point) {
 
 	// First check if this isn't a leaf node.
 	if (!isLeaf) {
@@ -94,12 +94,14 @@ void QuadTree::insert(Projectile* point) {
 }
 
 // Check if an entity is inside of this QuadTree.
-bool QuadTree::insideOf(Projectile* point) {
+bool QuadTree::insideOf(Entity* point) {
 	/*SDL_FRect* rect = point->rect;*/
-	SDL_FRect* rect = &point->pos;
+	SDL_FRect rect = point->getFRect();
 
-	bool colX = ((rect->x + rect->w) >= x) && ((x + width) >= rect->x);
-	bool colY = ((rect->y + rect->h) >= y) && ((y + height) >= rect->y);
+	/*bool colX = ((rect->x + rect->w) >= x) && ((x + width) >= rect->x);
+	bool colY = ((rect->y + rect->h) >= y) && ((y + height) >= rect->y);*/
+	bool colX = ((rect.x + rect.w) >= x) && ((x + width) >= rect.x);
+	bool colY = ((rect.y + rect.h) >= y) && ((y + height) >= rect.y);
 
 	return colX && colY;
 }
@@ -132,7 +134,7 @@ void QuadTree::draw(Renderer* renderer) {
 
 // Will return all leafs which the passed in Entity
 // is contained in. (An object can be in more than one leaf at a time).
-std::vector<QuadTree*> QuadTree::getLeafs(Projectile* dot) {
+std::vector<QuadTree*> QuadTree::getLeafs(Entity* dot) {
 
 	// If not leaf; call getLeaf on children which contain rect.
   // Else, return yourself in a vector.
@@ -167,7 +169,7 @@ std::vector<QuadTree*> QuadTree::getLeafs(Projectile* dot) {
 // I don't like how indented this function is.
 // Could be a recursive thing where QuadTree figures out from its children or
 // something like that.
-void QuadTree::getCollisionsWithEntity(Projectile* entity, int* collisions, int* comparisons) {
+void QuadTree::getCollisionsWithEntity(Entity* entity, int* collisions, int* comparisons) {
 	// Get all the leafs which contain curr entity. (max of 4)
 	//std::vector<QuadTree*> currentEntityLeafs = getLeafs(entity);
 
@@ -181,7 +183,7 @@ void QuadTree::getCollisionsWithEntity(Projectile* entity, int* collisions, int*
 	//	// and check for collision with 'curr' rect.
 	//	for (int k = 0; k < currLeaf->points.size(); k++) {
 	//		*comparisons = *comparisons + 1;
-	//		Projectile* otherEntity = currLeaf->points[k];
+	//		Entity* otherEntity = currLeaf->points[k];
 
 	//		if (entity->id != otherEntity->id) {
 
@@ -198,9 +200,9 @@ void QuadTree::getCollisionsWithEntity(Projectile* entity, int* collisions, int*
 	//}
 }
 
-bool QuadTree::checkCollision(Projectile* entity1, Projectile* entity2){
-  SDL_FRect rect1 = entity1->pos;
-  SDL_FRect rect2 = entity2->pos;
+bool QuadTree::checkCollision(Entity* entity1, Entity* entity2){
+  SDL_FRect rect1 = entity1->getFRect();
+  SDL_FRect rect2 = entity2->getFRect();
 
   bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
   bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
