@@ -58,6 +58,9 @@ void GameState::simulateProjectiles() {
 			printf("Deleted projectile at (%f,%f)\n", projectiles[i]->pos.x, projectiles[i]->pos.y);
 			delete projectiles[i];
 			projectiles.erase(projectiles.begin() + i);
+			i--; // move our i back so that we don't skip a variable
+			// @eh: could have this be done outside this loop, would maybe be clearer.
+			// seems to be working, so leaving for now.
 		}
 		else {
 			qTree->insert(projectiles[i]);
