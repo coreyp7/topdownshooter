@@ -1,6 +1,7 @@
 #pragma once
 #include <SDL.h> // using only for certain structs
 #include <vector>
+#include <tuple>
 #include <set>
 //#include "Entity.h"
 #include "Entity.h"
@@ -60,7 +61,8 @@ public:
 
   // Counts amount of collisions with an entity. 
   // Will increment collisions/comparisons as the entities are checked.
-  void getCollisionsWithEntity(Entity* entity, int* collisions, int* comparisons);
+  //void getCollisionsWithEntity(Entity* entity, int* collisions, int* comparisons);
+  std::set<std::tuple<Uint16, Uint16>> getCollisionsWithEntity(Entity* entity);
 
   // AABB collision.
   bool checkCollision(Entity* entity1, Entity* entity2);

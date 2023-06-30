@@ -169,24 +169,37 @@ std::vector<QuadTree*> QuadTree::getLeafs(Entity* dot) {
 // I don't like how indented this function is.
 // Could be a recursive thing where QuadTree figures out from its children or
 // something like that.
-void QuadTree::getCollisionsWithEntity(Entity* entity, int* collisions, int* comparisons) {
+std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* entity) {
+	std::set<std::tuple<Uint16, Uint16>> collisionList;
+
 	// Get all the leafs which contain curr entity. (max of 4)
-	//std::vector<QuadTree*> currentEntityLeafs = getLeafs(entity);
+	std::vector<QuadTree*> currentEntityLeafs = getLeafs(entity);
 
 	//// Keep track of rects collided with to avoid duplicates.
 	//std::set<int> alreadyCollidedEntities;
 
-	//for (int j = 0; j < currentEntityLeafs.size(); j++) {
-	//	QuadTree* currLeaf = currentEntityLeafs[j];
+	for (int j = 0; j < currentEntityLeafs.size(); j++) {
+		QuadTree* currLeaf = currentEntityLeafs[j];
 
 	//	// Iterate through other entities inside of this leaf
 	//	// and check for collision with 'curr' rect.
-	//	for (int k = 0; k < currLeaf->points.size(); k++) {
-	//		*comparisons = *comparisons + 1;
-	//		Entity* otherEntity = currLeaf->points[k];
+		for (int k = 0; k < currLeaf->points.size(); k++) {
+			//*comparisons = *comparisons + 1;
+			Entity* otherEntity = currLeaf->points[k];
 
-	//		if (entity->id != otherEntity->id) {
+			if (entity->id != otherEntity->id) {
+				// Add ordered tuple containing the two ids to collision vec.
+				std::tuple<Uint16, Uint16> newtuple;
+				if (entity->id > otherEntity->id) { //@test: should see if it automatically sorts for us
+					newtuple = { entity->id, otherEntity->id };
+				}
+				else {
+					newtuple = { otherEntity->id, entity->id };
+				}
 
+				//TODO: this should be a set
+				//collisionList.push_back(newtuple);
+				collisionList.insert(newtuple);
 	//			// Ensure otherEntity hasn't been collided with by this rect already.
 	//			if (!alreadyCollidedEntities.contains(otherEntity->id)) {
 	//				bool collision = checkCollision(entity, otherEntity);
@@ -195,9 +208,10 @@ void QuadTree::getCollisionsWithEntity(Entity* entity, int* collisions, int* com
 	//						alreadyCollidedEntities.insert(otherEntity->id);
 	//				}
 	//			}
-	//		}
-	//	}
-	//}
+			}
+		}
+	}
+	return collisionList;
 }
 
 bool QuadTree::checkCollision(Entity* entity1, Entity* entity2){

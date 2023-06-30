@@ -5,7 +5,7 @@ class Entity
 {
 public:
 	//static Uint16 ID_COUNTER; // this really needs to go somewhere else
-	int id;
+	Uint16 id;
 
 	Entity();
 	~Entity();

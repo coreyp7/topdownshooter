@@ -16,6 +16,7 @@ GameState::GameState(Player* player) {
 	enemies.push_back(new Enemy(200, 200, 75, 75));
 	enemies.push_back(new Enemy(300, 200, 75, 75));
 	enemies.push_back(new Enemy(400, 200, 75, 75));
+	entityIdMap.insert({ player->id, player });
 	entityIdMap.insert({ enemies[0]->id, enemies[0] });
 	entityIdMap.insert({ enemies[1]->id, enemies[1] });
 	entityIdMap.insert({ enemies[2]->id, enemies[2] });
@@ -47,28 +48,39 @@ void GameState::simulate() {
 }
 
 void GameState::resolveCollisions() {
-std::vector<std::tuple<Uint16, Uint16>> collisions;
+	//RIGHT NOW ITS ONLY ENEMIES; FIX THIS AFTER ITS TESTED.
+	for (int i = 0; i < enemies.size(); i++) {
+		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(enemies[i]);
+		std::set<std::tuple<Uint16, Uint16>>::iterator itr;
+		//for (int j = 0; j < collisions.size(); j++) {
+		for(itr = collisions.begin(); itr != collisions.end(); itr++){
+			std::tuple<Uint16, Uint16> currentCollisionIds = *itr;
+			Uint16 entity1Id = std::get<0>(currentCollisionIds);
+			Uint16 entity2Id = std::get<1>(currentCollisionIds);
+			Entity* entity1 = entityIdMap.find(entity1Id)->second;
+			Entity* entity2 = entityIdMap.find(entity2Id)->second;
 
-// TODO: fil collisions with ids obtained from quadtree work.
+			//NOTE TO COREY:
+			// OK: that error from before (assertion error) happens when a projectile hits the enemy.
+			// However, enemies/player can collide with each other.
+			// I think this is because projectiles aren't being added to the id hash table.
+			// Do that and then commit.
 
-  for(int i=0; i<collisions.size(); i++){
-    std::tuple<Uint16, Uint16> currentCollisionIds = collisions[i];
-	Uint16 entity1Id = std::get<0>(currentCollisionIds);
-	Uint16 entity2Id = std::get<1>(currentCollisionIds);
-	Entity* entity1 = entityIdMap.find(entity1Id)->second;
-	Entity* entity2 = entityIdMap.find(entity2Id)->second;
-	
-	/*std::tuple<Entity*, Entity*> orderedEntities;
-	if (entity1->getEntityType() > entity2->getEntityType()) {
+			/*std::tuple<Entity*, Entity*> orderedEntities;
+			if (entity1->getEntityType() > entity2->getEntityType()) {
 
-	}*/
-	// In future, this will be more complicated, but for now, just have it resolve
-	// enemies colliding with other enemies.
-	if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == ENEMY) {
-		// resolve their collision
-		printf("Enemy %i collided with %i\n", entity1Id, entity2Id);
+			}*/
+			// In future, this will be more complicated, but for now, just have it resolve
+			// enemies colliding with other enemies.
+			if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == ENEMY) {
+				// resolve their collision
+				//printf("Enemy %i collided with %i\n", entity1Id, entity2Id);
+			}
+		}
 	}
-  }
+
+	// TODO: fil collisions with ids obtained from quadtree work.
+
 }
 
 void GameState::simulateEnemies() {
