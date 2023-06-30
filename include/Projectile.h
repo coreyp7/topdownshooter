@@ -18,8 +18,11 @@ public:
 
 	const float SIZE = 8;
 
-	// Entity interface
+	// Entity interface stuff
+
 	SDL_FRect getFRect();
+
+	SDL_FPoint getPosition();
 
 };
 

@@ -42,8 +42,10 @@ void GameState::simulate() {
 }
 
 void GameState::simulateEnemies() {
+	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
 	for (int i = 0; i < enemies.size(); i++) {
-		enemies[i]->simulate(dt);
+		enemies[i]->simulate(dt, player->getPosition());
+		qTree->insert(enemies[i]);
 	}
 }
 

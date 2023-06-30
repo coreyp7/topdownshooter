@@ -18,3 +18,7 @@ void Projectile::simulate(float dt) {
 SDL_FRect Projectile::getFRect() {
 	return this->pos;
 }
+
+SDL_FPoint Projectile::getPosition() {
+	return SDL_FPoint{ pos.x + SIZE / 2, pos.y + SIZE / 2 };
+}

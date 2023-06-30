@@ -32,5 +32,6 @@ public:
 	void simulate(float dt); // TODO pass dt to this
 
 	SDL_FRect getFRect();
+	SDL_FPoint getPosition();
 };
 
