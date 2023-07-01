@@ -14,7 +14,7 @@ public:
 	void simulate(float dt, SDL_FPoint playerPosition);
 
 	// Entity stuff
-	SDL_FRect getFRect();
+	SDL_FRect* getFRect();
 	SDL_FPoint getPosition();
 	EntityType getEntityType();
 };

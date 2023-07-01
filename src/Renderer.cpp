@@ -47,7 +47,7 @@ void Renderer::showBackbufferClear() {
 void Renderer::renderGameState(GameState* gameState) {
 	//Setup camera for this frame, from gamestate
 	this->camera = gameState->getCamera();
-	SDL_FRect bg = { 0, 0, 3840, 2160 };
+	SDL_FRect bg = { 0, 0, 3840, 2160 }; //@hardcoded
 
 	renderTextureRelativeToCamera(testbg, &bg);
 	renderEnemies(gameState->getEnemies());
@@ -62,10 +62,10 @@ void Renderer::renderGameState(GameState* gameState) {
 ///
 
 void Renderer::renderEnemies(std::vector<Enemy*> enemies) {
-	SDL_FRect currRect;
+	SDL_FRect* currRect;
 	for (int i = 0; i < enemies.size(); i++) {
 		currRect = enemies.at(i)->getFRect();
-		renderTextureRelativeToCamera(enemyTexture, &currRect);
+		renderTextureRelativeToCamera(enemyTexture, currRect);
 	}
 }
 
@@ -82,27 +82,52 @@ void Renderer::renderTextureRelativeToCamera(
 	SDL_RenderCopyExF(renderer, texture, NULL, &relativeToCamera, 0, NULL, SDL_FLIP_NONE);
 }
 
-void Renderer::drawPointRelativeToCamera(int x, int y) {
-	SDL_RenderDrawPointF(renderer, x - camera.x, y - camera.y);
-}
-
 void Renderer::renderPlayer(Player* player) {
 	int radius = player->HITBOX_RADIUS;
 	SDL_FPoint center = player->pos;
 	SDL_FRect topLeft = { center.x - radius, center.y - radius, radius * 2, radius * 2 };
-	//SDL_RenderCopyExF(renderer, playerTexture, NULL, &topLeft, 0, NULL, SDL_FLIP_NONE);
 	this->renderTextureRelativeToCamera(playerTexture, &topLeft);
 
 	raster_circle(center, radius);
 }
 
-void Renderer::renderProjectiles(
-	std::vector<Projectile*> projectiles) {
-	SDL_FRect frect;
+void Renderer::renderProjectiles(std::vector<Projectile*> projectiles) {
+	SDL_FRect* frect;
 	for (int i = 0; i < projectiles.size(); i++) {
 		frect = projectiles.at(i)->getFRect();
-		//SDL_RenderCopyExF(renderer, playerTexture, NULL, &frect, 0, NULL, SDL_FLIP_NONE);
-		renderTextureRelativeToCamera(playerTexture, &frect);
+		renderTextureRelativeToCamera(playerTexture, frect);
+	}
+}
+
+void Renderer::drawPointRelativeToCamera(int x, int y) {
+	SDL_RenderDrawPointF(renderer, x - camera.x, y - camera.y);
+}
+
+void Renderer::drawRectRelativeToCamera(SDL_FRect rect) {
+	rect.x -= camera.x;
+	rect.y -= camera.y;
+	SDL_RenderDrawRectF(renderer, &rect);
+}
+
+// Render this QuadTree and all of its children.
+// Also draws all contained entities.
+void Renderer::drawQuadTree(QuadTree* qTree) {
+	SDL_FRect rect = { qTree->x, qTree->y, qTree->width, qTree->height };
+
+	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+	drawRectRelativeToCamera(rect);
+
+	if (qTree->isLeaf) {
+		for (int i = 0; i < qTree->points.size(); i++) {
+			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
+			drawRectRelativeToCamera(*qTree->points[i]->getFRect());
+		}
+	}
+	else {
+		drawQuadTree(qTree->nw);
+		drawQuadTree(qTree->ne);
+		drawQuadTree(qTree->sw);
+		drawQuadTree(qTree->se);
 	}
 }
 
@@ -150,33 +175,5 @@ void Renderer::raster_circle(SDL_FPoint center, float radius) //@move: could be 
 		drawPointRelativeToCamera(x0 - y, y0 + x);
 		drawPointRelativeToCamera(x0 + y, y0 - x);
 		drawPointRelativeToCamera(x0 - y, y0 - x);
-	}
-}
-
-void Renderer::drawRectRelativeToCamera(SDL_FRect rect) {
-	rect.x -= camera.x;
-	rect.y -= camera.y;
-	SDL_RenderDrawRectF(renderer, &rect);
-}
-
-// Render this QuadTree and all of its children.
-// Also draws all contained entities.
-void Renderer::drawQuadTree(QuadTree* qTree) {
-	SDL_FRect rect = { qTree->x, qTree->y, qTree->width, qTree->height };
-
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
-	drawRectRelativeToCamera(rect);
-
-	if (qTree->isLeaf) {
-		for (int i = 0; i < qTree->points.size(); i++) {
-			SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-			drawRectRelativeToCamera(qTree->points[i]->getFRect());
-		}
-	}
-	else {
-		drawQuadTree(qTree->nw);
-		drawQuadTree(qTree->ne);
-		drawQuadTree(qTree->sw);
-		drawQuadTree(qTree->se);
 	}
 }

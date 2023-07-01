@@ -20,7 +20,7 @@ public:
 
 	// Entity interface stuff
 
-	SDL_FRect getFRect();
+	SDL_FRect* getFRect();
 
 	SDL_FPoint getPosition();
 

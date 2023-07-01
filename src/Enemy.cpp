@@ -45,8 +45,8 @@ void Enemy::simulate(float dt, SDL_FPoint playerPosition) {
 	rect.y += yVel * dt;
 }
 
-SDL_FRect Enemy::getFRect() {
-	return rect;
+SDL_FRect* Enemy::getFRect() {
+	return &rect;
 }
 
 SDL_FPoint Enemy::getPosition() {

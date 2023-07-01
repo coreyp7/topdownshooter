@@ -16,9 +16,12 @@ GameState::GameState(Player* player) {
 	/*enemies.push_back(new Enemy(200, 200, 75, 75));
 	enemies.push_back(new Enemy(300, 200, 75, 75));
 	enemies.push_back(new Enemy(400, 200, 75, 75));*/
-	entities.push_back(new Enemy(200, 200, 75, 75));
+	/*entities.push_back(new Enemy(200, 200, 75, 75));
 	entities.push_back(new Enemy(300, 200, 75, 75));
-	entities.push_back(new Enemy(400, 200, 75, 75));
+	entities.push_back(new Enemy(400, 200, 75, 75));*/
+	entities.push_back(new Enemy(300, 200, 75, 75));
+	entities.push_back(new Enemy(300, 200, 75, 75));
+	entities.push_back(new Enemy(300, 200, 75, 75));
 	entityIdMap.insert({ player->id, player });
 	entityIdMap.insert({ entities[0]->id, entities[0] });
 	entityIdMap.insert({ entities[1]->id, entities[1] });
@@ -78,7 +81,6 @@ void GameState::resolveCollisions() {
 			//	printf("Enemy %i collided with projectile %i\n", entity1Id, entity2Id);
 			//}
 			int deletedEntities = resolveEntityCollision(entity1, entity2);
-			//i -= deletedEntities;
 			i -= deletedEntities;
 		}
 	}
@@ -269,15 +271,35 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 		// will handle ENEMY, ENEMY_PROJECTILE
 		break;
 	case ENEMY:
-		// call function for enemy behavior
-		// will handle PROJECTILE
 		if (entity2->getEntityType() == PROJECTILE) {
 			removeEntity(entity1);
-
 			removeEntity(entity2);
-
 			return 1;
-			//printf("Collision between enemy %i and projectile %i\n", entity1->id, entity2->id);
+		}
+		else if (entity2->getEntityType() == ENEMY) {
+			// Prevent these two from colliding; fix their position to stay out of each other
+			// @todo: move into function this is massive.
+			float xDistance, yDistance;
+			if (entity1->getFRect()->x < entity2->getFRect()->x) {
+				xDistance = ((entity1->getFRect()->x + entity1->getFRect()->w) - entity2->getFRect()->x);
+			}
+			else {
+				xDistance = ((entity2->getFRect()->x + entity2->getFRect()->w) - entity1->getFRect()->x);
+			}
+
+			if (entity1->getFRect()->y < entity2->getFRect()->y) {
+				yDistance = ((entity1->getFRect()->y + entity1->getFRect()->h) - entity2->getFRect()->y);
+			}
+			else {
+				yDistance = ((entity2->getFRect()->y + entity2->getFRect()->h) - entity1->getFRect()->y);
+			}
+
+			if (xDistance > yDistance) {
+				entity1->getFRect()->y -= yDistance;
+			}
+			else {
+				entity2->getFRect()->x -= xDistance;
+			}
 		}
 		break;
 	case PROJECTILE:

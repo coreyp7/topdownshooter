@@ -12,7 +12,7 @@ public:
 
 	virtual EntityType getEntityType() = 0;
 
-	virtual SDL_FRect getFRect() = 0; // TODO: this should return a pointer
+	virtual SDL_FRect* getFRect() = 0; // TODO: this should return a pointer
 
 	// Return center point of this entity.
 	virtual SDL_FPoint getPosition() = 0;

@@ -19,6 +19,8 @@ public:
 
 	int xVel, yVel;
 
+	SDL_FRect rect; // this is a hacky fix, needs to stay if this abides by Entity interface
+
 	//SDL_FRect pos; // center of box? not sure yet
 	SDL_FPoint pos;
 
@@ -31,7 +33,7 @@ public:
 
 	void simulate(float dt); // TODO pass dt to this
 
-	SDL_FRect getFRect();
+	SDL_FRect* getFRect();
 	SDL_FPoint getPosition();
 	EntityType getEntityType();
 };

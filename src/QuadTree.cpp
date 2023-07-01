@@ -95,7 +95,7 @@ void QuadTree::insert(Entity* point) {
 
 // Check if an entity is inside of this QuadTree.
 bool QuadTree::contains(Entity* point) {
-	SDL_FRect rect = point->getFRect();
+	SDL_FRect rect = *point->getFRect();
 
 	bool colX = ((rect.x + rect.w) >= x) && ((x + width) >= rect.x);
 	bool colY = ((rect.y + rect.h) >= y) && ((y + height) >= rect.y);
@@ -171,8 +171,8 @@ std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* e
 }
 
 bool QuadTree::checkCollision(Entity* entity1, Entity* entity2) {
-	SDL_FRect rect1 = entity1->getFRect();
-	SDL_FRect rect2 = entity2->getFRect();
+	SDL_FRect rect1 = *entity1->getFRect();
+	SDL_FRect rect2 = *entity2->getFRect();
 
 	bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
 	bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
