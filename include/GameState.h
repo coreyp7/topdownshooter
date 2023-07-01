@@ -22,10 +22,10 @@ public:
 	void simulate();
 
 	Player* getPlayer();
-	std::vector<Projectile*>* getProjectiles();
+	std::vector<Projectile*> getProjectiles();
 	SDL_FRect getCamera();
 	QuadTree* getQuadTree();
-	std::vector<Enemy*>* getEnemies();
+	std::vector<Enemy*> getEnemies();
 
 	// Shoots projectile from player to the specified point.
 	void playerShootBullet(int x, int y);
@@ -35,8 +35,9 @@ private:
 	Player* player;
 	float dt;
 	float lastUpdate;
-	std::vector<Projectile*> projectiles;
-	std::vector<Enemy*> enemies;
+	/*std::vector<Projectile*> projectiles;
+	std::vector<Enemy*> enemies;*/
+	std::vector<Entity*> entities;
 
 	std::unordered_map<Uint16, Entity*> entityIdMap;
 
@@ -56,6 +57,8 @@ private:
 	bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2);
 
 	void resolveCollisions();
+	int resolveEntityCollision(Entity* entity1, Entity* entity2);
 
 	Entity* getEntityById(Uint16 id);
+	void removeEntity(Entity* entity);
 };

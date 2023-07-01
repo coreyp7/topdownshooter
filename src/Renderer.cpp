@@ -61,10 +61,10 @@ void Renderer::renderGameState(GameState* gameState) {
 ///////////////// Helper functions. /////////////////
 ///
 
-void Renderer::renderEnemies(std::vector<Enemy*>* enemies) {
+void Renderer::renderEnemies(std::vector<Enemy*> enemies) {
 	SDL_FRect currRect;
-	for (int i = 0; i < enemies->size(); i++) {
-		currRect = enemies->at(i)->getFRect();
+	for (int i = 0; i < enemies.size(); i++) {
+		currRect = enemies.at(i)->getFRect();
 		renderTextureRelativeToCamera(enemyTexture, &currRect);
 	}
 }
@@ -97,10 +97,10 @@ void Renderer::renderPlayer(Player* player) {
 }
 
 void Renderer::renderProjectiles(
-	std::vector<Projectile*>* projectiles) {
+	std::vector<Projectile*> projectiles) {
 	SDL_FRect frect;
-	for (int i = 0; i < projectiles->size(); i++) {
-		frect = projectiles->at(i)->pos;
+	for (int i = 0; i < projectiles.size(); i++) {
+		frect = projectiles.at(i)->getFRect();
 		//SDL_RenderCopyExF(renderer, playerTexture, NULL, &frect, 0, NULL, SDL_FLIP_NONE);
 		renderTextureRelativeToCamera(playerTexture, &frect);
 	}

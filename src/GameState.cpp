@@ -13,13 +13,16 @@ GameState::GameState(Player* player) {
 	// Later, this would either:
 	// - be spawned in dynamically like a hoarde type game
 	// - loaded into a level ala a tile in the tilemap
-	enemies.push_back(new Enemy(200, 200, 75, 75));
+	/*enemies.push_back(new Enemy(200, 200, 75, 75));
 	enemies.push_back(new Enemy(300, 200, 75, 75));
-	enemies.push_back(new Enemy(400, 200, 75, 75));
+	enemies.push_back(new Enemy(400, 200, 75, 75));*/
+	entities.push_back(new Enemy(200, 200, 75, 75));
+	entities.push_back(new Enemy(300, 200, 75, 75));
+	entities.push_back(new Enemy(400, 200, 75, 75));
 	entityIdMap.insert({ player->id, player });
-	entityIdMap.insert({ enemies[0]->id, enemies[0] });
-	entityIdMap.insert({ enemies[1]->id, enemies[1] });
-	entityIdMap.insert({ enemies[2]->id, enemies[2] });
+	entityIdMap.insert({ entities[0]->id, entities[0] });
+	entityIdMap.insert({ entities[1]->id, entities[1] });
+	entityIdMap.insert({ entities[2]->id, entities[2] });
 }
 
 GameState::~GameState() {
@@ -50,8 +53,8 @@ void GameState::simulate() {
 //TODO: should change the name of this function. I'd name this something like
 // 'processAndResolveCollisions'
 void GameState::resolveCollisions() {
-	for (int i = 0; i < enemies.size(); i++) {
-		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(enemies[i]);
+	for (int i = 0; i < entities.size(); i++) {
+		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(entities[i]);
 		std::set<std::tuple<Uint16, Uint16>>::iterator itr;
 
 		for(itr = collisions.begin(); itr != collisions.end(); itr++){
@@ -70,11 +73,13 @@ void GameState::resolveCollisions() {
 			}
 
 			// TODO: send this to function for processing and resolving collision between both entities.
-			if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
-				// resolve their collision
-				printf("Enemy %i collided with projectile %i\n", entity1Id, entity2Id);
-				
-			}
+			//if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
+			//	// resolve their collision
+			//	printf("Enemy %i collided with projectile %i\n", entity1Id, entity2Id);
+			//}
+			int deletedEntities = resolveEntityCollision(entity1, entity2);
+			//i -= deletedEntities;
+			i -= deletedEntities;
 		}
 	}
 
@@ -84,27 +89,33 @@ void GameState::resolveCollisions() {
 
 void GameState::simulateEnemies() {
 	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
-	for (int i = 0; i < enemies.size(); i++) {
-		enemies[i]->simulate(dt, player->getPosition());
-		qTree->insert(enemies[i]);
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->getEntityType() == ENEMY) {
+			Enemy* enemy = (Enemy*)entities[i];
+			enemy->simulate(dt, player->getPosition());
+			qTree->insert(entities[i]);
+		}
 	}
 }
 
 void GameState::simulateProjectiles() {
 	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
-	for (int i = 0; i < projectiles.size(); i++) {
-		projectiles[i]->simulate(dt);
-		if (!checkCollision(&qTreeRect, &projectiles[i]->pos)) {
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->getEntityType() != PROJECTILE) continue;
+
+		Projectile* projectile = (Projectile*)entities[i];
+		projectile->simulate(dt);
+		if (!checkCollision(&qTreeRect, &projectile->pos)) {
 			// Delete if its outside the quadtree (and thus, the entire level)
-			printf("Deleted projectile at (%f,%f)\n", projectiles[i]->pos.x, projectiles[i]->pos.y);
-			delete projectiles[i];
-			projectiles.erase(projectiles.begin() + i);
+			printf("Deleted projectile at (%f,%f)\n", projectile->pos.x, projectile->pos.y);
+			delete projectile;
+			entities.erase(entities.begin() + i);
 			i--; // move our i back so that we don't skip a variable
 			// @eh: could have this be done outside this loop, would maybe be clearer.
 			// seems to be working, so leaving for now.
 		}
 		else {
-			qTree->insert(projectiles[i]);
+			qTree->insert(projectile);
 
 			// TODO: check for collisions with this
 		}
@@ -115,12 +126,28 @@ Player* GameState::getPlayer() {
 	return player;
 }
 
-std::vector<Projectile*>* GameState::getProjectiles() {
-	return &projectiles;
+std::vector<Projectile*> GameState::getProjectiles() {
+	//return &projectiles;
+	std::vector<Projectile*> projectiles;
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->getEntityType() == PROJECTILE) {
+			Projectile* projectile = (Projectile*)entities[i];
+			projectiles.push_back(projectile);
+		}
+	}
+	return projectiles;
 }
 
-std::vector<Enemy*>* GameState::getEnemies() {
-	return &enemies;
+std::vector<Enemy*> GameState::getEnemies() {
+	/*return &enemies;*/
+	std::vector<Enemy*> enemies;
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->getEntityType() == ENEMY) {
+			Enemy* enemy = (Enemy*)entities[i];
+			enemies.push_back(enemy);
+		}
+	}
+	return enemies;
 }
 
 SDL_FRect GameState::getCamera() {
@@ -199,7 +226,8 @@ void GameState::playerShootBullet(int x, int y) {
 	float yVel = yUnitVector * player->PROJECTILE_SPEED;
 
 	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel);
-	projectiles.push_back(newProj);
+	//projectiles.push_back(newProj);
+	entities.push_back(newProj);
 
 	// @refactor: could put this stuff into its own function
 	// so if the id is invalid, it doesn't crash.
@@ -227,6 +255,52 @@ bool GameState::checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
 	bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
 
 	return xCollision && yCollision;
+}
+
+int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
+	//if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
+	//	// resolve their collision
+	//	printf("Enemy %i collided with projectile %i\n", entity1->id, entity2->id);
+	//}
+
+	switch (entity1->getEntityType()) {
+	case PLAYER:
+		// call function for player behavior
+		// will handle ENEMY, ENEMY_PROJECTILE
+		break;
+	case ENEMY:
+		// call function for enemy behavior
+		// will handle PROJECTILE
+		if (entity2->getEntityType() == PROJECTILE) {
+			removeEntity(entity1);
+
+			removeEntity(entity2);
+
+			return 1;
+			//printf("Collision between enemy %i and projectile %i\n", entity1->id, entity2->id);
+		}
+		break;
+	case PROJECTILE:
+		// call function for projectile behavior
+		// will handle ENEMY_PROJECTILE (cancel each other out?)
+		break;
+	// Any after this has already been handled.
+	}
+	return 0;
+}
+
+// Removes this entity from the map, aswell as deleting the entity and setting nullptr.
+void GameState::removeEntity(Entity* entity) {
+	for (int i = 0; i < entities.size(); i++) {
+		if (entities[i]->id == entity->id) {
+			entities.erase(entities.begin()+i);
+			entityIdMap.erase(entity->id);
+			qTree->remove(entity);
+			delete entity;
+			entity = nullptr;
+			return;
+		}
+	}
 }
 
 // All the specific private stuff will be down here.

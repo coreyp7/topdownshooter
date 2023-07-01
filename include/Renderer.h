@@ -34,9 +34,9 @@ private:
 
 	void renderPlayer(Player* player);
 
-	void renderProjectiles(std::vector<Projectile*>* projectiles);
+	void renderProjectiles(std::vector<Projectile*> projectiles);
 
-	void renderEnemies(std::vector<Enemy*>* enemies);
+	void renderEnemies(std::vector<Enemy*> enemies);
 
 	void raster_circle(SDL_FPoint center, float radius);
 

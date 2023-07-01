@@ -211,4 +211,61 @@ bool QuadTree::checkCollision(Entity* entity1, Entity* entity2) {
 	return xCollision && yCollision;
 }
 
+//TODO: MOVE THIS TO A GENERAL UTIL COLLISION FILE PLEASE FUCKING HELL
+bool QuadTree::FRectCollision(SDL_FRect rect1, SDL_FRect rect2) {
+	bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
+	bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
+
+	return xCollision && yCollision;
+}
+
+bool QuadTree::remove(Entity* entity) {
+	SDL_FRect thisNode = { x, y, width, height };
+	bool successful = true;
+
+	// if its not a leaf, that means its the encompassing QuadTree.
+	// otherwise, its a leaf which will delete any instances it can
+	// find of the entity. Kindof a werider semi-recursive method.
+	if (!isLeaf) {
+		std::vector<QuadTree*> leafsToRemoveFrom = getLeafs(entity);
+
+		for (int i = 0; i < leafsToRemoveFrom.size(); i++) {
+			QuadTree* leaf = leafsToRemoveFrom[i];
+			if (leaf->remove(entity) == false) {
+				successful = false;
+			}
+		}
+		return successful;
+	}
+	else {
+		for (int i = 0; i < points.size(); i++) {
+			if (points[i]->id == entity->id) {
+				points.erase(points.begin() + i);
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/*if (isLeaf) {
+		if (this->insideOf(entity)) {
+			for (int i = 0; i < points.size(); i++) {
+				if (points[i]->id == entity->id) {
+					points.erase(points.begin() + i);
+					return true;
+				}
+			}
+		}
+	}
+	else {
+		if (this->insideOf(entity)) {
+
+		}
+	}*/
+
+	return false; // ???????
+}
+
+
+
 

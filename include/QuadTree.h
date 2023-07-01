@@ -42,6 +42,8 @@ public:
 	QuadTree(float x, float y, float width, float height);
 	~QuadTree();
 
+	bool remove(Entity* entity);
+
 	void insert(Entity* point);
 
 	// For confirming if a point belongs in this QuadTree (square).
@@ -55,6 +57,7 @@ public:
 	void draw(Renderer* renderer);
 
 	//void update();
+	bool FRectCollision(SDL_FRect rect1, SDL_FRect rect2);
 
   // Obtain list of all leaf nodes which thie provided entity is inside of.
   std::vector<QuadTree*> getLeafs(Entity* dot);
