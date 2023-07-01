@@ -202,6 +202,11 @@ void GameState::playerShootBullet(int x, int y) {
 	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel);
 	projectiles.push_back(newProj);
 
+	// @refactor: could put this stuff into its own function
+	// so if the id is invalid, it doesn't crash.
+	entityIdMap.insert({ newProj->id, newProj });
+	
+
 	//qTree->insert(new)
 }
 
