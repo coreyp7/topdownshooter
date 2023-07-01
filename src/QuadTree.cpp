@@ -163,65 +163,52 @@ std::vector<QuadTree*> QuadTree::getLeafs(Entity* dot) {
 	return trees;
 }
 
-// TODO: leaving this unfinished until I need it again.
-
-// TODO: this function is ugly and should be split up.
-// I don't like how indented this function is.
-// Could be a recursive thing where QuadTree figures out from its children or
-// something like that.
+// Returns a set containing tuple pairs of entity ids,
+// where ids indicate which entities collided with each other.
 std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* entity) {
 	std::set<std::tuple<Uint16, Uint16>> collisionList;
 
-	// Get all the leafs which contain curr entity. (max of 4)
+	// Get all the leafs which contain entity. (max of 4)
 	std::vector<QuadTree*> currentEntityLeafs = getLeafs(entity);
-
-	//// Keep track of rects collided with to avoid duplicates.
-	//std::set<int> alreadyCollidedEntities;
 
 	for (int j = 0; j < currentEntityLeafs.size(); j++) {
 		QuadTree* currLeaf = currentEntityLeafs[j];
 
-	//	// Iterate through other entities inside of this leaf
-	//	// and check for collision with 'curr' rect.
+		//	Iterate through other entities inside of this leaf
+		//	and check for collision with 'curr' rect.
 		for (int k = 0; k < currLeaf->points.size(); k++) {
-			//*comparisons = *comparisons + 1;
 			Entity* otherEntity = currLeaf->points[k];
 
-			if (entity->id != otherEntity->id) {
-				// Add ordered tuple containing the two ids to collision vec.
-				std::tuple<Uint16, Uint16> newtuple;
-				//if (entity->id < otherEntity->id) { //@test: should see if it automatically sorts for us
-				//	newtuple = { entity->id, otherEntity->id };
-				//}
-				//else {
-				//	newtuple = { otherEntity->id, entity->id };
-				//}
+			if (entity->id == otherEntity->id) {
+				continue; // ignore comparing entity with itself
+			}
 
-				// LOL need to check that there's actually a collision.
-				bool collision = checkCollision(entity, otherEntity);
-				if (collision) {
-					if (entity->getEntityType() < otherEntity->getEntityType()) {
-						newtuple = { entity->id, otherEntity->id };
-					}
-					else {
-						newtuple = { otherEntity->id, entity->id };
-					}
-					collisionList.insert(newtuple);
+			// If there's a collision between the two entities,
+			// add ordered tuple containing the two ids to collision vec.
+			bool collision = checkCollision(entity, otherEntity);
+			if (collision) {
+				std::tuple<Uint16, Uint16> newtuple;
+				if (entity->getEntityType() < otherEntity->getEntityType()) {
+					newtuple = { entity->id, otherEntity->id };
 				}
+				else {
+					newtuple = { otherEntity->id, entity->id };
+				}
+				collisionList.insert(newtuple);
 			}
 		}
 	}
 	return collisionList;
 }
 
-bool QuadTree::checkCollision(Entity* entity1, Entity* entity2){
-  SDL_FRect rect1 = entity1->getFRect();
-  SDL_FRect rect2 = entity2->getFRect();
+bool QuadTree::checkCollision(Entity* entity1, Entity* entity2) {
+	SDL_FRect rect1 = entity1->getFRect();
+	SDL_FRect rect2 = entity2->getFRect();
 
-  bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
-  bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
+	bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
+	bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
 
-  return xCollision && yCollision;
+	return xCollision && yCollision;
 }
 
 

@@ -47,36 +47,29 @@ void GameState::simulate() {
 	lastUpdate = SDL_GetTicks();
 }
 
+//TODO: should change the name of this function. I'd name this something like
+// 'processAndResolveCollisions'
 void GameState::resolveCollisions() {
-	//RIGHT NOW ITS ONLY ENEMIES; FIX THIS AFTER ITS TESTED.
 	for (int i = 0; i < enemies.size(); i++) {
 		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(enemies[i]);
 		std::set<std::tuple<Uint16, Uint16>>::iterator itr;
-		//for (int j = 0; j < collisions.size(); j++) {
+
 		for(itr = collisions.begin(); itr != collisions.end(); itr++){
 			std::tuple<Uint16, Uint16> currentCollisionIds = *itr;
 			Uint16 entity1Id = std::get<0>(currentCollisionIds);
 			Uint16 entity2Id = std::get<1>(currentCollisionIds);
-			/*Entity* entity1 = entityIdMap.find(entity1Id)->second;
-			Entity* entity2 = entityIdMap.find(entity2Id)->second;*/
 			Entity* entity1 = getEntityById(entity1Id);
 			Entity* entity2 = getEntityById(entity2Id);
-			if (entity1 == nullptr && entity2 == nullptr) {
+
+			if (entity1 == nullptr || entity2 == nullptr) {
+				// if either were invalid, then ignore iteration and log in console
+				printf(
+					"WARNING: either %i or %i return nullptr from id map. Cannot handle collision.\n",
+					entity1Id, entity2Id);
 				continue;
 			}
 
-			//NOTE TO COREY:
-			// OK: that error from before (assertion error) happens when a projectile hits the enemy.
-			// However, enemies/player can collide with each other.
-			// I think this is because projectiles aren't being added to the id hash table.
-			// Do that and then commit.
-
-			/*std::tuple<Entity*, Entity*> orderedEntities;
-			if (entity1->getEntityType() > entity2->getEntityType()) {
-
-			}*/
-			// In future, this will be more complicated, but for now, just have it resolve
-			// enemies colliding with other enemies.
+			// TODO: send this to function for processing and resolving collision between both entities.
 			if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
 				// resolve their collision
 				printf("Enemy %i collided with projectile %i\n", entity1Id, entity2Id);
