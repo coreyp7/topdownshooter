@@ -56,4 +56,6 @@ private:
 	bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2);
 
 	void resolveCollisions();
+
+	Entity* getEntityById(Uint16 id);
 };

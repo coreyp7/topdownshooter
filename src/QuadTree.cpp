@@ -190,24 +190,24 @@ std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* e
 			if (entity->id != otherEntity->id) {
 				// Add ordered tuple containing the two ids to collision vec.
 				std::tuple<Uint16, Uint16> newtuple;
-				if (entity->id > otherEntity->id) { //@test: should see if it automatically sorts for us
-					newtuple = { entity->id, otherEntity->id };
-				}
-				else {
-					newtuple = { otherEntity->id, entity->id };
-				}
+				//if (entity->id < otherEntity->id) { //@test: should see if it automatically sorts for us
+				//	newtuple = { entity->id, otherEntity->id };
+				//}
+				//else {
+				//	newtuple = { otherEntity->id, entity->id };
+				//}
 
-				//TODO: this should be a set
-				//collisionList.push_back(newtuple);
-				collisionList.insert(newtuple);
-	//			// Ensure otherEntity hasn't been collided with by this rect already.
-	//			if (!alreadyCollidedEntities.contains(otherEntity->id)) {
-	//				bool collision = checkCollision(entity, otherEntity);
-	//				if (collision) {
-	//					*collisions = *collisions + 1;
-	//						alreadyCollidedEntities.insert(otherEntity->id);
-	//				}
-	//			}
+				// LOL need to check that there's actually a collision.
+				bool collision = checkCollision(entity, otherEntity);
+				if (collision) {
+					if (entity->getEntityType() < otherEntity->getEntityType()) {
+						newtuple = { entity->id, otherEntity->id };
+					}
+					else {
+						newtuple = { otherEntity->id, entity->id };
+					}
+					collisionList.insert(newtuple);
+				}
 			}
 		}
 	}

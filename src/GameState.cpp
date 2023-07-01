@@ -57,8 +57,13 @@ void GameState::resolveCollisions() {
 			std::tuple<Uint16, Uint16> currentCollisionIds = *itr;
 			Uint16 entity1Id = std::get<0>(currentCollisionIds);
 			Uint16 entity2Id = std::get<1>(currentCollisionIds);
-			Entity* entity1 = entityIdMap.find(entity1Id)->second;
-			Entity* entity2 = entityIdMap.find(entity2Id)->second;
+			/*Entity* entity1 = entityIdMap.find(entity1Id)->second;
+			Entity* entity2 = entityIdMap.find(entity2Id)->second;*/
+			Entity* entity1 = getEntityById(entity1Id);
+			Entity* entity2 = getEntityById(entity2Id);
+			if (entity1 == nullptr && entity2 == nullptr) {
+				continue;
+			}
 
 			//NOTE TO COREY:
 			// OK: that error from before (assertion error) happens when a projectile hits the enemy.
@@ -72,9 +77,10 @@ void GameState::resolveCollisions() {
 			}*/
 			// In future, this will be more complicated, but for now, just have it resolve
 			// enemies colliding with other enemies.
-			if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == ENEMY) {
+			if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
 				// resolve their collision
-				//printf("Enemy %i collided with %i\n", entity1Id, entity2Id);
+				printf("Enemy %i collided with projectile %i\n", entity1Id, entity2Id);
+				
 			}
 		}
 	}
@@ -208,6 +214,14 @@ void GameState::playerShootBullet(int x, int y) {
 	
 
 	//qTree->insert(new)
+}
+Entity* GameState::getEntityById(Uint16 id) {
+	auto entry = entityIdMap.find(id);
+	
+	if (entry != entityIdMap.end()) {
+		return entry->second;
+	}
+	return nullptr;
 }
 
 bool GameState::checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
