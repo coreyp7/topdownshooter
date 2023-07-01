@@ -1,10 +1,10 @@
 #include "QuadTree.h"
 
 // Set defaults to static limit stuff (these are good values I've found).
-int QuadTree::LIMIT = 4;
-int QuadTree::DEPTH_LIMIT = 5;
-//int QuadTree::LIMIT = 1;
-//int QuadTree::DEPTH_LIMIT = 7;
+//int QuadTree::LIMIT = 4;
+//int QuadTree::DEPTH_LIMIT = 5;
+int QuadTree::LIMIT = 1;
+int QuadTree::DEPTH_LIMIT = 7;
 
 QuadTree::QuadTree(float x, float y, float width, float height) {
 	nw = nullptr;
@@ -33,16 +33,16 @@ void QuadTree::insert(Entity* point) {
 
 	// First check if this isn't a leaf node.
 	if (!isLeaf) {
-		if (nw->insideOf(point)) {
+		if (nw->contains(point)) {
 			nw->insert(point);
 		}
-		if (ne->insideOf(point)) {
+		if (ne->contains(point)) {
 			ne->insert(point);
 		}
-		if (sw->insideOf(point)) {
+		if (sw->contains(point)) {
 			sw->insert(point);
 		}
-		if (se->insideOf(point)) {
+		if (se->contains(point)) {
 			se->insert(point);
 		}
 	}
@@ -73,16 +73,16 @@ void QuadTree::insert(Entity* point) {
 
 			// Add entity to each leaf it belongs to.
 			for (int i = 0; i < points.size(); i++) {
-				if (nw->insideOf(points[i])) {
+				if (nw->contains(points[i])) {
 					nw->insert(points[i]);
 				}
-				if (ne->insideOf(points[i])) {
+				if (ne->contains(points[i])) {
 					ne->insert(points[i]);
 				}
-				if (sw->insideOf(points[i])) {
+				if (sw->contains(points[i])) {
 					sw->insert(points[i]);
 				}
-				if (se->insideOf(points[i])) {
+				if (se->contains(points[i])) {
 					se->insert(points[i]);
 				}
 			}
@@ -94,43 +94,14 @@ void QuadTree::insert(Entity* point) {
 }
 
 // Check if an entity is inside of this QuadTree.
-bool QuadTree::insideOf(Entity* point) {
-	/*SDL_FRect* rect = point->rect;*/
+bool QuadTree::contains(Entity* point) {
 	SDL_FRect rect = point->getFRect();
 
-	/*bool colX = ((rect->x + rect->w) >= x) && ((x + width) >= rect->x);
-	bool colY = ((rect->y + rect->h) >= y) && ((y + height) >= rect->y);*/
 	bool colX = ((rect.x + rect.w) >= x) && ((x + width) >= rect.x);
 	bool colY = ((rect.y + rect.h) >= y) && ((y + height) >= rect.y);
 
 	return colX && colY;
 }
-
-// Render this QuadTree and all of its children.
-// Also draws all contained entities.
-void QuadTree::draw(Renderer* renderer) {
-	SDL_FRect rect = { x,y,width,height };
-
-	/*SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-	SDL_RenderDrawRect(renderer, &rect);
-	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);*/
-	//renderer->drawRectRelativeToCamera(rect);
-
-	if (isLeaf) {
-		for (int i = 0; i < points.size(); i++) {
-			//SDL_RenderDrawRectF(renderer, points[i]->rect);
-			//SDL_RenderDrawRectF(renderer, &points[i]->pos);
-			//renderer->drawRectRelativeToCamera(rect);
-		}
-	}
-	else {
-		nw->draw(renderer);
-		ne->draw(renderer);
-		sw->draw(renderer);
-		se->draw(renderer);
-	}
-}
-
 
 // Will return all leafs which the passed in Entity
 // is contained in. (An object can be in more than one leaf at a time).
@@ -140,19 +111,19 @@ std::vector<QuadTree*> QuadTree::getLeafs(Entity* dot) {
   // Else, return yourself in a vector.
 	std::vector<QuadTree*> trees;
 	if (!isLeaf) {
-		if (nw->insideOf(dot)) {
+		if (nw->contains(dot)) {
 			std::vector<QuadTree*> newTrees = nw->getLeafs(dot);
 			trees.insert(trees.end(), newTrees.begin(), newTrees.end());
 		}
-		if (ne->insideOf(dot)) {
+		if (ne->contains(dot)) {
 			std::vector<QuadTree*> newTrees = ne->getLeafs(dot);
 			trees.insert(trees.end(), newTrees.begin(), newTrees.end());
 		}
-		if (sw->insideOf(dot)) {
+		if (sw->contains(dot)) {
 			std::vector<QuadTree*> newTrees = sw->getLeafs(dot);
 			trees.insert(trees.end(), newTrees.begin(), newTrees.end());
 		}
-		if (se->insideOf(dot)) {
+		if (se->contains(dot)) {
 			std::vector<QuadTree*> newTrees = se->getLeafs(dot);
 			trees.insert(trees.end(), newTrees.begin(), newTrees.end());
 		}
@@ -163,8 +134,6 @@ std::vector<QuadTree*> QuadTree::getLeafs(Entity* dot) {
 	return trees;
 }
 
-// Returns a set containing tuple pairs of entity ids,
-// where ids indicate which entities collided with each other.
 std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* entity) {
 	std::set<std::tuple<Uint16, Uint16>> collisionList;
 
@@ -180,7 +149,7 @@ std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* e
 			Entity* otherEntity = currLeaf->points[k];
 
 			if (entity->id == otherEntity->id) {
-				continue; // ignore comparing entity with itself
+				continue; // ignore; comparing entity with itself
 			}
 
 			// If there's a collision between the two entities,
@@ -211,14 +180,6 @@ bool QuadTree::checkCollision(Entity* entity1, Entity* entity2) {
 	return xCollision && yCollision;
 }
 
-//TODO: MOVE THIS TO A GENERAL UTIL COLLISION FILE PLEASE FUCKING HELL
-bool QuadTree::FRectCollision(SDL_FRect rect1, SDL_FRect rect2) {
-	bool xCollision = (((rect1.x + rect1.w) >= (rect2.x)) && ((rect2.x + rect2.w) >= (rect1.x)));
-	bool yCollision = (((rect1.y + rect1.h) >= (rect2.y)) && ((rect2.y + rect2.h) >= (rect1.y)));
-
-	return xCollision && yCollision;
-}
-
 bool QuadTree::remove(Entity* entity) {
 	SDL_FRect thisNode = { x, y, width, height };
 	bool successful = true;
@@ -226,6 +187,8 @@ bool QuadTree::remove(Entity* entity) {
 	// if its not a leaf, that means its the encompassing QuadTree.
 	// otherwise, its a leaf which will delete any instances it can
 	// find of the entity. Kindof a werider semi-recursive method.
+	// Could be split into two methods actually...
+	// Only called from outside the QuadTree.
 	if (!isLeaf) {
 		std::vector<QuadTree*> leafsToRemoveFrom = getLeafs(entity);
 
@@ -247,25 +210,31 @@ bool QuadTree::remove(Entity* entity) {
 		return false;
 	}
 
-	/*if (isLeaf) {
-		if (this->insideOf(entity)) {
-			for (int i = 0; i < points.size(); i++) {
-				if (points[i]->id == entity->id) {
-					points.erase(points.begin() + i);
-					return true;
-				}
-			}
-		}
-	}
-	else {
-		if (this->insideOf(entity)) {
-
-		}
-	}*/
-
-	return false; // ???????
+	return false; // ??????? it shouldn't ever reach here lol
 }
 
 
-
+// Legacy function from original demo; keeping for convenience.
+//void QuadTree::draw(Renderer* renderer) {
+//	SDL_FRect rect = { x,y,width,height };
+//
+//	/*SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+//	SDL_RenderDrawRect(renderer, &rect);
+//	SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);*/
+//	//renderer->drawRectRelativeToCamera(rect);
+//
+//	if (isLeaf) {
+//		for (int i = 0; i < points.size(); i++) {
+//			//SDL_RenderDrawRectF(renderer, points[i]->rect);
+//			//SDL_RenderDrawRectF(renderer, &points[i]->pos);
+//			//renderer->drawRectRelativeToCamera(rect);
+//		}
+//	}
+//	else {
+//		nw->draw(renderer);
+//		ne->draw(renderer);
+//		sw->draw(renderer);
+//		se->draw(renderer);
+//	}
+//}
 

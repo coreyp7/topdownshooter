@@ -10,63 +10,58 @@ class Renderer;  // forward declaration that should only be needed for debugging
 
 class QuadTree {
 public:
-
-  // These settings are the best I've found so far.
-  // LIMIT=4, DEPTH_LIMIT=5.
-
-  // LIMIT: max count of rects in a QuadTree
-  // DEPTH_LIMIT: maximum depth that an entire QuadTree can have.
-  static int LIMIT, DEPTH_LIMIT;
+	// LIMIT: max count of rects in a QuadTree
+	// DEPTH_LIMIT: maximum depth that an entire QuadTree can have.
+	static int LIMIT, DEPTH_LIMIT; // values declared in cpp file
 
 	// Pointers to all children of this 'node'. 
+	// @refactor: i shouldve just made this a list.
 	QuadTree* nw;
 	QuadTree* ne;
 	QuadTree* sw;
 	QuadTree* se;
 
 	// Leaving for convenience to easily check if this is a leaf 
-  // (and thus, all children references are nullptr).
+	// (if true, all children references are nullptr).
 	bool isLeaf;
 
-  // Entities inside this QuadTree.
-  // NOTE: only contains entities if isLeaf==true.
+	// Entities inside this QuadTree.
+	// NOTE: only contains entities if isLeaf==true.
 	std::vector<Entity*> points;
 
 	// Position of this QuadTree square (from top left).
+	// @refactor: could make this an FRect.
 	int x, y, width, height;
 
-  // Used to determine "how deep" we are down the tree.
-  // Maximum depth is specified by static DEPTH_LIMIT.
-  int depth;
+	// Used to determine "how deep" we are down the tree.
+	// Maximum depth is specified by static DEPTH_LIMIT.
+	int depth;
 
+	// @todo: put depth of quadtree in constructor
+	// instead of manually setting it LOL
 	QuadTree(float x, float y, float width, float height);
 	~QuadTree();
 
+	// NOTE: its your job to delete the entity still after calling this.
 	bool remove(Entity* entity);
 
 	void insert(Entity* point);
 
-	// For confirming if a point belongs in this QuadTree (square).
-  // TODO: should probably change this to be 'contains' or something
-  // less stupid.
-	bool insideOf(Entity* point);
+	// For confirming if an entity is contained in this QuadTree.
+	// (Note: only leafs will actually store references to the Entities
+	// inside the points vector.)
+	bool contains(Entity* point);
 
-	// Will draw this entire QuadTree and all of its children.
-	// (Will also draw the points).
-	//void draw(SDL_Renderer* renderer);
-	void draw(Renderer* renderer);
+	// Obtain list of all leaf nodes which the provided entity is inside of.
+	std::vector<QuadTree*> getLeafs(Entity* dot);
 
-	//void update();
-	bool FRectCollision(SDL_FRect rect1, SDL_FRect rect2);
+	// Returns a set containing tuple pairs of entity ids (in order),
+	// where ids indicate which entities collided with each other.
+	std::set<std::tuple<Uint16, Uint16>> getCollisionsWithEntity(Entity* entity);
 
-  // Obtain list of all leaf nodes which thie provided entity is inside of.
-  std::vector<QuadTree*> getLeafs(Entity* dot);
+	// AABB collision.
+	bool checkCollision(Entity* entity1, Entity* entity2);
 
-  // Counts amount of collisions with an entity. 
-  // Will increment collisions/comparisons as the entities are checked.
-  //void getCollisionsWithEntity(Entity* entity, int* collisions, int* comparisons);
-  std::set<std::tuple<Uint16, Uint16>> getCollisionsWithEntity(Entity* entity);
-
-  // AABB collision.
-  bool checkCollision(Entity* entity1, Entity* entity2);
+	// Legacy function from original demo; keeping for convenience.
+	//void draw(Renderer* renderer);
 };
