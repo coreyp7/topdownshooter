@@ -11,6 +11,8 @@ public:
 	Renderer(SDL_Window* window, SDL_Renderer* renderer);
 	~Renderer();
 
+	int renderedEnemiesThisFrame;
+
 	// Renders the entire GameState.
 	// Everything starts here.
 	void renderGameState(GameState* gameState);

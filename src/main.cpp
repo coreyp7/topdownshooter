@@ -125,6 +125,8 @@ void showImGui() {
 	}
 	ImGui::Text("Enemy count:");
 	ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
+	ImGui::Text("Rendered enemies this frame:");
+	ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
 	ImGui::End();
 
 	ImGui::Render();

@@ -62,10 +62,18 @@ void Renderer::renderGameState(GameState* gameState) {
 ///
 
 void Renderer::renderEnemies(std::vector<Enemy*> enemies) {
+	renderedEnemiesThisFrame = 0;
 	SDL_FRect* currRect;
 	for (int i = 0; i < enemies.size(); i++) {
 		currRect = enemies.at(i)->getFRect();
-		renderTextureRelativeToCamera(enemyTexture, currRect);
+
+		bool xCollision = (((currRect->x + currRect->w) >= (camera.x)) && ((camera.x + camera.w) >= (currRect->x)));
+		bool yCollision = (((currRect->y + currRect->h) >= (camera.y)) && ((camera.y + camera.h) >= (currRect->y)));
+
+		if (xCollision && yCollision) {
+			renderTextureRelativeToCamera(enemyTexture, currRect);
+			renderedEnemiesThisFrame++;
+		}
 	}
 }
 
