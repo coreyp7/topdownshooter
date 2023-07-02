@@ -30,6 +30,8 @@ public:
 	// Shoots projectile from player to the specified point.
 	void playerShootBullet(int x, int y);
 
+	void spawnEnemyTesting(int, int); // for testing enemies
+
 private:
 
 	Player* player;

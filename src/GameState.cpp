@@ -67,6 +67,8 @@ void GameState::resolveCollisions() {
 			Entity* entity1 = getEntityById(entity1Id);
 			Entity* entity2 = getEntityById(entity2Id);
 
+			// I think: this happens when an entity was collided with, but that entity was
+			// destroyed because that entity was destroyed this frame by a projectile or something.
 			if (entity1 == nullptr || entity2 == nullptr) {
 				// if either were invalid, then ignore iteration and log in console
 				printf(
@@ -323,6 +325,18 @@ void GameState::removeEntity(Entity* entity) {
 			return;
 		}
 	}
+}
+
+
+
+void GameState::spawnEnemyTesting(int x, int y) {
+	int xWorldPos = x + camera.x;
+	int yWorldPos = y + camera.y;
+
+	Enemy* newEnemy = new Enemy(xWorldPos, yWorldPos, 75, 75);
+	entities.push_back(newEnemy);
+	entityIdMap.insert({ newEnemy->id, newEnemy });
+
 }
 
 // All the specific private stuff will be down here.

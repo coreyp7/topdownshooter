@@ -18,6 +18,7 @@
 const int DEFAULT_COUNT = 1500;
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
+Uint32 totalFrames = 0;
 
 // Globals because this just a demo project to implement a QuadTree.
 //SDL_Renderer* renderer;
@@ -61,6 +62,8 @@ void gameLoop() {
 		renderManager->renderGameState(&gameState);
 		showImGui();
 		renderManager->showBackbufferClear();
+
+		totalFrames++;
 	}
 }
 
@@ -98,9 +101,14 @@ void showImGui() {
 
 	//bool show = true;
 	//ImGui::ShowDemoWindow(&show);
+	float secondsSinceStart = (SDL_GetTicks() / 1000);
+	float fps = totalFrames / secondsSinceStart;
 
 	ImGui::Begin("Info");
 	ImGui::Text("Test text");
+	if (totalFrames > 0) {
+		ImGui::Text(std::to_string(fps).c_str());
+	}
 	ImGui::End();
 
 	ImGui::Render();

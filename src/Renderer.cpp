@@ -54,7 +54,7 @@ void Renderer::renderGameState(GameState* gameState) {
 	renderProjectiles(gameState->getProjectiles());
 	renderPlayer(gameState->getPlayer());
 
-	drawQuadTree(gameState->getQuadTree());
+	//drawQuadTree(gameState->getQuadTree());
 }
 
 ///
