@@ -18,7 +18,8 @@
 const int DEFAULT_COUNT = 1500;
 const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
-Uint32 totalFrames = 0;
+Uint32 countedFrames = 0;
+int fpsCap = 60;
 
 // Globals because this just a demo project to implement a QuadTree.
 //SDL_Renderer* renderer;
@@ -43,7 +44,11 @@ void gameLoop() {
 	Uint32 lastPhysicsUpdate = 0;
 	float dt = 0;
 
+	Uint32 frameStart = 0;
+	Uint32 frameTimeToComplete = -1;
+
 	while (!quit) {
+		frameStart = SDL_GetTicks();
 
 		// capture user inputs
 		while (SDL_PollEvent(&event)) {
@@ -63,7 +68,14 @@ void gameLoop() {
 		showImGui();
 		renderManager->showBackbufferClear();
 
-		totalFrames++;
+		countedFrames++;
+
+		// Finished rendering, cap framerate.
+		// If frame is finished early, wait remaining time.
+		frameTimeToComplete = SDL_GetTicks() - frameStart;
+		if (1000 / fpsCap > frameTimeToComplete) {
+			SDL_Delay((1000 / fpsCap) - frameTimeToComplete);
+		}
 	}
 }
 
@@ -101,14 +113,18 @@ void showImGui() {
 
 	//bool show = true;
 	//ImGui::ShowDemoWindow(&show);
-	float secondsSinceStart = (SDL_GetTicks() / 1000);
-	float fps = totalFrames / secondsSinceStart;
+	float secondsSinceStart = (SDL_GetTicks() / 1000.f);
+	float fps = countedFrames / secondsSinceStart;
 
 	ImGui::Begin("Info");
-	ImGui::Text("Test text");
-	if (totalFrames > 0) {
+	ImGui::Text("Counted frames");
+	ImGui::Text(std::to_string(countedFrames).c_str());
+	if (countedFrames > 0) {
+		ImGui::Text("avg fps");
 		ImGui::Text(std::to_string(fps).c_str());
 	}
+	ImGui::Text("Enemy count:");
+	ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
 	ImGui::End();
 
 	ImGui::Render();
@@ -134,7 +150,7 @@ int setup() {
 	// Create window with SDL_Renderer graphics context
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
 	SDL_Window* window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (renderer == nullptr)
 	{
 		SDL_Log("Error creating SDL_Renderer!");
