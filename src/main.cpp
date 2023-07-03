@@ -20,6 +20,7 @@ const int WINDOW_WIDTH = 1280;
 const int WINDOW_HEIGHT = 720;
 Uint32 countedFrames = 0;
 int fpsCap = 60;
+Uint32 frameTimeToComplete = -1;
 
 // Globals because this just a demo project to implement a QuadTree.
 //SDL_Renderer* renderer;
@@ -45,7 +46,6 @@ void gameLoop() {
 	float dt = 0;
 
 	Uint32 frameStart = 0;
-	Uint32 frameTimeToComplete = -1;
 
 	while (!quit) {
 		frameStart = SDL_GetTicks();
@@ -76,6 +76,11 @@ void gameLoop() {
 		if (1000 / fpsCap > frameTimeToComplete) {
 			SDL_Delay((1000 / fpsCap) - frameTimeToComplete);
 		}
+		//assert(1000 / fpsCap > frameTimeToComplete);
+		if (!(1000 / fpsCap > frameTimeToComplete)) {
+			printf("DID NOT FINISH IN TIME\n");
+		}
+
 	}
 }
 
@@ -127,6 +132,11 @@ void showImGui() {
 	ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
 	ImGui::Text("Rendered enemies this frame:");
 	ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
+	ImGui::SliderInt("fps cap:", &fpsCap, 5, 120);
+	ImGui::Text("Frame time to complete:");
+	ImGui::Text(std::to_string(frameTimeToComplete).c_str());
+	ImGui::Text("'Ahead of schedule':");
+	ImGui::Text(std::to_string(1000 / fpsCap > frameTimeToComplete).c_str());
 	ImGui::End();
 
 	ImGui::Render();

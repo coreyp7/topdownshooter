@@ -19,13 +19,19 @@ GameState::GameState(Player* player) {
 	/*entities.push_back(new Enemy(200, 200, 75, 75));
 	entities.push_back(new Enemy(300, 200, 75, 75));
 	entities.push_back(new Enemy(400, 200, 75, 75));*/
-	entities.push_back(new Enemy(300, 200, 75, 75));
-	entities.push_back(new Enemy(300, 200, 75, 75));
-	entities.push_back(new Enemy(300, 200, 75, 75));
 	entityIdMap.insert({ player->id, player });
+
+	for (int i = 0; i < 200; i++) {
+		entities.push_back(new Enemy((100*i)% 3840, (30*i)% 2160, 75, 75));
+		entityIdMap.insert({ entities[i]->id, entities[i] });
+	}
+
+	/*entities.push_back(new Enemy(300, 200, 75, 75));
+	entities.push_back(new Enemy(300, 200, 75, 75));
+	entities.push_back(new Enemy(300, 200, 75, 75));
 	entityIdMap.insert({ entities[0]->id, entities[0] });
 	entityIdMap.insert({ entities[1]->id, entities[1] });
-	entityIdMap.insert({ entities[2]->id, entities[2] });
+	entityIdMap.insert({ entities[2]->id, entities[2] });*/
 }
 
 GameState::~GameState() {
@@ -59,7 +65,7 @@ void GameState::resolveCollisions() {
 	for (int i = 0; i < entities.size(); i++) {
 		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(entities[i]);
 		std::set<std::tuple<Uint16, Uint16>>::iterator itr;
-
+		
 		for(itr = collisions.begin(); itr != collisions.end(); itr++){
 			std::tuple<Uint16, Uint16> currentCollisionIds = *itr;
 			Uint16 entity1Id = std::get<0>(currentCollisionIds);
