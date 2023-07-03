@@ -133,10 +133,10 @@ void showImGui() {
 	ImGui::Text("Rendered enemies this frame:");
 	ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
 	ImGui::SliderInt("fps cap:", &fpsCap, 5, 120);
-	ImGui::Text("Frame time to complete:");
+	ImGui::Text("Ticks to complete frame:");
 	ImGui::Text(std::to_string(frameTimeToComplete).c_str());
-	ImGui::Text("'Ahead of schedule':");
-	ImGui::Text(std::to_string(1000 / fpsCap > frameTimeToComplete).c_str());
+	ImGui::Text("How long it can take w/ current framerate cap:");
+	ImGui::Text(std::to_string(1000.f / fpsCap).c_str());
 	ImGui::End();
 
 	ImGui::Render();

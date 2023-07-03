@@ -152,6 +152,11 @@ std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* e
 				continue; // ignore; comparing entity with itself
 			}
 
+			if (entity == nullptr) {
+				printf("hit that continue\n");
+				continue; // ignore; this entity has been removed during this frame
+			}
+
 			// If there's a collision between the two entities,
 			// add ordered tuple containing the two ids to collision vec.
 			bool collision = checkCollision(entity, otherEntity);

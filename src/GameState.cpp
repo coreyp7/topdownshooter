@@ -22,8 +22,9 @@ GameState::GameState(Player* player) {
 	entityIdMap.insert({ player->id, player });
 
 	for (int i = 0; i < 200; i++) {
-		entities.push_back(new Enemy((100*i)% 3840, (30*i)% 2160, 75, 75));
-		entityIdMap.insert({ entities[i]->id, entities[i] });
+		Enemy* newEnemy = new Enemy(i*75 % 3840, i*75 % 2180, 75, 75);
+		entities.push_back(newEnemy);
+		entityIdMap.insert({ newEnemy->id, newEnemy });
 	}
 
 	/*entities.push_back(new Enemy(300, 200, 75, 75));
@@ -40,6 +41,10 @@ GameState::~GameState() {
 
 // Entire state simulate which is public.
 void GameState::simulate() {
+	// This approach to handling time is appropriate for this game.
+	// Physics is simple and there's no networking.
+	// If it becomes too inconsistent or gross later, then I will attempt
+	// to refactor into example on 131/132 of 'Game Programming Patterns'.
 	dt = (SDL_GetTicks() - lastUpdate) / 1000.f;
 	lastUpdate = SDL_GetTicks();
 
