@@ -41,6 +41,7 @@ GameState::~GameState() {
 // Entire state simulate which is public.
 void GameState::simulate() {
 	dt = (SDL_GetTicks() - lastUpdate) / 1000.f;
+	lastUpdate = SDL_GetTicks();
 
 	// Simulate entire game for dt seconds.
 	player->simulate(dt);
@@ -56,7 +57,7 @@ void GameState::simulate() {
 
 	resolveCollisions();
 
-	lastUpdate = SDL_GetTicks();
+	//lastUpdate = SDL_GetTicks();
 }
 
 //TODO: should change the name of this function. I'd name this something like
