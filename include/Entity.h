@@ -6,6 +6,7 @@ class Entity
 public:
 	//static Uint16 ID_COUNTER; // this really needs to go somewhere else
 	Uint16 id;
+	bool dead;
 
 	Entity();
 	~Entity();

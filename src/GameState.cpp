@@ -95,11 +95,23 @@ void GameState::resolveCollisions() {
 			//	printf("Enemy %i collided with projectile %i\n", entity1Id, entity2Id);
 			//}
 			int deletedEntities = resolveEntityCollision(entity1, entity2);
-			i -= deletedEntities;
+			//i -= deletedEntities;
 		}
 	}
 
-	// TODO: fil collisions with ids obtained from quadtree work.
+	// @lazy fix that adds extra O(n). delete stuff thats dead.
+	for (int i = 0; i < entities.size(); i++) {
+		Entity* curr = entities[i];
+		if (curr->dead) {
+			entities.erase(entities.begin() + i);
+			entityIdMap.erase(curr->id);
+			qTree->remove(curr);
+			delete curr;
+			curr = nullptr;
+			//entities[i] = nullptr;
+			i--;
+		}
+	}
 
 }
 
@@ -124,9 +136,10 @@ void GameState::simulateProjectiles() {
 		if (!checkCollision(&qTreeRect, &projectile->pos)) {
 			// Delete if its outside the quadtree (and thus, the entire level)
 			printf("Deleted projectile at (%f,%f)\n", projectile->pos.x, projectile->pos.y);
-			delete projectile;
-			entities.erase(entities.begin() + i);
-			i--; // move our i back so that we don't skip a variable
+			projectile->dead = true;
+			//delete projectile;
+			//entities.erase(entities.begin() + i);
+			//i--; // move our i back so that we don't skip a variable
 			// @eh: could have this be done outside this loop, would maybe be clearer.
 			// seems to be working, so leaving for now.
 		}
@@ -286,8 +299,10 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 		break;
 	case ENEMY:
 		if (entity2->getEntityType() == PROJECTILE) {
-			removeEntity(entity1);
-			removeEntity(entity2);
+			//removeEntity(entity1);
+			//removeEntity(entity2);
+			entity1->dead = true;
+			entity2->dead = true;
 			return 1;
 		}
 		else if (entity2->getEntityType() == ENEMY) {

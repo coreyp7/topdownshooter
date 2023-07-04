@@ -152,8 +152,8 @@ std::set<std::tuple<Uint16, Uint16>> QuadTree::getCollisionsWithEntity(Entity* e
 				continue; // ignore; comparing entity with itself
 			}
 
-			if (entity == nullptr) {
-				printf("hit that continue\n");
+			if (entity == nullptr || otherEntity == nullptr) {
+				printf("!!!!hit that continue!!!!\n");
 				continue; // ignore; this entity has been removed during this frame
 			}
 
