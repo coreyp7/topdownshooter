@@ -7,7 +7,7 @@ GameState::GameState(Player* player) {
 	lastUpdate = 0;
 	camera = { 0, 0, 1280, 720 };//@hardcoded: this should be set from main or
 	//something; constructor params probably.
-	qTree = new QuadTree(0, 0, 3840, 2160); //@hardcoded
+	qTree = new QuadTree(0, 0, 1000, 1500); //@hardcoded
 
 	// Here I'm hardcoding test enemies.
 	// Later, this would either:
@@ -15,8 +15,8 @@ GameState::GameState(Player* player) {
 	// - loaded into a level ala a tile in the tilemap
 	entityIdMap.insert({ player->id, player });
 
-	for (int i = 0; i < 200; i++) {
-		Enemy* newEnemy = new Enemy(i*75 % 3840, i*75 % 2180, 75, 75);
+	for (int i = 0; i < 20; i++) {
+		Enemy* newEnemy = new Enemy(i*75 % 3840, i*75 % 2180, 45, 45);
 		entities.push_back(newEnemy);
 		entityIdMap.insert({ newEnemy->id, newEnemy });
 	}
@@ -41,7 +41,7 @@ void GameState::simulate() {
 
 	// Update QuadTree (for now, deleting it and rebuilding it every frame).
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself
-	qTree = new QuadTree(0, 0, 3840, 2160); // @hardcoded: !!!!!!!!!!!!!!!!
+	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded: !!!!!!!!!!!!!!!!
 	qTree->insert(player);
 
 	simulateEnemies();
@@ -86,6 +86,7 @@ void GameState::resolveCollisions() {
 			delete curr;
 			curr = nullptr;
 			i--;
+
 		}
 	}
 	/*Entity* deadEntity;
@@ -100,7 +101,7 @@ void GameState::resolveCollisions() {
 }
 
 void GameState::simulateEnemies() {
-	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
+	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() == ENEMY) {
 			Enemy* enemy = (Enemy*)entities[i];
@@ -111,7 +112,7 @@ void GameState::simulateEnemies() {
 }
 
 void GameState::simulateProjectiles() {
-	SDL_FRect qTreeRect = { 0, 0, 3840, 2160 };
+	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() != PROJECTILE) continue;
 

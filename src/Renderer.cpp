@@ -23,7 +23,7 @@ void Renderer::setup() {
 		printf("Couldn't load player texture. %s", IMG_GetError());
 	}
 
-	testbg = IMG_LoadTexture(renderer, "assets/bg.jpg");
+	testbg = IMG_LoadTexture(renderer, "assets/bg2.jpg");
 	if (testbg == NULL) {
 		printf("bg not loaded %s", IMG_GetError());
 	}
@@ -47,14 +47,14 @@ void Renderer::showBackbufferClear() {
 void Renderer::renderGameState(GameState* gameState) {
 	//Setup camera for this frame, from gamestate
 	this->camera = gameState->getCamera();
-	SDL_FRect bg = { 0, 0, 3840, 2160 }; //@hardcoded
+	SDL_FRect bg = { 0, 0, 1000, 1500 }; //@hardcoded
 
 	renderTextureRelativeToCamera(testbg, &bg);
 	renderEnemies(gameState->getEnemies());
 	renderProjectiles(gameState->getProjectiles());
 	renderPlayer(gameState->getPlayer());
 
-	//drawQuadTree(gameState->getQuadTree());
+	drawQuadTree(gameState->getQuadTree());
 }
 
 ///
