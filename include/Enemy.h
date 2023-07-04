@@ -6,7 +6,7 @@
 class Enemy : public Entity {
 public:
 	SDL_FRect rect;
-	const int MOVE_SPEED = 100; // @temporary, @testing
+	const int MOVE_SPEED = 200; // @temporary, @testing
 
 	Enemy(float x, float y, float w, float h);
 	~Enemy();
@@ -17,4 +17,9 @@ public:
 	SDL_FRect* getFRect();
 	SDL_FPoint getPosition();
 	EntityType getEntityType();
+
+	bool lunging;
+
+	// This indicates starting/stoppping
+	Uint32 timeToToggleLunging;
 };

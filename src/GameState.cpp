@@ -283,29 +283,29 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 			return 1;
 		}
 		else if (entity2->getEntityType() == ENEMY) {
-			// Prevent these two from colliding; fix their position to stay out of each other
-			// @todo: move into function this is massive.
-			float xDistance, yDistance;
-			if (entity1->getFRect()->x < entity2->getFRect()->x) {
-				xDistance = ((entity1->getFRect()->x + entity1->getFRect()->w) - entity2->getFRect()->x);
-			}
-			else {
-				xDistance = ((entity2->getFRect()->x + entity2->getFRect()->w) - entity1->getFRect()->x);
-			}
+		//	// Prevent these two from colliding; fix their position to stay out of each other
+		//	// @todo: move into function this is massive.
+		//	float xDistance, yDistance;
+		//	if (entity1->getFRect()->x < entity2->getFRect()->x) {
+		//		xDistance = ((entity1->getFRect()->x + entity1->getFRect()->w) - entity2->getFRect()->x);
+		//	}
+		//	else {
+		//		xDistance = ((entity2->getFRect()->x + entity2->getFRect()->w) - entity1->getFRect()->x);
+		//	}
 
-			if (entity1->getFRect()->y < entity2->getFRect()->y) {
-				yDistance = ((entity1->getFRect()->y + entity1->getFRect()->h) - entity2->getFRect()->y);
-			}
-			else {
-				yDistance = ((entity2->getFRect()->y + entity2->getFRect()->h) - entity1->getFRect()->y);
-			}
+		//	if (entity1->getFRect()->y < entity2->getFRect()->y) {
+		//		yDistance = ((entity1->getFRect()->y + entity1->getFRect()->h) - entity2->getFRect()->y);
+		//	}
+		//	else {
+		//		yDistance = ((entity2->getFRect()->y + entity2->getFRect()->h) - entity1->getFRect()->y);
+		//	}
 
-			if (xDistance > yDistance) {
-				entity1->getFRect()->y -= yDistance;
-			}
-			else {
-				entity2->getFRect()->x -= xDistance;
-			}
+		//	if (xDistance > yDistance) {
+		//		entity1->getFRect()->y -= yDistance;
+		//	}
+		//	else {
+		//		entity2->getFRect()->x -= xDistance;
+		//	}
 		}
 		break;
 	case PROJECTILE:
