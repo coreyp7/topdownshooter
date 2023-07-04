@@ -278,8 +278,10 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 		if (entity2->getEntityType() == PROJECTILE) {
 			//removeEntity(entity1);
 			//removeEntity(entity2);
-			entity1->dead = true;
-			entity2->dead = true;
+			if (!entity2->dead) {
+				entity1->dead = true;
+				entity2->dead = true;
+			}
 			return 1;
 		}
 		else if (entity2->getEntityType() == ENEMY) {

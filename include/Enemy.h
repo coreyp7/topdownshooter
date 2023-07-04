@@ -22,4 +22,6 @@ public:
 
 	// This indicates starting/stoppping
 	Uint32 timeToToggleLunging;
+	float lungeVectorX, lungeVectorY;
+	int lungeToggleWait;
 };
