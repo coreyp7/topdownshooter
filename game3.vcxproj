@@ -140,6 +140,7 @@
     <ClInclude Include="include\Projectile.h" />
     <ClInclude Include="include\QuadTree.h" />
     <ClInclude Include="include\Renderer.h" />
+    <ClInclude Include="include\SmallEnemy.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Enemy.cpp" />
@@ -151,6 +152,7 @@
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />
     <ClCompile Include="src\Renderer.cpp" />
+    <ClCompile Include="src\SmallEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\libs\imgui_sdl_renderer_vs\imgui_vs.vcxproj">

@@ -1,14 +1,14 @@
 #include "Enemy.h"
 
-Enemy::Enemy(float x, float y, float w, float h) {
-	rect = { x, y, w, h };
+Enemy::Enemy(float x, float y) {
+	rect = { x, y, 0, 0 }; // width/height set in subclasses
 }
 
 Enemy::~Enemy() {
 	
 }
 
-// TODO: this should be moved to a file dedicated to vector space operations.
+// TODO: this should be a virtual method which is implemented in subclasses.
 void Enemy::simulate(float dt, SDL_FPoint playerPosition) {
 	SDL_FPoint ourPosition = this->getPosition();
 

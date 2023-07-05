@@ -8,7 +8,7 @@ public:
 	SDL_FRect rect;
 	const int MOVE_SPEED = 100; // @temporary, @testing
 
-	Enemy(float x, float y, float w, float h);
+	Enemy(float x, float y);
 	~Enemy();
 
 	void simulate(float dt, SDL_FPoint playerPosition);

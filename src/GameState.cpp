@@ -16,7 +16,7 @@ GameState::GameState(Player* player) {
 	entityIdMap.insert({ player->id, player });
 
 	for (int i = 0; i < 20; i++) {
-		Enemy* newEnemy = new Enemy(i*75 % 3840, i*75 % 2180, 45, 45);
+		Enemy* newEnemy = new SmallEnemy(i*75 % 3840, i*75 % 2180);
 		entities.push_back(newEnemy);
 		entityIdMap.insert({ newEnemy->id, newEnemy });
 	}
@@ -339,7 +339,7 @@ void GameState::spawnEnemyTesting(int x, int y) {
 	int xWorldPos = x + camera.x;
 	int yWorldPos = y + camera.y;
 
-	Enemy* newEnemy = new Enemy(xWorldPos, yWorldPos, 75, 75);
+	Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 
