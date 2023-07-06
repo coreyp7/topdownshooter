@@ -8,6 +8,7 @@ public:
 	Uint16 id;
 	bool dead;
 	int hp;
+	int maxHp;
 
 	Entity();
 	~Entity();

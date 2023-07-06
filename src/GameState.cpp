@@ -15,7 +15,7 @@ GameState::GameState(Player* player) {
 	// - loaded into a level ala a tile in the tilemap
 	entityIdMap.insert({ player->id, player });
 
-	for (int i = 0; i < 20; i++) {
+	for (int i = 0; i < 3; i++) {
 		Enemy* newEnemy = new SmallEnemy(i*75 % 3840, i*75 % 2180);
 		entities.push_back(newEnemy);
 		entityIdMap.insert({ newEnemy->id, newEnemy });

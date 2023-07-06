@@ -29,6 +29,7 @@ private:
 	SDL_Texture* playerTexture;
 	SDL_Texture* enemyTexture;
 	SDL_Texture* testbg;
+	SDL_Texture* healthBarTexture;
 
 	// Updated every frame from gamestate for rendering.
 	// Used in like every function so keeping here for convenience.

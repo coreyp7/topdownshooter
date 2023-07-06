@@ -33,6 +33,11 @@ void Renderer::setup() {
 		printf("enemytexture not loaded %s", IMG_GetError());
 	}
 
+	healthBarTexture = IMG_LoadTexture(renderer, "assets/health.png");
+	if (healthBarTexture == NULL) {
+		printf("healthBarTexture not loaded %s", IMG_GetError());
+	}
+
 }
 
 void Renderer::showBackbufferClear() {
@@ -54,7 +59,7 @@ void Renderer::renderGameState(GameState* gameState) {
 	renderProjectiles(gameState->getProjectiles());
 	renderPlayer(gameState->getPlayer());
 
-	drawQuadTree(gameState->getQuadTree());
+	//drawQuadTree(gameState->getQuadTree());
 }
 
 ///
@@ -73,6 +78,15 @@ void Renderer::renderEnemies(std::vector<Enemy*> enemies) {
 		if (xCollision && yCollision) {
 			renderTextureRelativeToCamera(enemyTexture, currRect);
 			renderedEnemiesThisFrame++;
+
+			// health bar
+			SDL_FRect healthbar = { currRect->x, currRect->y + currRect->h, currRect->w, 5};
+			SDL_FRect healthBarFill = healthbar;
+			float fillMultiplier = healthBarFill.w / enemies.at(i)->maxHp;
+			fillMultiplier *= enemies.at(i)->hp;
+			healthBarFill.w = fillMultiplier;
+			renderTextureRelativeToCamera(healthBarTexture, &healthBarFill);
+			drawRectRelativeToCamera(healthbar);
 		}
 	}
 }
