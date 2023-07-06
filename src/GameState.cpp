@@ -279,8 +279,16 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 			//removeEntity(entity1);
 			//removeEntity(entity2);
 			if (!entity2->dead) {
-				entity1->dead = true;
+				//entity1->dead = true;
 				entity2->dead = true;
+
+				if (entity1->hp > 0) {
+					entity1->hp--;
+				}
+
+				if (entity1->hp <= 0) {
+					entity1->dead = true;
+				}
 			}
 			return 1;
 		}
