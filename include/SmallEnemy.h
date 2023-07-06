@@ -6,6 +6,8 @@ public:
 	SmallEnemy(float x, float y);
 	~SmallEnemy();
 
-	const int MOVE_SPEED = 100;
+	void simulate(float dt, SDL_FPoint playerPosition);
+
+	const int MOVE_SPEED = 100; // @change: maybe this should escalate as the waves increment
 	const float SIZE = 45;
 };

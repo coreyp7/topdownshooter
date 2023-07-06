@@ -6,12 +6,13 @@
 class Enemy : public Entity {
 public:
 	SDL_FRect rect;
-	const int MOVE_SPEED = 100; // @temporary, @testing
+	//const int MOVE_SPEED = 100; // @temporary, @testing
+	//const int MOVE_SPEED = 50; // @temporary, @testing
 
 	Enemy(float x, float y);
 	~Enemy();
 
-	void simulate(float dt, SDL_FPoint playerPosition);
+	virtual void simulate(float dt, SDL_FPoint playerPosition) = 0;
 
 	// Entity stuff
 	SDL_FRect* getFRect();
