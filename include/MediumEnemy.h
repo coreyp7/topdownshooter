@@ -3,7 +3,7 @@
 
 class MediumEnemy : public Enemy {
 public:
-	MediumEnemy(float x, float y);
+	MediumEnemy(EnemyManager* manager, float x, float y);
 	~MediumEnemy();
 
 	void simulate(float dt, SDL_FPoint playerPosition);
@@ -11,5 +11,8 @@ public:
 
 	const int SIZE = 65;
 	const int MOVE_SPEED = 60;
+
+	Uint32 nextShotTicks;
+	const int nextShotDelay = 1000;
 
 };

@@ -1,10 +1,12 @@
 #include "MediumEnemy.h"
 
-MediumEnemy::MediumEnemy(float x, float y) : Enemy(x, y) {
+MediumEnemy::MediumEnemy(EnemyManager* manager, float x, float y) : Enemy(manager, x, y) {
 	rect.w = SIZE;
 	rect.h = SIZE+20;
 	hp = 9;
 	maxHp = 9;
+
+	nextShotTicks = SDL_GetTicks() + nextShotDelay;
 }
 
 MediumEnemy::~MediumEnemy() {
@@ -41,6 +43,11 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 
 	rect.x += xVel * dt;
 	rect.y += yVel * dt;
+
+	if (nextShotTicks < SDL_GetTicks()) {
+		nextShotTicks += nextShotDelay;
+		manager->shootEnemyProjectile(rect.x, rect.y, xVel, yVel);
+	}
 }
 
 int MediumEnemy::getEnemyType() {

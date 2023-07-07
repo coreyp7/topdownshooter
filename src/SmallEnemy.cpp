@@ -1,6 +1,6 @@
 #include "SmallEnemy.h"
 
-SmallEnemy::SmallEnemy(float x, float y) : Enemy(x,y)
+SmallEnemy::SmallEnemy(EnemyManager* manager, float x, float y) : Enemy(manager,x,y)
 {
 	rect.w = SIZE;
 	rect.h = SIZE;

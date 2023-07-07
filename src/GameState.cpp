@@ -14,6 +14,7 @@ GameState::GameState(Player* player) {
 	// - be spawned in dynamically like a hoarde type game
 	// - loaded into a level ala a tile in the tilemap
 	entityIdMap.insert({ player->id, player });
+	enemyManager = new EnemyManager(this);
 
 	/*for (int i = 0; i < 3; i++) {
 		Enemy* newEnemy = new SmallEnemy(i*75 % 3840, i*75 % 2180);
@@ -371,10 +372,20 @@ void GameState::spawnEnemyTesting(int x, int y) {
 	int yWorldPos = y + camera.y;
 
 	//Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
-	Enemy* newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
+	Enemy* newEnemy = new MediumEnemy(enemyManager, xWorldPos, yWorldPos);
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 
+}
+
+void GameState::shootEnemyProjectile(float x, float y, float xVel, float yVel) {
+	Projectile* newProj = new Projectile({x,y}, xVel, yVel);
+	//projectiles.push_back(newProj);
+	entities.push_back(newProj);
+
+	// @refactor: could put this stuff into its own function
+	// so if the id is invalid, it doesn't crash.
+	entityIdMap.insert({ newProj->id, newProj });
 }
 
 // All the specific private stuff will be down here.

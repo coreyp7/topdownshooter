@@ -2,14 +2,16 @@
 #include <SDL.h>
 #include "Entity.h"
 #include "EntityType.h"
+#include "EnemyManager.h"
 
 class Enemy : public Entity {
 public:
 	SDL_FRect rect;
 	//const int MOVE_SPEED = 100; // @temporary, @testing
 	//const int MOVE_SPEED = 50; // @temporary, @testing
+	EnemyManager* manager;
 
-	Enemy(float x, float y);
+	Enemy(EnemyManager* manager, float x, float y);
 	~Enemy();
 
 	virtual void simulate(float dt, SDL_FPoint playerPosition) = 0;

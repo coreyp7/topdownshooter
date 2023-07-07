@@ -3,7 +3,7 @@
 
 class SmallEnemy : public Enemy {
 public:
-	SmallEnemy(float x, float y);
+	SmallEnemy(EnemyManager* manager, float x, float y);
 	~SmallEnemy();
 
 	void simulate(float dt, SDL_FPoint playerPosition);

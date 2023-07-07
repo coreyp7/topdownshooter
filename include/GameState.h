@@ -15,6 +15,8 @@
 #include "SmallEnemy.h"
 #include "MediumEnemy.h"
 
+#include "EnemyManager.h"
+
 class GameState {
 
 public:
@@ -35,6 +37,8 @@ public:
 
 	void spawnEnemyTesting(int, int); // for testing enemies
 
+	void shootEnemyProjectile(float x, float y, float xVel, float yVel);
+
 private:
 
 	Player* player;
@@ -45,6 +49,8 @@ private:
 	std::vector<Entity*> entities;
 
 	std::unordered_map<Uint16, Entity*> entityIdMap;
+
+	EnemyManager* enemyManager;
 
 
 	SDL_FRect camera;
