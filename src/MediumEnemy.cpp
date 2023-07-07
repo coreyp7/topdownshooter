@@ -46,7 +46,7 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 
 	if (nextShotTicks < SDL_GetTicks()) {
 		nextShotTicks += nextShotDelay;
-		manager->shootEnemyProjectile(rect.x, rect.y, xVel, yVel);
+		manager->shootEnemyProjectile(rect.x, rect.y, xUnitVector * PROJECTILE_SPEED, yUnitVector * PROJECTILE_SPEED);
 	}
 }
 

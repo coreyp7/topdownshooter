@@ -4,6 +4,7 @@ Projectile::Projectile(SDL_FPoint pos, float xVel, float yVel) {
 	this->xVel = xVel;
 	this->yVel = yVel;
 	this->pos = SDL_FRect{ pos.x - SIZE / 2, pos.y - SIZE / 2, SIZE, SIZE };
+	typeOfProjectile = PROJECTILE;
 }
 
 Projectile::~Projectile() {
@@ -24,5 +25,5 @@ SDL_FPoint Projectile::getPosition() {
 }
 
 EntityType Projectile::getEntityType() {
-	return PROJECTILE;
+	return typeOfProjectile;
 }

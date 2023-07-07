@@ -115,7 +115,7 @@ void GameState::simulateEnemies() {
 void GameState::simulateProjectiles() {
 	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
-		if (entities[i]->getEntityType() != PROJECTILE) continue;
+		if (entities[i]->getEntityType() != PROJECTILE && entities[i]->getEntityType() != ENEMY_PROJECTILE) continue;
 
 		Projectile* projectile = (Projectile*)entities[i];
 		projectile->simulate(dt);
@@ -138,7 +138,7 @@ std::vector<Projectile*> GameState::getProjectiles() {
 	//return &projectiles;
 	std::vector<Projectile*> projectiles;
 	for (int i = 0; i < entities.size(); i++) {
-		if (entities[i]->getEntityType() == PROJECTILE) {
+		if (entities[i]->getEntityType() == PROJECTILE || entities[i]->getEntityType() == ENEMY_PROJECTILE) {
 			Projectile* projectile = (Projectile*)entities[i];
 			projectiles.push_back(projectile);
 		}
@@ -380,6 +380,7 @@ void GameState::spawnEnemyTesting(int x, int y) {
 
 void GameState::shootEnemyProjectile(float x, float y, float xVel, float yVel) {
 	Projectile* newProj = new Projectile({x,y}, xVel, yVel);
+	newProj->typeOfProjectile = ENEMY_PROJECTILE;
 	//projectiles.push_back(newProj);
 	entities.push_back(newProj);
 

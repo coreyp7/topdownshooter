@@ -18,6 +18,8 @@ public:
 
 	const float SIZE = 8;
 
+	EntityType typeOfProjectile;
+
 	// Entity interface stuff
 
 	SDL_FRect* getFRect();
