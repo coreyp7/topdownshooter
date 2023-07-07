@@ -14,6 +14,10 @@ public:
 
 	virtual void simulate(float dt, SDL_FPoint playerPosition) = 0;
 
+	// 0 = smallenemy
+	// 1 = medium enemy
+	virtual int getEnemyType() = 0;
+
 	// Entity stuff
 	SDL_FRect* getFRect();
 	SDL_FPoint getPosition();

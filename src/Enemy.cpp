@@ -8,6 +8,19 @@ Enemy::~Enemy() {
 	
 }
 
+SDL_FRect* Enemy::getFRect() {
+	return &rect;
+}
+
+SDL_FPoint Enemy::getPosition() {
+	return SDL_FPoint{ rect.x + rect.w / 2, rect.y + rect.h / 2 };
+}
+
+EntityType Enemy::getEntityType() {
+	return ENEMY;
+}
+
+
 //// TODO: this should be a virtual method which is implemented in subclasses.
 //void Enemy::simulate(float dt, SDL_FPoint playerPosition) {
 //	SDL_FPoint ourPosition = this->getPosition();
@@ -40,15 +53,3 @@ Enemy::~Enemy() {
 //	rect.x += xVel * dt;
 //	rect.y += yVel * dt;
 //}
-
-SDL_FRect* Enemy::getFRect() {
-	return &rect;
-}
-
-SDL_FPoint Enemy::getPosition() {
-	return SDL_FPoint{ rect.x + rect.w / 2, rect.y + rect.h / 2 };
-}
-
-EntityType Enemy::getEntityType() {
-	return ENEMY;
-}

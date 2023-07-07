@@ -27,7 +27,8 @@ private:
 	SDL_Renderer* renderer;
 
 	SDL_Texture* playerTexture;
-	SDL_Texture* enemyTexture;
+	SDL_Texture* sEnemyTexture;
+	SDL_Texture* mEnemyTexture;
 	SDL_Texture* testbg;
 	SDL_Texture* healthBarTexture;
 

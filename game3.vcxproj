@@ -136,6 +136,7 @@
     <ClInclude Include="include\EntityType.h" />
     <ClInclude Include="include\GameState.h" />
     <ClInclude Include="include\InputManager.h" />
+    <ClInclude Include="include\MediumEnemy.h" />
     <ClInclude Include="include\Player.h" />
     <ClInclude Include="include\Projectile.h" />
     <ClInclude Include="include\QuadTree.h" />
@@ -148,6 +149,7 @@
     <ClCompile Include="src\GameState.cpp" />
     <ClCompile Include="src\InputManager.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MediumEnemy.cpp" />
     <ClCompile Include="src\Player.cpp" />
     <ClCompile Include="src\Projectile.cpp" />
     <ClCompile Include="src\QuadTree.cpp" />

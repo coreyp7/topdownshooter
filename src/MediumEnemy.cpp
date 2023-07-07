@@ -1,19 +1,17 @@
-#include "SmallEnemy.h"
+#include "MediumEnemy.h"
 
-SmallEnemy::SmallEnemy(float x, float y) : Enemy(x,y)
-{
+MediumEnemy::MediumEnemy(float x, float y) : Enemy(x, y) {
 	rect.w = SIZE;
-	rect.h = SIZE;
-	hp = 3;
-	maxHp = 3;
+	rect.h = SIZE+20;
+	hp = 9;
+	maxHp = 9;
 }
 
-
-SmallEnemy::~SmallEnemy() {
+MediumEnemy::~MediumEnemy() {
 
 }
 
-void SmallEnemy::simulate(float dt, SDL_FPoint playerPosition) {
+void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 	SDL_FPoint ourPosition = this->getPosition();
 
 	//1
@@ -45,6 +43,6 @@ void SmallEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 	rect.y += yVel * dt;
 }
 
-int SmallEnemy::getEnemyType() {
-	return 0;
+int MediumEnemy::getEnemyType() {
+	return 1;
 }

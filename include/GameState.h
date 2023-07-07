@@ -11,7 +11,9 @@
 #include "QuadTree.h"
 #include "Enemy.h"
 #include "EntityType.h"
+
 #include "SmallEnemy.h"
+#include "MediumEnemy.h"
 
 class GameState {
 

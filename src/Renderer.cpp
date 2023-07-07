@@ -28,9 +28,14 @@ void Renderer::setup() {
 		printf("bg not loaded %s", IMG_GetError());
 	}
 
-	enemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
-	if (enemyTexture == NULL) {
-		printf("enemytexture not loaded %s", IMG_GetError());
+	sEnemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
+	if (sEnemyTexture == NULL) {
+		printf("sEnemyTexture not loaded %s", IMG_GetError());
+	}
+
+	mEnemyTexture = IMG_LoadTexture(renderer, "assets/matt.png");
+	if (mEnemyTexture == NULL) {
+		printf("mEnemyTexture not loaded %s", IMG_GetError());
 	}
 
 	healthBarTexture = IMG_LoadTexture(renderer, "assets/health.png");
@@ -59,7 +64,7 @@ void Renderer::renderGameState(GameState* gameState) {
 	renderProjectiles(gameState->getProjectiles());
 	renderPlayer(gameState->getPlayer());
 
-	drawQuadTree(gameState->getQuadTree());
+	//drawQuadTree(gameState->getQuadTree());
 }
 
 ///
@@ -76,7 +81,11 @@ void Renderer::renderEnemies(std::vector<Enemy*> enemies) {
 		bool yCollision = (((currRect->y + currRect->h) >= (camera.y)) && ((camera.y + camera.h) >= (currRect->y)));
 
 		if (xCollision && yCollision) {
-			renderTextureRelativeToCamera(enemyTexture, currRect);
+
+			switch (enemies.at(i)->getEnemyType()) {
+				case 0: renderTextureRelativeToCamera(sEnemyTexture, currRect); break;
+				case 1: renderTextureRelativeToCamera(mEnemyTexture, currRect); break;
+			}
 			renderedEnemiesThisFrame++;
 
 			// health bar
