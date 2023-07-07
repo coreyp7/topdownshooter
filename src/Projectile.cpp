@@ -1,9 +1,10 @@
 #include "Projectile.h"
 
-Projectile::Projectile(SDL_FPoint pos, float xVel, float yVel) {
+Projectile::Projectile(SDL_FPoint pos, float xVel, float yVel, float size) {
 	this->xVel = xVel;
 	this->yVel = yVel;
-	this->pos = SDL_FRect{ pos.x - SIZE / 2, pos.y - SIZE / 2, SIZE, SIZE };
+	this->size = size;
+	this->pos = SDL_FRect{ pos.x - size / 2, pos.y - size / 2, size, size };
 	typeOfProjectile = PROJECTILE;
 }
 
@@ -21,7 +22,7 @@ SDL_FRect* Projectile::getFRect() {
 }
 
 SDL_FPoint Projectile::getPosition() {
-	return SDL_FPoint{ pos.x + SIZE / 2, pos.y + SIZE / 2 };
+	return SDL_FPoint{ pos.x + size / 2, pos.y + size / 2 };
 }
 
 EntityType Projectile::getEntityType() {

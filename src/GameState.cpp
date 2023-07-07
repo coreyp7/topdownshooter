@@ -232,7 +232,7 @@ void GameState::playerShootBullet(int x, int y) {
 	float xVel = xUnitVector * player->PROJECTILE_SPEED;
 	float yVel = yUnitVector * player->PROJECTILE_SPEED;
 
-	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel);
+	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
 	//projectiles.push_back(newProj);
 	entities.push_back(newProj);
 
@@ -378,8 +378,8 @@ void GameState::spawnEnemyTesting(int x, int y) {
 
 }
 
-void GameState::shootEnemyProjectile(float x, float y, float xVel, float yVel) {
-	Projectile* newProj = new Projectile({x,y}, xVel, yVel);
+void GameState::shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
+	Projectile* newProj = new Projectile({x,y}, xVel, yVel, size);
 	newProj->typeOfProjectile = ENEMY_PROJECTILE;
 	//projectiles.push_back(newProj);
 	entities.push_back(newProj);

@@ -10,6 +10,6 @@ EnemyManager::~EnemyManager() {
 
 }
 
-void EnemyManager::shootEnemyProjectile(float x, float y, float xVel, float yVel) {
-	gameState->shootEnemyProjectile(x, y, xVel, yVel);
+void EnemyManager::shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
+	gameState->shootEnemyProjectile(x, y, xVel, yVel, size);
 }

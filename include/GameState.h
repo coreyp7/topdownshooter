@@ -37,7 +37,7 @@ public:
 
 	void spawnEnemyTesting(int, int); // for testing enemies
 
-	void shootEnemyProjectile(float x, float y, float xVel, float yVel);
+	void shootEnemyProjectile(float x, float y, float xVel, float yVel, int size);
 
 private:
 
