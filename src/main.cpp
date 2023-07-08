@@ -16,8 +16,10 @@
 
 //const int DEFAULT_COUNT = 500;
 const int DEFAULT_COUNT = 1500;
-const int WINDOW_WIDTH = 1280;
-const int WINDOW_HEIGHT = 720;
+//const int WINDOW_WIDTH = 1280;
+//const int WINDOW_HEIGHT = 720;
+const int WINDOW_WIDTH = 720;
+const int WINDOW_HEIGHT = 480;
 Uint32 countedFrames = 0;
 int fpsCap = 60;
 Uint32 frameTimeToComplete = -1;
@@ -32,6 +34,9 @@ Player player = Player(SDL_FPoint{ 250, 250 });
 GameState gameState = GameState(&player);
 InputManager inputManager = InputManager(&gameState);
 Renderer* renderManager;
+
+SDL_Window* window;
+SDL_Renderer* renderer;
 
 int setup();
 void gameLoop();
@@ -53,33 +58,44 @@ void gameLoop() {
 		// capture user inputs
 		while (SDL_PollEvent(&event)) {
 			ImGui_ImplSDL2_ProcessEvent(&event);
-			inputManager.handleEvent(event);
+			//inputManager.handleEvent(event);
 			if (event.type == SDL_QUIT) {
 				quit = true;
 			}
 		}
 
 		// Simulate gamestate
-		gameState.simulate();
+		//gameState.simulate();
 
 		// Render current gamestate
 		//renderManager->renderPlayer(&player);
-		renderManager->renderGameState(&gameState);
+		/*renderManager->renderGameState(&gameState);
 		showImGui();
-		renderManager->showBackbufferClear();
+		renderManager->showBackbufferClear();*/
+		ImGui_ImplSDLRenderer_NewFrame();
+		ImGui_ImplSDL2_NewFrame();
+		ImGui::NewFrame();
+		ImGui::Begin("Info");
+		ImGui::Text("Test text");
+		ImGui::End();
+		ImGui::Render();
+		ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 
-		countedFrames++;
+		SDL_RenderPresent(renderer);
+		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+		SDL_RenderClear(renderer);
+		//countedFrames++;
 
 		// Finished rendering, cap framerate.
 		// If frame is finished early, wait remaining time.
-		frameTimeToComplete = SDL_GetTicks() - frameStart;
-		if (1000 / fpsCap > frameTimeToComplete) {
-			SDL_Delay((1000 / fpsCap) - frameTimeToComplete);
-		}
-		//assert(1000 / fpsCap > frameTimeToComplete);
-		if (!(1000 / fpsCap > frameTimeToComplete)) {
-			printf("DID NOT FINISH IN TIME\n");
-		}
+		//frameTimeToComplete = SDL_GetTicks() - frameStart;
+		//if (1000 / fpsCap > frameTimeToComplete) {
+		//	SDL_Delay((1000 / fpsCap) - frameTimeToComplete);
+		//}
+		////assert(1000 / fpsCap > frameTimeToComplete);
+		//if (!(1000 / fpsCap > frameTimeToComplete)) {
+		//	printf("DID NOT FINISH IN TIME\n");
+		//}
 
 	}
 }
@@ -95,7 +111,7 @@ int main(int, char**)
 	}
 
 	// Loads assets to be ready for rendering
-	renderManager->setup();
+	//renderManager->setup();
 
 	gameLoop();
 
@@ -105,7 +121,7 @@ int main(int, char**)
 	ImGui::DestroyContext();
 
 	// TODO: check that this is working.
-	renderManager->~Renderer();
+	//renderManager->~Renderer();
 
 	return 0;
 }
@@ -161,8 +177,8 @@ int setup() {
 
 	// Create window with SDL_Renderer graphics context
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-	SDL_Window* window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
-	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+	window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
+	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (renderer == nullptr)
 	{
 		SDL_Log("Error creating SDL_Renderer!");
@@ -196,7 +212,7 @@ int setup() {
 
 	// Render manager will hold pointers to these. It will handle
 	// cleaning itself up.
-	renderManager = new Renderer(window, renderer);
+	//renderManager = new Renderer(window, renderer);
 
 	return 0;
 }
