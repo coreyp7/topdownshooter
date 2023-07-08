@@ -32,7 +32,7 @@ ImGuiIO io; // idk what this is for rn, but imgui needs it
 //Player player = Player(SDL_FRect{250, 250, 50, 50});
 Player player = Player(SDL_FPoint{ 250, 250 });
 GameState gameState = GameState(&player);
-InputManager inputManager = InputManager(&gameState);
+//InputManager inputManager = InputManager(&gameState);
 Renderer* renderManager;
 
 SDL_Window* window;
@@ -59,6 +59,7 @@ void gameLoop() {
 		while (SDL_PollEvent(&event)) {
 			ImGui_ImplSDL2_ProcessEvent(&event);
 			//inputManager.handleEvent(event);
+			handleEvent(event);
 			if (event.type == SDL_QUIT) {
 				quit = true;
 			}

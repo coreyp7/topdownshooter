@@ -1,25 +1,25 @@
 #pragma once
 #include <SDL.h>
 #include <vector>
-#include "GameState.h"
+//#include "GameState.h"
 
 /**
 Handles SDL events and calls functions in the Player apprpriate
 to the proccessed user inputs.
 */
-class InputManager
-{
-public:
-	InputManager(GameState* gameState);
-	void handleEvent(SDL_Event event);
+//class InputManager
+//{
+//public:
+	//InputManager(GameState* gameState);
+void handleEvent(SDL_Event event);
 
-private:
-	std::vector<SDL_Event> events;
+//private:
+//std::vector<SDL_Event> events;
 
 	// NOTE: this should be the GameState instead.
-	GameState* gameState;
+//GameState* gameState;
 
-	void handleMovementEvent(SDL_Event event);
+void handleMovementEvent(SDL_Event event);
 
-};
+//};
 
