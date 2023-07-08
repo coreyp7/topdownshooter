@@ -5,13 +5,13 @@
 #include "Player.h"
 #include "GameState.h"
 
-class Renderer
-{
-public:
-	Renderer(SDL_Window* window, SDL_Renderer* renderer);
-	~Renderer();
+//class Renderer
+//{
+//public:
+//	Renderer(SDL_Window* window, SDL_Renderer* renderer);
+//	~Renderer();
 
-	int renderedEnemiesThisFrame;
+	//int renderedEnemiesThisFrame;
 
 	// Renders the entire GameState.
 	// Everything starts here.
@@ -21,20 +21,10 @@ public:
 	void showBackbufferClear();
 
 	// Called to load assets from project for rendering.
-	void setup();
-private:
-	SDL_Window* window;
-	SDL_Renderer* renderer;
-
-	SDL_Texture* playerTexture;
-	SDL_Texture* sEnemyTexture;
-	SDL_Texture* mEnemyTexture;
-	SDL_Texture* testbg;
-	SDL_Texture* healthBarTexture;
-
-	// Updated every frame from gamestate for rendering.
-	// Used in like every function so keeping here for convenience.
-	SDL_FRect camera;
+	void setupRenderer(SDL_Renderer* renderer, SDL_Window* window);
+//private:
+	/*SDL_Window* window;
+	SDL_Renderer* renderer;*/
 
 	void renderPlayer(Player* player);
 
@@ -58,5 +48,5 @@ private:
 
 	void drawQuadTree(QuadTree* qTree);
 
-};
+//};
 

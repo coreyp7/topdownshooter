@@ -33,10 +33,10 @@ ImGuiIO io; // idk what this is for rn, but imgui needs it
 Player* player = new Player(SDL_FPoint{ 250, 250 });
 //GameState gameState = GameState(&player);
 //InputManager inputManager = InputManager(&gameState);
-Renderer* renderManager;
+//Renderer* renderManager;
 
-SDL_Window* window;
-SDL_Renderer* renderer;
+//SDL_Window* window;
+//SDL_Renderer* renderer;
 
 int setup();
 void gameLoop();
@@ -74,6 +74,8 @@ void gameLoop() {
 		/*renderManager->renderGameState(&gameState);
 		showImGui();
 		renderManager->showBackbufferClear();*/
+		renderGameState();
+
 		ImGui_ImplSDLRenderer_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
@@ -83,9 +85,10 @@ void gameLoop() {
 		ImGui::Render();
 		ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
 
-		SDL_RenderPresent(renderer);
+		showBackbufferClear();
+		/*SDL_RenderPresent(renderer);
 		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);
+		SDL_RenderClear(renderer);*/
 		//countedFrames++;
 
 		// Finished rendering, cap framerate.
@@ -149,7 +152,7 @@ void showImGui() {
 	ImGui::Text("Enemy count:");
 	//ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
 	ImGui::Text("Rendered enemies this frame:");
-	ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
+	//ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
 	ImGui::SliderInt("fps cap:", &fpsCap, 5, 120);
 	ImGui::Text("Ticks to complete frame:");
 	ImGui::Text(std::to_string(frameTimeToComplete).c_str());
@@ -179,8 +182,8 @@ int setup() {
 
 	// Create window with SDL_Renderer graphics context
 	SDL_WindowFlags window_flags = (SDL_WindowFlags)(SDL_WINDOW_RESIZABLE | SDL_WINDOW_ALLOW_HIGHDPI);
-	window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
-	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
+	SDL_Window* window = SDL_CreateWindow("QuadTree Collision Detection demo", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WINDOW_WIDTH, WINDOW_HEIGHT, window_flags);
+	SDL_Renderer* renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED); //SDL_RENDERER_PRESENTVSYNC | SDL_RENDERER_ACCELERATED);
 	if (renderer == nullptr)
 	{
 		SDL_Log("Error creating SDL_Renderer!");
@@ -215,6 +218,7 @@ int setup() {
 	// Render manager will hold pointers to these. It will handle
 	// cleaning itself up.
 	//renderManager = new Renderer(window, renderer);
+	setupRenderer(renderer, window);
 
 	return 0;
 }
