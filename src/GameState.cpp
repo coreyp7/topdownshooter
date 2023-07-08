@@ -233,15 +233,7 @@ void GameState::playerShootBullet(int x, int y) {
 	float yVel = yUnitVector * player->PROJECTILE_SPEED;
 
 	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
-	//projectiles.push_back(newProj);
-	entities.push_back(newProj);
-
-	// @refactor: could put this stuff into its own function
-	// so if the id is invalid, it doesn't crash.
-	entityIdMap.insert({ newProj->id, newProj });
-	
-
-	//qTree->insert(new)
+	addEntity(newProj);
 }
 Entity* GameState::getEntityById(Uint16 id) {
 	auto entry = entityIdMap.find(id);
@@ -296,6 +288,9 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 			else {
 				entity2->getFRect()->x -= xDistance;
 			}
+		}
+		else if (entity2->getEntityType() == ENEMY_PROJECTILE) {
+			entity2->dead = true;
 		}
 		break;
 	case ENEMY:
@@ -365,8 +360,6 @@ void GameState::removeEntity(Entity* entity) {
 	}
 }
 
-
-
 void GameState::spawnEnemyTesting(int x, int y) {
 	int xWorldPos = x + camera.x;
 	int yWorldPos = y + camera.y;
@@ -381,12 +374,12 @@ void GameState::spawnEnemyTesting(int x, int y) {
 void GameState::shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
 	Projectile* newProj = new Projectile({x,y}, xVel, yVel, size);
 	newProj->typeOfProjectile = ENEMY_PROJECTILE;
-	//projectiles.push_back(newProj);
-	entities.push_back(newProj);
-
-	// @refactor: could put this stuff into its own function
-	// so if the id is invalid, it doesn't crash.
-	entityIdMap.insert({ newProj->id, newProj });
+	addEntity(newProj);
 }
 
-// All the specific private stuff will be down here.
+// Adds a new entity to the game state. (quadtree, entities vec, anything else)
+void GameState::addEntity(Entity* entity) {
+	entities.push_back(entity);
+	entityIdMap.insert({ entity->id, entity });
+}
+

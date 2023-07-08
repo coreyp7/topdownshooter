@@ -39,6 +39,8 @@ public:
 
 	void shootEnemyProjectile(float x, float y, float xVel, float yVel, int size);
 
+	void addEntity(Entity* entity);
+
 private:
 
 	Player* player;
