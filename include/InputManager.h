@@ -1,7 +1,7 @@
 #pragma once
 #include <SDL.h>
 #include <vector>
-//#include "GameState.h"
+#include "GameState.h"
 
 /**
 Handles SDL events and calls functions in the Player apprpriate

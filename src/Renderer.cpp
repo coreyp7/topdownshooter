@@ -54,15 +54,15 @@ void Renderer::showBackbufferClear() {
 
 // Renders entire game state. Utilizes functions for rendering
 // specific things below this.
-void Renderer::renderGameState(GameState* gameState) {
+void Renderer::renderGameState() {
 	//Setup camera for this frame, from gamestate
-	this->camera = gameState->getCamera();
+	//this->camera = gameState->getCamera();
 	SDL_FRect bg = { 0, 0, 1000, 1500 }; //@hardcoded
 
 	renderTextureRelativeToCamera(testbg, &bg);
-	renderEnemies(gameState->getEnemies());
-	renderProjectiles(gameState->getProjectiles());
-	renderPlayer(gameState->getPlayer());
+	//renderEnemies(gameState->getEnemies());
+	//renderProjectiles(gameState->getProjectiles());
+	//renderPlayer(gameState->getPlayer());
 
 	//drawQuadTree(gameState->getQuadTree());
 }

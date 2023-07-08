@@ -17,14 +17,14 @@
 
 #include "EnemyManager.h"
 
-class GameState {
-
-public:
-	GameState(Player* player);
-	~GameState();
+//class GameState {
+//
+//public:
+//	GameState(Player* player);
+//	~GameState();
 
 	// Simulate entire game state for dt seconds.
-	void simulate();
+	void simulateWorld();
 
 	Player* getPlayer();
 	std::vector<Projectile*> getProjectiles();
@@ -41,23 +41,23 @@ public:
 
 	void addEntity(Entity* entity);
 
-private:
+//private:
 
-	Player* player;
-	float dt;
-	float lastUpdate;
+	//Player* player;
+	//float dt;
+	//float lastUpdate;
 	/*std::vector<Projectile*> projectiles;
 	std::vector<Enemy*> enemies;*/
-	std::vector<Entity*> entities;
+	//std::vector<Entity*> entities;
 
-	std::unordered_map<Uint16, Entity*> entityIdMap;
+	//std::unordered_map<Uint16, Entity*> entityIdMap;
 
-	EnemyManager* enemyManager;
+	////EnemyManager* enemyManager;
 
 
-	SDL_FRect camera;
+	//SDL_FRect camera;
 
-	QuadTree* qTree;
+	//QuadTree* qTree;
 
 	// Updates camera position depending on player's position.
 	void moveCameraWithPlayer();
@@ -74,4 +74,4 @@ private:
 
 	Entity* getEntityById(Uint16 id);
 	void removeEntity(Entity* entity);
-};
+//};

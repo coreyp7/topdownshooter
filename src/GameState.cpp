@@ -1,34 +1,44 @@
 #include "GameState.h"
 
-GameState::GameState(Player* player) {
-	this->player = player;
+extern Player* player;
 
-	dt = 0;
-	lastUpdate = 0;
-	camera = { 0, 0, 1280, 720 };//@hardcoded: this should be set from main or
-	//something; constructor params probably.
-	qTree = new QuadTree(0, 0, 1000, 1500); //@hardcoded
+//GameState(Player* player) {
+//	this->player = player;
+//
+//	dt = 0;
+//	lastUpdate = 0;
+//	camera = { 0, 0, 1280, 720 };//@hardcoded: this should be set from main or
+//	//something; constructor params probably.
+//	qTree = new QuadTree(0, 0, 1000, 1500); //@hardcoded
+//
+//	// Here I'm hardcoding test enemies.
+//	// Later, this would either:
+//	// - be spawned in dynamically like a hoarde type game
+//	// - loaded into a level ala a tile in the tilemap
+//	entityIdMap.insert({ player->id, player });
+//	enemyManager = new EnemyManager(this);
+//
+//	/*for (int i = 0; i < 3; i++) {
+//		Enemy* newEnemy = new SmallEnemy(i*75 % 3840, i*75 % 2180);
+//		entities.push_back(newEnemy);
+//		entityIdMap.insert({ newEnemy->id, newEnemy });
+//	}*/
+//}
 
-	// Here I'm hardcoding test enemies.
-	// Later, this would either:
-	// - be spawned in dynamically like a hoarde type game
-	// - loaded into a level ala a tile in the tilemap
-	entityIdMap.insert({ player->id, player });
-	enemyManager = new EnemyManager(this);
+//~GameState() {
+//	this->player = nullptr;
+//}
 
-	/*for (int i = 0; i < 3; i++) {
-		Enemy* newEnemy = new SmallEnemy(i*75 % 3840, i*75 % 2180);
-		entities.push_back(newEnemy);
-		entityIdMap.insert({ newEnemy->id, newEnemy });
-	}*/
-}
-
-GameState::~GameState() {
-	this->player = nullptr;
-}
+int dt;
+float lastUpdate;
+std::vector<Entity*> entities;
+std::unordered_map<Uint16, Entity*> entityIdMap;
+SDL_FRect camera;
+QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
 
 // Entire state simulate which is public.
-void GameState::simulate() {
+void simulateWorld() {
+	//printf("simulateWorld called\n");
 	// This approach to handling time is appropriate for this game.
 	// Physics is simple and there's no networking.
 	// If it becomes too inconsistent or gross later, then I will attempt
@@ -36,11 +46,11 @@ void GameState::simulate() {
 	dt = (SDL_GetTicks() - lastUpdate) / 1000.f;
 	lastUpdate = SDL_GetTicks();
 
-	// Simulate entire game for dt seconds.
+	//// Simulate entire game for dt seconds.
 	player->simulate(dt);
 	moveCameraWithPlayer();
 
-	// Update QuadTree (for now, deleting it and rebuilding it every frame).
+	//// Update QuadTree (for now, deleting it and rebuilding it every frame).
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself
 	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded: !!!!!!!!!!!!!!!!
 	qTree->insert(player);
@@ -48,14 +58,12 @@ void GameState::simulate() {
 	simulateEnemies();
 	simulateProjectiles();
 
-	resolveCollisions();
-
-	//lastUpdate = SDL_GetTicks();
+	//resolveCollisions();
 }
 
 //TODO: should change the name of this function. I'd name this something like
 // 'processAndResolveCollisions'
-void GameState::resolveCollisions() {
+void resolveCollisions() {
 	//std::vector<int> entitiesToDestroy;
 	for (int i = 0; i < entities.size(); i++) {
 		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(entities[i]);
@@ -101,7 +109,7 @@ void GameState::resolveCollisions() {
 	}*/
 }
 
-void GameState::simulateEnemies() {
+void simulateEnemies() {
 	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() == ENEMY) {
@@ -112,7 +120,7 @@ void GameState::simulateEnemies() {
 	}
 }
 
-void GameState::simulateProjectiles() {
+void simulateProjectiles() {
 	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() != PROJECTILE && entities[i]->getEntityType() != ENEMY_PROJECTILE) continue;
@@ -130,11 +138,11 @@ void GameState::simulateProjectiles() {
 	}
 }
 
-Player* GameState::getPlayer() {
+Player* getPlayer() {
 	return player;
 }
 
-std::vector<Projectile*> GameState::getProjectiles() {
+std::vector<Projectile*> getProjectiles() {
 	//return &projectiles;
 	std::vector<Projectile*> projectiles;
 	for (int i = 0; i < entities.size(); i++) {
@@ -146,7 +154,7 @@ std::vector<Projectile*> GameState::getProjectiles() {
 	return projectiles;
 }
 
-std::vector<Enemy*> GameState::getEnemies() {
+std::vector<Enemy*> getEnemies() {
 	std::vector<Enemy*> enemies;
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() == ENEMY) {
@@ -157,15 +165,15 @@ std::vector<Enemy*> GameState::getEnemies() {
 	return enemies;
 }
 
-SDL_FRect GameState::getCamera() {
+SDL_FRect getCamera() {
 	return camera;
 }
 
-QuadTree* GameState::getQuadTree() {
+QuadTree* getQuadTree() {
 	return qTree;
 }
 
-void GameState::moveCameraWithPlayer() {
+void moveCameraWithPlayer() {
 	int offset = 150;
 
 	// x axis
@@ -198,7 +206,8 @@ void GameState::moveCameraWithPlayer() {
 // Param should be the position in the window the player clicked.
 // This function will shoot it in worldspace (using camera). 
 // Don't worry about camera shit when calling this.
-void GameState::playerShootBullet(int x, int y) {
+void playerShootBullet(int x, int y) {
+	//printf("playerShootBullet called.");
 	/*
 	1. get vector from center of player circle to the point (x/y params).
 	2. normalize that vector into a unit vector
@@ -232,10 +241,10 @@ void GameState::playerShootBullet(int x, int y) {
 	float xVel = xUnitVector * player->PROJECTILE_SPEED;
 	float yVel = yUnitVector * player->PROJECTILE_SPEED;
 
-	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
-	addEntity(newProj);
+	//Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
+	//addEntity(newProj);
 }
-Entity* GameState::getEntityById(Uint16 id) {
+Entity* getEntityById(Uint16 id) {
 	auto entry = entityIdMap.find(id);
 	
 	if (entry != entityIdMap.end()) {
@@ -244,7 +253,7 @@ Entity* GameState::getEntityById(Uint16 id) {
 	return nullptr;
 }
 
-bool GameState::checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
+bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
 	/*SDL_FRect rect1 = *entity1->rect;
 	SDL_FRect rect2 = *entity2->rect;*/
 	SDL_FRect rect1 = *entity1; // TODO: change this function to match the params instead of this shit
@@ -256,7 +265,7 @@ bool GameState::checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
 	return xCollision && yCollision;
 }
 
-int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
+int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 	//if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
 	//	// resolve their collision
 	//	printf("Enemy %i collided with projectile %i\n", entity1->id, entity2->id);
@@ -347,7 +356,7 @@ int GameState::resolveEntityCollision(Entity* entity1, Entity* entity2) {
 }
 
 // Removes this entity from the map, aswell as deleting the entity and setting nullptr.
-void GameState::removeEntity(Entity* entity) {
+void removeEntity(Entity* entity) {
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->id == entity->id) {
 			entities.erase(entities.begin()+i);
@@ -360,25 +369,26 @@ void GameState::removeEntity(Entity* entity) {
 	}
 }
 
-void GameState::spawnEnemyTesting(int x, int y) {
+void spawnEnemyTesting(int x, int y) {
+	printf("spawnEnemyTesting called.");
 	int xWorldPos = x + camera.x;
 	int yWorldPos = y + camera.y;
 
-	//Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
-	Enemy* newEnemy = new MediumEnemy(enemyManager, xWorldPos, yWorldPos);
+	Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
+	//Enemy* newEnemy = new MediumEnemy(nullptr, xWorldPos, yWorldPos);
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 
 }
 
-void GameState::shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
+void shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
 	Projectile* newProj = new Projectile({x,y}, xVel, yVel, size);
 	newProj->typeOfProjectile = ENEMY_PROJECTILE;
 	addEntity(newProj);
 }
 
 // Adds a new entity to the game state. (quadtree, entities vec, anything else)
-void GameState::addEntity(Entity* entity) {
+void addEntity(Entity* entity) {
 	entities.push_back(entity);
 	entityIdMap.insert({ entity->id, entity });
 }

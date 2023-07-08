@@ -30,8 +30,8 @@ Uint32 frameTimeToComplete = -1;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 //Player player = Player(SDL_FRect{250, 250, 50, 50});
-Player player = Player(SDL_FPoint{ 250, 250 });
-GameState gameState = GameState(&player);
+Player* player = new Player(SDL_FPoint{ 250, 250 });
+//GameState gameState = GameState(&player);
 //InputManager inputManager = InputManager(&gameState);
 Renderer* renderManager;
 
@@ -65,8 +65,9 @@ void gameLoop() {
 			}
 		}
 
-		// Simulate gamestate
+		// Simulate entire gamestate
 		//gameState.simulate();
+		simulateWorld();
 
 		// Render current gamestate
 		//renderManager->renderPlayer(&player);
@@ -146,7 +147,7 @@ void showImGui() {
 		ImGui::Text(std::to_string(fps).c_str());
 	}
 	ImGui::Text("Enemy count:");
-	ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
+	//ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
 	ImGui::Text("Rendered enemies this frame:");
 	ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
 	ImGui::SliderInt("fps cap:", &fpsCap, 5, 120);

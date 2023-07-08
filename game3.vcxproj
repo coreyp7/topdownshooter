@@ -104,12 +104,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>$(SolutionDir)include\;C:\dev\libs\SDL2_vs\include;C:\dev\libs\SDL2_image-2.6.3\include;C:\dev\libs\imgui_sdl_renderer_vs\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include\;C:\dev\dependencies\SDL2\include;C:\dev\dependencies\SDL2_image-2.6.3\include;C:\dev\dependencies\imgui_sdlrenderer\imgui_sdlrenderer\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>C:\dev\libs\SDL2_vs\lib\x64;C:\dev\libs\SDL2_image-2.6.3\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\dev\dependencies\SDL2\lib\x64;C:\dev\dependencies\SDL2_image-2.6.3\lib\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_image.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -159,8 +159,8 @@
     <ClCompile Include="src\SmallEnemy.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\libs\imgui_sdl_renderer_vs\imgui_vs.vcxproj">
-      <Project>{9f2f48d0-ba33-4e48-9efc-90cec73ffa4f}</Project>
+    <ProjectReference Include="..\..\dependencies\imgui_sdlrenderer\imgui_sdlrenderer\imgui_sdlrenderer.vcxproj">
+      <Project>{1e582473-4e54-49d4-bc2c-fc8ea4378bf3}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

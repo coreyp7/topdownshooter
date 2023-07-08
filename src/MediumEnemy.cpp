@@ -1,6 +1,6 @@
 #include "MediumEnemy.h"
 
-MediumEnemy::MediumEnemy(EnemyManager* manager, float x, float y) : Enemy(manager, x, y) {
+MediumEnemy::MediumEnemy(float x, float y) : Enemy(x, y) {
 	rect.w = SIZE;
 	rect.h = SIZE+20;
 	hp = 9;
@@ -46,10 +46,10 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 
 	if (nextShotTicks < SDL_GetTicks()) {
 		nextShotTicks += nextShotDelay;
-		manager->shootEnemyProjectile(rect.x + rect.w/2, rect.y + rect.h/2, 
+		/*manager->shootEnemyProjectile(rect.x + rect.w/2, rect.y + rect.h/2, 
 			xUnitVector * PROJECTILE_SPEED, yUnitVector * PROJECTILE_SPEED,
 			PROJECTILE_SIZE
-		);
+		);*/
 	}
 }
 

@@ -14,13 +14,15 @@ void handleEvent(SDL_Event event) {
 	if (event.type == SDL_MOUSEBUTTONDOWN) {
 		if (event.button.button == 1) { // left click
 			//gameState->playerShootBullet(event.button.x, event.button.y);
-			printf("player shoot bullet at (%i,%i)\n",
-				event.button.x, event.button.y);
+			/*printf("player shoot bullet at (%i,%i)\n",
+				event.button.x, event.button.y);*/
+			playerShootBullet(event.button.x, event.button.y);
 		}
 		else {
 			//gameState->spawnEnemyTesting(event.button.x, event.button.y);
-			printf("spawn enemy at (%i,%i)\n",
-				event.button.x, event.button.y);
+			/*printf("spawn enemy at (%i,%i)\n",
+				event.button.x, event.button.y);*/
+			spawnEnemyTesting(event.button.x, event.button.y);
 		}
 	}
 

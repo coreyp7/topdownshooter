@@ -1,7 +1,7 @@
 #include "Enemy.h"
 
-Enemy::Enemy(EnemyManager* manager, float x, float y) {
-	this->manager = manager;
+Enemy::Enemy(float x, float y) {
+	//this->manager = manager;
 	rect = { x, y, 0, 0 }; // width/height set in subclasses
 }
 

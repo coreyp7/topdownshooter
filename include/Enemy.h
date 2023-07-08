@@ -9,9 +9,9 @@ public:
 	SDL_FRect rect;
 	//const int MOVE_SPEED = 100; // @temporary, @testing
 	//const int MOVE_SPEED = 50; // @temporary, @testing
-	EnemyManager* manager;
+	//EnemyManager* manager;
 
-	Enemy(EnemyManager* manager, float x, float y);
+	Enemy(float x, float y);
 	~Enemy();
 
 	virtual void simulate(float dt, SDL_FPoint playerPosition) = 0;
