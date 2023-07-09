@@ -43,6 +43,10 @@ Uint32 lastUpdate = 0;
 //std::unordered_map<Uint16, Entity*> entityIdMap;
 QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
 
+void setupGameState() {
+	entityIdMap.insert({ player.id, &player });
+}
+
 // Entire state simulate which is public.
 void simulateWorld() {
 	//printf("simulateWorld called\n");
@@ -66,7 +70,7 @@ void simulateWorld() {
 	simulateEnemies();
 	simulateProjectiles();
 
-	//resolveCollisions();
+	resolveCollisions();
 
 	// @lazy fix that adds extra O(n). delete stuff thats dead.
 	// If I ever start having performance problems, I'm going
@@ -149,7 +153,7 @@ void simulateProjectiles() {
 }
 
 Player* getPlayer() {
-	return nullptr;
+	return &player;
 }
 
 std::vector<Projectile*> getProjectiles() {
@@ -384,8 +388,9 @@ void spawnEnemyTesting(int x, int y) {
 	int xWorldPos = x + camera.x;
 	int yWorldPos = y + camera.y;
 
-	Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
-	//Enemy* newEnemy = new MediumEnemy(nullptr, xWorldPos, yWorldPos);
+	// TODO: have functions for creating enemies inside the enemymanager so we don't have to worry about it in here.
+	//Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
+	Enemy* newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 

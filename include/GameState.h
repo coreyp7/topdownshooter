@@ -27,6 +27,8 @@ extern SDL_FRect camera;
 extern std::vector<Entity*> entities;
 extern std::unordered_map<Uint16, Entity*> entityIdMap;
 
+void setupGameState();
+
 // Simulate entire game state for dt seconds.
 void simulateWorld();
 

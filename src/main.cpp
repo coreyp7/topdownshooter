@@ -16,10 +16,10 @@
 
 //const int DEFAULT_COUNT = 500;
 const int DEFAULT_COUNT = 1500;
-//const int WINDOW_WIDTH = 1280;
-//const int WINDOW_HEIGHT = 720;
-const int WINDOW_WIDTH = 720;
-const int WINDOW_HEIGHT = 480;
+const int WINDOW_WIDTH = 1280;
+const int WINDOW_HEIGHT = 720;
+//const int WINDOW_WIDTH = 720;
+//const int WINDOW_HEIGHT = 480;
 Uint32 countedFrames = 0;
 int fpsCap = 60;
 Uint32 frameTimeToComplete = -1;
@@ -37,6 +37,7 @@ ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 //SDL_Window* window;
 //SDL_Renderer* renderer;
+
 extern Player player; // from gamestate
 
 int setup();
@@ -220,6 +221,7 @@ int setup() {
 	// Render manager will hold pointers to these. It will handle
 	// cleaning itself up.
 	//renderManager = new Renderer(window, renderer);
+	setupGameState();
 	setupRenderer(renderer, window);
 
 	return 0;
