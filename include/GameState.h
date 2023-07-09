@@ -22,6 +22,10 @@
 //public:
 //	GameState(Player* player);
 //	~GameState();
+extern Player player;
+extern SDL_FRect camera;
+extern std::vector<Entity*> entities;
+extern std::unordered_map<Uint16, Entity*> entityIdMap;
 
 // Simulate entire game state for dt seconds.
 void simulateWorld();

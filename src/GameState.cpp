@@ -30,15 +30,18 @@ void moveCameraWithPlayer(Player* player);
 //~GameState() {
 //	this->player = nullptr;
 //}
+// 
+// externs
+Player player = Player(SDL_FPoint{ 250, 250 });
+SDL_FRect camera = { 0, 0, 720, 480 };
+std::vector<Entity*> entities;
+std::unordered_map<Uint16, Entity*> entityIdMap;
 
 float dt = 0;
 Uint32 lastUpdate = 0;
-std::vector<Entity*> entities;
-std::unordered_map<Uint16, Entity*> entityIdMap;
-SDL_FRect camera;
+//std::vector<Entity*> entities;
+//std::unordered_map<Uint16, Entity*> entityIdMap;
 QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
-
-extern Player player;
 
 // Entire state simulate which is public.
 void simulateWorld() {
@@ -49,7 +52,6 @@ void simulateWorld() {
 	// to refactor into example on 131/132 of 'Game Programming Patterns'.
 	dt = (SDL_GetTicks() - lastUpdate) / 1000.f;
 	lastUpdate = SDL_GetTicks();
-	printf("dt:%f", dt);
 
 	//// Simulate entire game for dt seconds.
 	player.simulate(dt);
@@ -61,10 +63,26 @@ void simulateWorld() {
 	qTree->insert(&player);
 
 	//printf("(%f,%f)\n", player->getFRect()->x, player->getFRect()->y);
-	/*simulateEnemies();
-	simulateProjectiles();*/
+	simulateEnemies();
+	simulateProjectiles();
 
 	//resolveCollisions();
+
+	// @lazy fix that adds extra O(n). delete stuff thats dead.
+	// If I ever start having performance problems, I'm going
+	// to change these to contiguous arrays.
+	for (int i = 0; i < entities.size(); i++) {
+		Entity* curr = entities[i];
+		if (curr->dead) {
+			entities.erase(entities.begin() + i);
+			entityIdMap.erase(curr->id);
+			qTree->remove(curr);
+			delete curr;
+			curr = nullptr;
+			i--;
+
+		}
+	}
 }
 
 //TODO: should change the name of this function. I'd name this something like
@@ -89,21 +107,7 @@ void resolveCollisions() {
 		}
 	}
 
-	// @lazy fix that adds extra O(n). delete stuff thats dead.
-	// If I ever start having performance problems, I'm going
-	// to change these to contiguous arrays.
-	for (int i = 0; i < entities.size(); i++) {
-		Entity* curr = entities[i];
-		if (curr->dead) {
-			entities.erase(entities.begin() + i);
-			entityIdMap.erase(curr->id);
-			qTree->remove(curr);
-			delete curr;
-			curr = nullptr;
-			i--;
-
-		}
-	}
+	
 	/*Entity* deadEntity;
 	for (int i = 0; i < entitiesToDestroy.size(); i++) {
 		deadEntity = entities[entitiesToDestroy[i]];
@@ -120,7 +124,7 @@ void simulateEnemies() {
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() == ENEMY) {
 			Enemy* enemy = (Enemy*)entities[i];
-			//enemy->simulate(dt, player->getPosition());
+			enemy->simulate(dt, player.getPosition());
 			qTree->insert(entities[i]);
 		}
 	}
@@ -223,32 +227,32 @@ void playerShootBullet(int x, int y) {
 	*/
 
 	// Change position to be in world space instead of relative to window.
-	//int xWorldPos = x + camera.x;
-	//int yWorldPos = y + camera.y;
+	int xWorldPos = x + camera.x;
+	int yWorldPos = y + camera.y;
 
 	//printf("Shoot bullet at (%i,%i) in global worldspace.\n", xWorldPos, yWorldPos);
 	////1
-	//float xVec, yVec;
-	//xVec = xWorldPos - player->pos.x;
-	//yVec = yWorldPos - player->pos.y;
+	float xVec, yVec;
+	xVec = xWorldPos - player.pos.x;
+	yVec = yWorldPos - player.pos.y;
 
 	////2: normalize into unit vector
-	//float vectorMagnitude = sqrt((xVec * xVec) + (yVec * yVec));
-	//float xUnitVector = xVec / vectorMagnitude;
-	//float yUnitVector = yVec / vectorMagnitude;
+	float vectorMagnitude = sqrt((xVec * xVec) + (yVec * yVec));
+	float xUnitVector = xVec / vectorMagnitude;
+	float yUnitVector = yVec / vectorMagnitude;
 
 	////3+4: this is the spawn point of the projectile.
-	//float circleEdgeX = player->pos.x + (xUnitVector * player->HITBOX_RADIUS);
-	//float circleEdgeY = player->pos.y + (yUnitVector * player->HITBOX_RADIUS);
-	//SDL_FPoint edgeSpawnPoint = { circleEdgeX, circleEdgeY };
+	float circleEdgeX = player.pos.x + (xUnitVector * player.HITBOX_RADIUS);
+	float circleEdgeY = player.pos.y + (yUnitVector * player.HITBOX_RADIUS);
+	SDL_FPoint edgeSpawnPoint = { circleEdgeX, circleEdgeY };
 
-	//// Projectiles' velocity; just the unit vector multiplied by the projectile
-	//// speed.
-	//float xVel = xUnitVector * player->PROJECTILE_SPEED;
-	//float yVel = yUnitVector * player->PROJECTILE_SPEED;
+	// Projectiles' velocity; just the unit vector multiplied by the projectile
+	// speed.
+	float xVel = xUnitVector * player.PROJECTILE_SPEED;
+	float yVel = yUnitVector * player.PROJECTILE_SPEED;
 
-	////Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
-	////addEntity(newProj);
+	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
+	addEntity(newProj);
 }
 Entity* getEntityById(Uint16 id) {
 	auto entry = entityIdMap.find(id);

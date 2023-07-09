@@ -29,7 +29,7 @@ SDL_Texture* healthBarTexture;
 
 // Updated every frame from gamestate for rendering.
 // Used in like every function so keeping here for convenience.
-static SDL_FRect camera;
+//extern SDL_FRect camera;
 
 void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
 	renderer = newRenderer;
@@ -80,6 +80,9 @@ void renderGameState(Player* player) {
 	//renderEnemies(gameState->getEnemies());
 	//renderProjectiles(gameState->getProjectiles());
 	//renderPlayer(gameState->getPlayer());
+	renderEnemies(getEnemies());
+	renderProjectiles(getProjectiles());
+
 	renderPlayer(player);
 
 	//drawQuadTree(gameState->getQuadTree());

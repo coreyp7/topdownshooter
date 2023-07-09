@@ -30,13 +30,14 @@ Uint32 frameTimeToComplete = -1;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 //Player player = Player(SDL_FRect{250, 250, 50, 50});
-Player player = Player(SDL_FPoint{ 250, 250 });
+//Player player = Player(SDL_FPoint{ 250, 250 });
 //GameState gameState = GameState(&player);
 //InputManager inputManager = InputManager(&gameState);
 //Renderer* renderManager;
 
 //SDL_Window* window;
 //SDL_Renderer* renderer;
+extern Player player; // from gamestate
 
 int setup();
 void gameLoop();
@@ -94,14 +95,14 @@ void gameLoop() {
 
 		// Finished rendering, cap framerate.
 		// If frame is finished early, wait remaining time.
-		//frameTimeToComplete = SDL_GetTicks() - frameStart;
-		//if (1000 / fpsCap > frameTimeToComplete) {
-		//	SDL_Delay((1000 / fpsCap) - frameTimeToComplete);
-		//}
-		////assert(1000 / fpsCap > frameTimeToComplete);
-		//if (!(1000 / fpsCap > frameTimeToComplete)) {
-		//	printf("DID NOT FINISH IN TIME\n");
-		//}
+		frameTimeToComplete = SDL_GetTicks() - frameStart;
+		if (1000 / fpsCap > frameTimeToComplete) {
+			SDL_Delay((1000 / fpsCap) - frameTimeToComplete);
+		}
+		//assert(1000 / fpsCap > frameTimeToComplete);
+		if (!(1000 / fpsCap > frameTimeToComplete)) {
+			printf("DID NOT FINISH IN TIME\n");
+		}
 
 	}
 }
