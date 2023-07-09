@@ -1,6 +1,8 @@
 #include "GameState.h"
 
-extern Player* player;
+void moveCameraWithPlayer(Player* player);
+
+//extern Player* player;
 
 //GameState(Player* player) {
 //	this->player = player;
@@ -29,12 +31,14 @@ extern Player* player;
 //	this->player = nullptr;
 //}
 
-int dt;
-float lastUpdate;
+float dt = 0;
+Uint32 lastUpdate = 0;
 std::vector<Entity*> entities;
 std::unordered_map<Uint16, Entity*> entityIdMap;
 SDL_FRect camera;
 QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
+
+extern Player player;
 
 // Entire state simulate which is public.
 void simulateWorld() {
@@ -45,18 +49,20 @@ void simulateWorld() {
 	// to refactor into example on 131/132 of 'Game Programming Patterns'.
 	dt = (SDL_GetTicks() - lastUpdate) / 1000.f;
 	lastUpdate = SDL_GetTicks();
+	printf("dt:%f", dt);
 
 	//// Simulate entire game for dt seconds.
-	player->simulate(dt);
-	moveCameraWithPlayer();
+	player.simulate(dt);
+	moveCameraWithPlayer(&player);
 
 	//// Update QuadTree (for now, deleting it and rebuilding it every frame).
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself
 	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded: !!!!!!!!!!!!!!!!
-	qTree->insert(player);
+	qTree->insert(&player);
 
-	simulateEnemies();
-	simulateProjectiles();
+	//printf("(%f,%f)\n", player->getFRect()->x, player->getFRect()->y);
+	/*simulateEnemies();
+	simulateProjectiles();*/
 
 	//resolveCollisions();
 }
@@ -114,7 +120,7 @@ void simulateEnemies() {
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() == ENEMY) {
 			Enemy* enemy = (Enemy*)entities[i];
-			enemy->simulate(dt, player->getPosition());
+			//enemy->simulate(dt, player->getPosition());
 			qTree->insert(entities[i]);
 		}
 	}
@@ -139,7 +145,7 @@ void simulateProjectiles() {
 }
 
 Player* getPlayer() {
-	return player;
+	return nullptr;
 }
 
 std::vector<Projectile*> getProjectiles() {
@@ -173,7 +179,7 @@ QuadTree* getQuadTree() {
 	return qTree;
 }
 
-void moveCameraWithPlayer() {
+void moveCameraWithPlayer(Player* player) {
 	int offset = 150;
 
 	// x axis
@@ -217,32 +223,32 @@ void playerShootBullet(int x, int y) {
 	*/
 
 	// Change position to be in world space instead of relative to window.
-	int xWorldPos = x + camera.x;
-	int yWorldPos = y + camera.y;
+	//int xWorldPos = x + camera.x;
+	//int yWorldPos = y + camera.y;
 
-	printf("Shoot bullet at (%i,%i) in global worldspace.\n", xWorldPos, yWorldPos);
-	//1
-	float xVec, yVec;
-	xVec = xWorldPos - player->pos.x;
-	yVec = yWorldPos - player->pos.y;
+	//printf("Shoot bullet at (%i,%i) in global worldspace.\n", xWorldPos, yWorldPos);
+	////1
+	//float xVec, yVec;
+	//xVec = xWorldPos - player->pos.x;
+	//yVec = yWorldPos - player->pos.y;
 
-	//2: normalize into unit vector
-	float vectorMagnitude = sqrt((xVec * xVec) + (yVec * yVec));
-	float xUnitVector = xVec / vectorMagnitude;
-	float yUnitVector = yVec / vectorMagnitude;
+	////2: normalize into unit vector
+	//float vectorMagnitude = sqrt((xVec * xVec) + (yVec * yVec));
+	//float xUnitVector = xVec / vectorMagnitude;
+	//float yUnitVector = yVec / vectorMagnitude;
 
-	//3+4: this is the spawn point of the projectile.
-	float circleEdgeX = player->pos.x + (xUnitVector * player->HITBOX_RADIUS);
-	float circleEdgeY = player->pos.y + (yUnitVector * player->HITBOX_RADIUS);
-	SDL_FPoint edgeSpawnPoint = { circleEdgeX, circleEdgeY };
+	////3+4: this is the spawn point of the projectile.
+	//float circleEdgeX = player->pos.x + (xUnitVector * player->HITBOX_RADIUS);
+	//float circleEdgeY = player->pos.y + (yUnitVector * player->HITBOX_RADIUS);
+	//SDL_FPoint edgeSpawnPoint = { circleEdgeX, circleEdgeY };
 
-	// Projectiles' velocity; just the unit vector multiplied by the projectile
-	// speed.
-	float xVel = xUnitVector * player->PROJECTILE_SPEED;
-	float yVel = yUnitVector * player->PROJECTILE_SPEED;
+	//// Projectiles' velocity; just the unit vector multiplied by the projectile
+	//// speed.
+	//float xVel = xUnitVector * player->PROJECTILE_SPEED;
+	//float yVel = yUnitVector * player->PROJECTILE_SPEED;
 
-	//Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
-	//addEntity(newProj);
+	////Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
+	////addEntity(newProj);
 }
 Entity* getEntityById(Uint16 id) {
 	auto entry = entityIdMap.find(id);

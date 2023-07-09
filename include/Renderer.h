@@ -15,7 +15,7 @@
 
 	// Renders the entire GameState.
 	// Everything starts here.
-	void renderGameState();
+	void renderGameState(Player* player);
 
 	// Swaps back buffer to front and clears backbuffer (black).
 	void showBackbufferClear();

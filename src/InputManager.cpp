@@ -3,26 +3,21 @@
 //InputManager::InputManager(GameState* gameState) {
 //	this->gameState = gameState;
 //}
+//extern Player* player;
 
-void handleEvent(SDL_Event event) {
+void handleEvent(SDL_Event* event, Player* player) {
 	// TODO: this'll have to change to something smarter to split
 	// up this stuff into separate functions.
-	if (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP) {
-		handleMovementEvent(event);
+	if (event->type == SDL_KEYDOWN || event->type == SDL_KEYUP) {
+		handleMovementEvent(event, player);
 	}
 
-	if (event.type == SDL_MOUSEBUTTONDOWN) {
-		if (event.button.button == 1) { // left click
-			//gameState->playerShootBullet(event.button.x, event.button.y);
-			/*printf("player shoot bullet at (%i,%i)\n",
-				event.button.x, event.button.y);*/
-			playerShootBullet(event.button.x, event.button.y);
+	if (event->type == SDL_MOUSEBUTTONDOWN) {
+		if (event->button.button == 1) { // left click
+			playerShootBullet(event->button.x, event->button.y);
 		}
 		else {
-			//gameState->spawnEnemyTesting(event.button.x, event.button.y);
-			/*printf("spawn enemy at (%i,%i)\n",
-				event.button.x, event.button.y);*/
-			spawnEnemyTesting(event.button.x, event.button.y);
+			spawnEnemyTesting(event->button.x, event->button.y);
 		}
 	}
 
@@ -30,44 +25,36 @@ void handleEvent(SDL_Event event) {
 
 //@TODO: call gameState function instead of calling a player
 // function to move the player.
-void handleMovementEvent(SDL_Event event) {
-	if (event.type == SDL_KEYDOWN) {
-		switch (event.key.keysym.sym) {
+void handleMovementEvent(SDL_Event* event, Player* player) {
+	if (event->type == SDL_KEYDOWN) {
+		switch (event->key.keysym.sym) {
 		case SDLK_w:
-			//gameState->getPlayer()->startMoving(UP);
-			printf("move");
+			player->startMoving(UP);
 			break;
 		case SDLK_s:
-			//gameState->getPlayer()->startMoving(DOWN);
-			printf("move");
+			player->startMoving(DOWN);
 			break;
 		case SDLK_a:
-			//gameState->getPlayer()->startMoving(LEFT);
-			printf("move");
+			player->startMoving(LEFT);
 			break;
 		case SDLK_d:
-			//gameState->getPlayer()->startMoving(RIGHT);
-			printf("move");
+			player->startMoving(RIGHT);
 			break;
 		}
 	}
-	else if (event.type == SDL_KEYUP) {
-		switch (event.key.keysym.sym) {
+	else if (event->type == SDL_KEYUP) {
+		switch (event->key.keysym.sym) {
 		case SDLK_w:
-			//gameState->getPlayer()->stopMoving(UP);
-			printf("move");
+			player->stopMoving(UP);
 			break;
 		case SDLK_s:
-			//gameState->getPlayer()->stopMoving(DOWN);
-			printf("move");
+			player->stopMoving(DOWN);
 			break;
 		case SDLK_a:
-			//gameState->getPlayer()->stopMoving(LEFT);
-			printf("move");
+			player->stopMoving(LEFT);
 			break;
 		case SDLK_d:
-			//gameState->getPlayer()->stopMoving(RIGHT);
-			printf("move");
+			player->stopMoving(RIGHT);
 			break;
 		}
 	}

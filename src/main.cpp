@@ -30,7 +30,7 @@ Uint32 frameTimeToComplete = -1;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 //Player player = Player(SDL_FRect{250, 250, 50, 50});
-Player* player = new Player(SDL_FPoint{ 250, 250 });
+Player player = Player(SDL_FPoint{ 250, 250 });
 //GameState gameState = GameState(&player);
 //InputManager inputManager = InputManager(&gameState);
 //Renderer* renderManager;
@@ -48,7 +48,7 @@ void gameLoop() {
 	SDL_Event event;
 	std::vector<SDL_Event> events;
 	Uint32 lastPhysicsUpdate = 0;
-	float dt = 0;
+	//float dt = 0;
 
 	Uint32 frameStart = 0;
 
@@ -59,7 +59,7 @@ void gameLoop() {
 		while (SDL_PollEvent(&event)) {
 			ImGui_ImplSDL2_ProcessEvent(&event);
 			//inputManager.handleEvent(event);
-			handleEvent(event);
+			handleEvent(&event, &player);
 			if (event.type == SDL_QUIT) {
 				quit = true;
 			}
@@ -74,13 +74,14 @@ void gameLoop() {
 		/*renderManager->renderGameState(&gameState);
 		showImGui();
 		renderManager->showBackbufferClear();*/
-		renderGameState();
+		renderGameState(&player);
 
 		ImGui_ImplSDLRenderer_NewFrame();
 		ImGui_ImplSDL2_NewFrame();
 		ImGui::NewFrame();
 		ImGui::Begin("Info");
 		ImGui::Text("Test text");
+		ImGui::Text(std::to_string(player.getFRect()->x).c_str());
 		ImGui::End();
 		ImGui::Render();
 		ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());

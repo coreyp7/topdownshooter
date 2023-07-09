@@ -8,6 +8,7 @@ Player::Player(SDL_FPoint pos) {
 }
 
 void Player::startMoving(Direction direction) {
+	printf("start moving\n");
 	switch (direction) {
 	case UP:
 		yVel = -MOVE_SPEED;

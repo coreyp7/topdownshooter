@@ -11,7 +11,7 @@ to the proccessed user inputs.
 //{
 //public:
 	//InputManager(GameState* gameState);
-void handleEvent(SDL_Event event);
+void handleEvent(SDL_Event* event, Player* player);
 
 //private:
 //std::vector<SDL_Event> events;
@@ -19,7 +19,7 @@ void handleEvent(SDL_Event event);
 	// NOTE: this should be the GameState instead.
 //GameState* gameState;
 
-void handleMovementEvent(SDL_Event event);
+void handleMovementEvent(SDL_Event* event, Player* player);
 
 //};
 
