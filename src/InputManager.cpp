@@ -1,10 +1,5 @@
 #include "InputManager.h"
 
-//InputManager::InputManager(GameState* gameState) {
-//	this->gameState = gameState;
-//}
-//extern Player* player;
-
 void handleEvent(SDL_Event* event, Player* player) {
 	// TODO: this'll have to change to something smarter to split
 	// up this stuff into separate functions.
@@ -14,7 +9,7 @@ void handleEvent(SDL_Event* event, Player* player) {
 
 	if (event->type == SDL_MOUSEBUTTONDOWN) {
 		if (event->button.button == 1) { // left click
-			playerShootBullet(event->button.x, event->button.y);
+			shootPlayerProjectile(event->button.x, event->button.y);
 		}
 		else {
 			spawnEnemyTesting(event->button.x, event->button.y);

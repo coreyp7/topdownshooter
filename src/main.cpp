@@ -24,19 +24,7 @@ Uint32 countedFrames = 0;
 int fpsCap = 60;
 Uint32 frameTimeToComplete = -1;
 
-// Globals because this just a demo project to implement a QuadTree.
-//SDL_Renderer* renderer;
-//SDL_Window* window;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
-
-//Player player = Player(SDL_FRect{250, 250, 50, 50});
-//Player player = Player(SDL_FPoint{ 250, 250 });
-//GameState gameState = GameState(&player);
-//InputManager inputManager = InputManager(&gameState);
-//Renderer* renderManager;
-
-//SDL_Window* window;
-//SDL_Renderer* renderer;
 
 extern Player player; // from gamestate
 
@@ -68,31 +56,12 @@ void gameLoop() {
 		}
 
 		// Simulate entire gamestate
-		//gameState.simulate();
 		simulateWorld();
 
 		// Render current gamestate
-		//renderManager->renderPlayer(&player);
-		/*renderManager->renderGameState(&gameState);
-		showImGui();
-		renderManager->showBackbufferClear();*/
 		renderGameState(&player);
-
-		ImGui_ImplSDLRenderer_NewFrame();
-		ImGui_ImplSDL2_NewFrame();
-		ImGui::NewFrame();
-		ImGui::Begin("Info");
-		ImGui::Text("Test text");
-		ImGui::Text(std::to_string(player.getFRect()->x).c_str());
-		ImGui::End();
-		ImGui::Render();
-		ImGui_ImplSDLRenderer_RenderDrawData(ImGui::GetDrawData());
-
+		showImGui();
 		showBackbufferClear();
-		/*SDL_RenderPresent(renderer);
-		SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-		SDL_RenderClear(renderer);*/
-		//countedFrames++;
 
 		// Finished rendering, cap framerate.
 		// If frame is finished early, wait remaining time.
@@ -153,9 +122,9 @@ void showImGui() {
 		ImGui::Text(std::to_string(fps).c_str());
 	}
 	ImGui::Text("Enemy count:");
-	//ImGui::Text(std::to_string(gameState.getEnemies().size()).c_str());
+	ImGui::Text(std::to_string(getEnemies().size()).c_str());
 	ImGui::Text("Rendered enemies this frame:");
-	//ImGui::Text(std::to_string(renderManager->renderedEnemiesThisFrame).c_str());
+	ImGui::Text(std::to_string(renderedEnemiesThisFrame).c_str());
 	ImGui::SliderInt("fps cap:", &fpsCap, 5, 120);
 	ImGui::Text("Ticks to complete frame:");
 	ImGui::Text(std::to_string(frameTimeToComplete).c_str());

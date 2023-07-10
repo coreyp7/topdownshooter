@@ -1,55 +1,35 @@
 #include "GameState.h"
 
+// Here's stuff that are only visible in this file.
 void moveCameraWithPlayer(Player* player);
 
-//extern Player* player;
+bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2);
+void resolveCollisions();
+int resolveEntityCollision(Entity* entity1, Entity* entity2);
 
-//GameState(Player* player) {
-//	this->player = player;
-//
-//	dt = 0;
-//	lastUpdate = 0;
-//	camera = { 0, 0, 1280, 720 };//@hardcoded: this should be set from main or
-//	//something; constructor params probably.
-//	qTree = new QuadTree(0, 0, 1000, 1500); //@hardcoded
-//
-//	// Here I'm hardcoding test enemies.
-//	// Later, this would either:
-//	// - be spawned in dynamically like a hoarde type game
-//	// - loaded into a level ala a tile in the tilemap
-//	entityIdMap.insert({ player->id, player });
-//	enemyManager = new EnemyManager(this);
-//
-//	/*for (int i = 0; i < 3; i++) {
-//		Enemy* newEnemy = new SmallEnemy(i*75 % 3840, i*75 % 2180);
-//		entities.push_back(newEnemy);
-//		entityIdMap.insert({ newEnemy->id, newEnemy });
-//	}*/
-//}
+void simulateProjectiles();
+void simulateEnemies();
+void addEntity(Entity* entity);
 
-//~GameState() {
-//	this->player = nullptr;
-//}
-// 
+Entity* getEntityById(Uint16 id);
+void removeEntity(Entity* entity);
+
 // externs
 Player player = Player(SDL_FPoint{ 250, 250 });
-SDL_FRect camera = { 0, 0, 720, 480 };
-std::vector<Entity*> entities;
+SDL_FRect camera = { 0, 0, 1280, 720 };
+std::vector<Entity*> entities; // TODO: change to fixed sized array maybe
 std::unordered_map<Uint16, Entity*> entityIdMap;
+QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
 
+// normal shit
 float dt = 0;
 Uint32 lastUpdate = 0;
-//std::vector<Entity*> entities;
-//std::unordered_map<Uint16, Entity*> entityIdMap;
-QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
 
 void setupGameState() {
 	entityIdMap.insert({ player.id, &player });
 }
 
-// Entire state simulate which is public.
 void simulateWorld() {
-	//printf("simulateWorld called\n");
 	// This approach to handling time is appropriate for this game.
 	// Physics is simple and there's no networking.
 	// If it becomes too inconsistent or gross later, then I will attempt
@@ -57,16 +37,15 @@ void simulateWorld() {
 	dt = (SDL_GetTicks() - lastUpdate) / 1000.f;
 	lastUpdate = SDL_GetTicks();
 
-	//// Simulate entire game for dt seconds.
+	// Simulate entire game for dt seconds.
 	player.simulate(dt);
 	moveCameraWithPlayer(&player);
 
-	//// Update QuadTree (for now, deleting it and rebuilding it every frame).
-	qTree->~QuadTree(); // @todo: have quadtree maintain itself
-	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded: !!!!!!!!!!!!!!!!
+	// Update QuadTree (for now, deleting it and rebuilding it every frame).
+	qTree->~QuadTree(); // @todo: have quadtree maintain itself (this is hard)
+	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded
 	qTree->insert(&player);
 
-	//printf("(%f,%f)\n", player->getFRect()->x, player->getFRect()->y);
 	simulateEnemies();
 	simulateProjectiles();
 
@@ -89,10 +68,9 @@ void simulateWorld() {
 	}
 }
 
-//TODO: should change the name of this function. I'd name this something like
-// 'processAndResolveCollisions'
+// Goes through every entity and finds if it collides with anything.
+// When collisions occur, they will be resolved.
 void resolveCollisions() {
-	//std::vector<int> entitiesToDestroy;
 	for (int i = 0; i < entities.size(); i++) {
 		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(entities[i]);
 		std::set<std::tuple<Uint16, Uint16>>::iterator itr;
@@ -111,7 +89,6 @@ void resolveCollisions() {
 		}
 	}
 
-	
 	/*Entity* deadEntity;
 	for (int i = 0; i < entitiesToDestroy.size(); i++) {
 		deadEntity = entities[entitiesToDestroy[i]];
@@ -220,7 +197,7 @@ void moveCameraWithPlayer(Player* player) {
 // Param should be the position in the window the player clicked.
 // This function will shoot it in worldspace (using camera). 
 // Don't worry about camera shit when calling this.
-void playerShootBullet(int x, int y) {
+void shootPlayerProjectile(int x, int y) {
 	//printf("playerShootBullet called.");
 	/*
 	1. get vector from center of player circle to the point (x/y params).
@@ -280,11 +257,6 @@ bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
 }
 
 int resolveEntityCollision(Entity* entity1, Entity* entity2) {
-	//if (entity1->getEntityType() == ENEMY && entity2->getEntityType() == PROJECTILE) {
-	//	// resolve their collision
-	//	printf("Enemy %i collided with projectile %i\n", entity1->id, entity2->id);
-	//}
-
 	switch (entity1->getEntityType()) {
 	case PLAYER:
 		// call function for player behavior

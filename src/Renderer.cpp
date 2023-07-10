@@ -1,24 +1,5 @@
 #include "Renderer.h"
 
-
-
-//Renderer(SDL_Window* window, SDL_Renderer* renderer) {
-//	// Setup SDL & window/renderer
-//	this->window = window;
-//	this->renderer = renderer;
-//	//camera = NULL; // just incase there's an edge case where this is called
-//				   // when its not set yet
-//				   //
-//	//camera = {0, 0, 1280, 720}; //@hardcoded: this should be obtained from
-//								//params or something
-//}
-//
-//~Renderer() {
-//	SDL_DestroyRenderer(renderer);
-//	SDL_DestroyWindow(window);
-//	SDL_Quit();
-//}
-
 SDL_Window* window;
 SDL_Renderer* renderer;
 SDL_Texture* playerTexture;
@@ -27,9 +8,7 @@ SDL_Texture* mEnemyTexture;
 SDL_Texture* testbg;
 SDL_Texture* healthBarTexture;
 
-// Updated every frame from gamestate for rendering.
-// Used in like every function so keeping here for convenience.
-//extern SDL_FRect camera;
+int renderedEnemiesThisFrame = 0;
 
 void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
 	renderer = newRenderer;
@@ -72,20 +51,15 @@ void showBackbufferClear() {
 // Renders entire game state. Utilizes functions for rendering
 // specific things below this.
 void renderGameState(Player* player) {
-	//Setup camera for this frame, from gamestate
-	//this->camera = gameState->getCamera();
 	SDL_FRect bg = { 0, 0, 1000, 1500 }; //@hardcoded
+	
+	renderTextureRelativeToCamera(testbg, &bg); // test background to be replaced/improved later
 
-	renderTextureRelativeToCamera(testbg, &bg);
-	//renderEnemies(gameState->getEnemies());
-	//renderProjectiles(gameState->getProjectiles());
-	//renderPlayer(gameState->getPlayer());
 	renderEnemies(getEnemies());
 	renderProjectiles(getProjectiles());
-
 	renderPlayer(player);
 
-	//drawQuadTree(gameState->getQuadTree());
+	drawQuadTree(qTree);
 }
 
 ///
@@ -93,23 +67,23 @@ void renderGameState(Player* player) {
 ///
 
 void renderEnemies(std::vector<Enemy*> enemies) {
-	//renderedEnemiesThisFrame = 0;
+	renderedEnemiesThisFrame = 0;
 	SDL_FRect* currRect;
 	for (int i = 0; i < enemies.size(); i++) {
 		currRect = enemies.at(i)->getFRect();
 
+		// Only render if the enemy collides with the camera.
 		bool xCollision = (((currRect->x + currRect->w) >= (camera.x)) && ((camera.x + camera.w) >= (currRect->x)));
 		bool yCollision = (((currRect->y + currRect->h) >= (camera.y)) && ((camera.y + camera.h) >= (currRect->y)));
 
 		if (xCollision && yCollision) {
-
+			// @refactor: could change all entities to hold their texture, but this works fine.
 			switch (enemies.at(i)->getEnemyType()) {
 				case 0: renderTextureRelativeToCamera(sEnemyTexture, currRect); break;
 				case 1: renderTextureRelativeToCamera(mEnemyTexture, currRect); break;
 			}
-			//renderedEnemiesThisFrame++;
 
-			// health bar
+			// draw enemy health bar
 			SDL_FRect healthbar = { currRect->x, currRect->y + currRect->h, currRect->w, 5};
 			SDL_FRect healthBarFill = healthbar;
 			float fillMultiplier = healthBarFill.w / enemies.at(i)->maxHp;
@@ -117,6 +91,8 @@ void renderEnemies(std::vector<Enemy*> enemies) {
 			healthBarFill.w = fillMultiplier;
 			renderTextureRelativeToCamera(healthBarTexture, &healthBarFill);
 			drawRectRelativeToCamera(healthbar);
+
+			renderedEnemiesThisFrame++;
 		}
 	}
 }
@@ -147,7 +123,13 @@ void renderProjectiles(std::vector<Projectile*> projectiles) {
 	SDL_FRect* frect;
 	for (int i = 0; i < projectiles.size(); i++) {
 		frect = projectiles.at(i)->getFRect();
-		renderTextureRelativeToCamera(playerTexture, frect);
+		// Only render if the enemy collides with the camera.
+		bool xCollision = (((frect->x + frect->w) >= (camera.x)) && ((camera.x + camera.w) >= (frect->x)));
+		bool yCollision = (((frect->y + frect->h) >= (camera.y)) && ((camera.y + camera.h) >= (frect->y)));
+
+		if (xCollision && yCollision) {
+			renderTextureRelativeToCamera(playerTexture, frect);
+		}
 	}
 }
 
