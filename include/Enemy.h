@@ -2,7 +2,6 @@
 #include <SDL.h>
 #include "Entity.h"
 #include "EntityType.h"
-#include "EnemyManager.h"
 
 class Enemy : public Entity {
 public:

@@ -1,4 +1,4 @@
-//#include "EnemyManager.h"
+#include "EnemyManager.h"
 //#include "GameState.h"
 //
 //EnemyManager::EnemyManager(GameState* gameState) {

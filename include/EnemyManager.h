@@ -1,5 +1,7 @@
-//#pragma once
-//#include <SDL.h>
+#pragma once
+#include <SDL.h>
+#include "GameState.h"
+
 //class GameState;
 //
 //class EnemyManager {
