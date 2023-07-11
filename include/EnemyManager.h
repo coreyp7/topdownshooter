@@ -2,6 +2,8 @@
 #include <SDL.h>
 #include "GameState.h"
 
+void shootProjectile(float x, float y, float xVel, float yVel, int size);
+
 //class GameState;
 //
 //class EnemyManager {

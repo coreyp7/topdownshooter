@@ -44,5 +44,9 @@ void shootPlayerProjectile(int x, int y);
 // is called by the enemymanager when you wanna shoot a projectile.
 void shootEnemyProjectile(float x, float y, float xVel, float yVel, int size);
 
+// For adding an entity to the entire system.
+// TODO: move entity access/manipulation into entitymanager file or something.
+void addEntity(Entity* entity);
+
 // Testing stuff go down here.
 void spawnEnemyTesting(int, int);

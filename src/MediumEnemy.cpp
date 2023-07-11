@@ -50,6 +50,9 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 			xUnitVector * PROJECTILE_SPEED, yUnitVector * PROJECTILE_SPEED,
 			PROJECTILE_SIZE
 		);*/
+		shootProjectile(ourPosition.x, ourPosition.y, 
+			xUnitVector*PROJECTILE_SPEED, yUnitVector * PROJECTILE_SPEED, 
+			PROJECTILE_SIZE);
 	}
 }
 
