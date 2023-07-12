@@ -7,7 +7,6 @@ SDL_Texture* sEnemyTexture;
 SDL_Texture* mEnemyTexture;
 SDL_Texture* testbg;
 SDL_Texture* healthBarTexture;
-
 int renderedEnemiesThisFrame = 0;
 
 void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
@@ -38,7 +37,6 @@ void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
 	if (healthBarTexture == NULL) {
 		printf("healthBarTexture not loaded %s", IMG_GetError());
 	}
-
 }
 
 void showBackbufferClear() {
@@ -60,6 +58,18 @@ void renderGameState(Player* player) {
 	renderPlayer(player);
 
 	drawQuadTree(qTree);
+}
+
+void renderEntityHealthBar(Entity* entity) {
+	SDL_FRect* currRect = entity->getFRect();
+	// draw enemy health bar
+	SDL_FRect healthbar = { currRect->x, currRect->y + currRect->h, currRect->w, 5 };
+	SDL_FRect healthBarFill = healthbar;
+	//float fillMultiplier = healthBarFill.w / enemies.at(i)->maxHp;
+	float fillMultiplier = healthBarFill.w / entity->maxHp;
+	fillMultiplier *= entity->hp;
+	healthBarFill.w = fillMultiplier;
+	renderTextureRelativeToCamera(healthBarTexture, &healthBarFill);
 }
 
 ///
@@ -84,13 +94,14 @@ void renderEnemies(std::vector<Enemy*> enemies) {
 			}
 
 			// draw enemy health bar
-			SDL_FRect healthbar = { currRect->x, currRect->y + currRect->h, currRect->w, 5};
+			/*SDL_FRect healthbar = { currRect->x, currRect->y + currRect->h, currRect->w, 5};
 			SDL_FRect healthBarFill = healthbar;
 			float fillMultiplier = healthBarFill.w / enemies.at(i)->maxHp;
 			fillMultiplier *= enemies.at(i)->hp;
 			healthBarFill.w = fillMultiplier;
 			renderTextureRelativeToCamera(healthBarTexture, &healthBarFill);
-			drawRectRelativeToCamera(healthbar);
+			drawRectRelativeToCamera(healthbar);*/
+			renderEntityHealthBar(enemies.at(i));
 
 			renderedEnemiesThisFrame++;
 		}
@@ -115,8 +126,8 @@ void renderPlayer(Player* player) {
 	SDL_FPoint center = player->pos;
 	SDL_FRect topLeft = { center.x - radius, center.y - radius, radius * 2, radius * 2 };
 	renderTextureRelativeToCamera(playerTexture, &topLeft);
-
 	raster_circle(center, radius);
+	renderEntityHealthBar(player);
 }
 
 void renderProjectiles(std::vector<Projectile*> projectiles) {
@@ -129,6 +140,7 @@ void renderProjectiles(std::vector<Projectile*> projectiles) {
 
 		if (xCollision && yCollision) {
 			renderTextureRelativeToCamera(playerTexture, frect);
+			renderEntityHealthBar(projectiles.at(i));
 		}
 	}
 }

@@ -202,9 +202,9 @@ void shootPlayerProjectile(int x, int y) {
 	/*
 	1. get vector from center of player circle to the point (x/y params).
 	2. normalize that vector into a unit vector
-  3. multiply unit vector by radius.
-  4. Add the multiplied unit vector to the player's position.
-  This gives us the point to spawn the projectile at.
+	3. multiply unit vector by radius.
+	4. Add the multiplied unit vector to the player's position.
+	This gives us the point to spawn the projectile at.
 	*/
 
 	// Change position to be in world space instead of relative to window.
@@ -212,17 +212,17 @@ void shootPlayerProjectile(int x, int y) {
 	int yWorldPos = y + camera.y;
 
 	//printf("Shoot bullet at (%i,%i) in global worldspace.\n", xWorldPos, yWorldPos);
-	////1
+	//1
 	float xVec, yVec;
 	xVec = xWorldPos - player.pos.x;
 	yVec = yWorldPos - player.pos.y;
 
-	////2: normalize into unit vector
+	//2: normalize into unit vector
 	float vectorMagnitude = sqrt((xVec * xVec) + (yVec * yVec));
 	float xUnitVector = xVec / vectorMagnitude;
 	float yUnitVector = yVec / vectorMagnitude;
 
-	////3+4: this is the spawn point of the projectile.
+	//3+4: this is the spawn point of the projectile.
 	float circleEdgeX = player.pos.x + (xUnitVector * player.HITBOX_RADIUS);
 	float circleEdgeY = player.pos.y + (yUnitVector * player.HITBOX_RADIUS);
 	SDL_FPoint edgeSpawnPoint = { circleEdgeX, circleEdgeY };
@@ -235,6 +235,7 @@ void shootPlayerProjectile(int x, int y) {
 	Projectile* newProj = new Projectile(edgeSpawnPoint, xVel, yVel, 10); //@refactor: put value in player object
 	addEntity(newProj);
 }
+
 Entity* getEntityById(Uint16 id) {
 	auto entry = entityIdMap.find(id);
 	
@@ -334,9 +335,18 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 	case PROJECTILE:
 		// call function for projectile behavior
 		// will handle ENEMY_PROJECTILE (cancel each other out?)
-		if (entity2->getEntityType() == ENEMY_PROJECTILE) {
+		if (entity2->getEntityType() == ENEMY_PROJECTILE && !entity1->dead) {
 			entity1->dead = true;
-			entity2->dead = true;
+
+			if (!entity2->dead) {
+				if (entity2->hp > 0) {
+					entity2->hp--; // TODO: have projectile/entity hold 'damage' variable to deduct from this valuevvvvv
+				}
+
+				if (entity2->hp <= 0) {
+					entity2->dead = true;
+				}
+			}
 		}
 		break;
 	// Any after this has already been handled.

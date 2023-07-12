@@ -8,20 +8,7 @@ void shootProjectile(float x, float y, float xVel, float yVel, int size) {
 	// TODO: just have this be a value in the constructor, make creating
 	// projectiles in a more general function for player/enemies.
 	newProj->typeOfProjectile = ENEMY_PROJECTILE;
+	newProj->hp = 3;
+	newProj->maxHp = 3;
 	addEntity(newProj);
 }
-
-//#include "GameState.h"
-//
-//EnemyManager::EnemyManager(GameState* gameState) {
-//	//this->gameState = gameState;
-//}
-//
-//
-//EnemyManager::~EnemyManager() {
-//
-//}
-//
-//void EnemyManager::shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
-//	//gameState->shootEnemyProjectile(x, y, xVel, yVel, size);
-//}
