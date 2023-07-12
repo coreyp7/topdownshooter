@@ -304,7 +304,6 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 					entity1->dead = true;
 				}
 			}
-			return 1;
 		}
 		else if (entity2->getEntityType() == ENEMY) {
 		//	// Prevent these two from colliding; fix their position to stay out of each other
@@ -335,6 +334,10 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 	case PROJECTILE:
 		// call function for projectile behavior
 		// will handle ENEMY_PROJECTILE (cancel each other out?)
+		if (entity2->getEntityType() == ENEMY_PROJECTILE) {
+			entity1->dead = true;
+			entity2->dead = true;
+		}
 		break;
 	// Any after this has already been handled.
 	}
@@ -366,12 +369,6 @@ void spawnEnemyTesting(int x, int y) {
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 
-}
-
-void shootEnemyProjectile(float x, float y, float xVel, float yVel, int size) {
-	Projectile* newProj = new Projectile({x,y}, xVel, yVel, size);
-	newProj->typeOfProjectile = ENEMY_PROJECTILE;
-	addEntity(newProj);
 }
 
 // Adds a new entity to the game state. (quadtree, entities vec, anything else)
