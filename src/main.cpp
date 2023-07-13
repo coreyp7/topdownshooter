@@ -23,6 +23,7 @@ const int WINDOW_HEIGHT = 720;
 Uint32 countedFrames = 0;
 int fpsCap = 60;
 Uint32 frameTimeToComplete = -1;
+double frameLength;
 
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
@@ -42,8 +43,13 @@ void gameLoop() {
 
 	Uint32 frameStart = 0;
 
+	//double frameLength;
+	Uint64 startTime;
+	Uint64 endTime;
+
 	while (!quit) {
 		frameStart = SDL_GetTicks();
+		startTime = SDL_GetPerformanceCounter();
 
 		// capture user inputs
 		while (SDL_PollEvent(&event)) {
@@ -62,6 +68,9 @@ void gameLoop() {
 		renderGameState(&player);
 		showImGui();
 		showBackbufferClear();
+
+		endTime = SDL_GetPerformanceCounter();
+		frameLength = (endTime - startTime) / static_cast<double>(SDL_GetPerformanceFrequency());
 
 		// Finished rendering, cap framerate.
 		// If frame is finished early, wait remaining time.
@@ -126,8 +135,8 @@ void showImGui() {
 	ImGui::Text("Rendered enemies this frame:");
 	ImGui::Text(std::to_string(renderedEnemiesThisFrame).c_str());
 	ImGui::SliderInt("fps cap:", &fpsCap, 5, 120);
-	ImGui::Text("Ticks to complete frame:");
-	ImGui::Text(std::to_string(frameTimeToComplete).c_str());
+	ImGui::Text("frame length (seconds):");
+	ImGui::Text(std::to_string(frameLength).c_str());
 	ImGui::Text("How long it can take w/ current framerate cap:");
 	ImGui::Text(std::to_string(1000.f / fpsCap).c_str());
 	ImGui::End();
