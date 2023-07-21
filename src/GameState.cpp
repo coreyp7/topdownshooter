@@ -70,7 +70,7 @@ void simulateWorld() {
 
 // Goes through every entity and finds if it collides with anything.
 // When collisions occur, they will be resolved.
-void resolveCollisions() {
+void resolveCollisions() { //TODO: optimize; we don't need to be doing this for all the projectiles. Only for player & enemies.
 	for (int i = 0; i < entities.size(); i++) {
 		std::set<std::tuple<Uint16, Uint16>> collisions = qTree->getCollisionsWithEntity(entities[i]);
 		std::set<std::tuple<Uint16, Uint16>>::iterator itr;
@@ -356,10 +356,14 @@ void spawnEnemyTesting(int x, int y) {
 	printf("spawnEnemyTesting called.");
 	int xWorldPos = x + camera.x;
 	int yWorldPos = y + camera.y;
-
+	Enemy* newEnemy;
 	// TODO: have functions for creating enemies inside the enemymanager so we don't have to worry about it in here.
-	//Enemy* newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
-	Enemy* newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
+	if (rand() % 2) {
+		newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
+	}
+	else {
+		newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
+	}
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 

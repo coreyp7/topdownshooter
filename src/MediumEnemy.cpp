@@ -33,11 +33,11 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 
 	// Projectiles' velocity; just the unit vector multiplied by the projectile
 	// speed.
-	float xVel = xUnitVector * MOVE_SPEED;
+	/*float xVel = xUnitVector * MOVE_SPEED;
 	float yVel = yUnitVector * MOVE_SPEED;
 
 	rect.x += xVel * dt;
-	rect.y += yVel * dt;
+	rect.y += yVel * dt;*/
 
 	if (nextShotTicks < SDL_GetTicks()) {
 		nextShotTicks += nextShotDelay;
