@@ -263,27 +263,11 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 		// call function for player behavior
 		// will handle ENEMY, ENEMY_PROJECTILE
 		if (entity2->getEntityType() == ENEMY) {
-			float xDistance, yDistance;
-			if (entity1->getFRect()->x < entity2->getFRect()->x) {
-				xDistance = ((entity1->getFRect()->x + entity1->getFRect()->w) - entity2->getFRect()->x);
-			}
-			else {
-				xDistance = ((entity2->getFRect()->x + entity2->getFRect()->w) - entity1->getFRect()->x);
-			}
+			// Currently, there is no colliding resolution for player vs enemy, 
+			// because it was breaking things and might not actually be neccessary.
+			// Old code is at bottom of file.
 
-			if (entity1->getFRect()->y < entity2->getFRect()->y) {
-				yDistance = ((entity1->getFRect()->y + entity1->getFRect()->h) - entity2->getFRect()->y);
-			}
-			else {
-				yDistance = ((entity2->getFRect()->y + entity2->getFRect()->h) - entity1->getFRect()->y);
-			}
-
-			if (xDistance > yDistance) {
-				entity2->getFRect()->y -= yDistance;
-			}
-			else {
-				entity2->getFRect()->x -= xDistance;
-			}
+			//TODO: damage player from here, and start an invulerability phase.
 		}
 		else if (entity2->getEntityType() == ENEMY_PROJECTILE) {
 			entity2->dead = true;
@@ -387,3 +371,49 @@ void addEntity(Entity* entity) {
 	entityIdMap.insert({ entity->id, entity });
 }
 
+/* old code for resolving player vs enemy
+* 
+			Right now, this code is literally just teleporting the enemy to the closest position
+			outside the player.
+
+			What we'd rather happen is have the enemy be slowly pushed outside of the bounds of the
+			player's hurtbox. This will be much cleaner and less jank.
+			*/
+			//float xDistance, yDistance;
+			//bool xLeftSide, yTopSide;
+			//if (entity1->getFRect()->x < entity2->getFRect()->x) {
+			//	xDistance = ((entity1->getFRect()->x + entity1->getFRect()->w) - entity2->getFRect()->x);
+			//	xLeftSide = true; // player is coming from left side
+			//}
+			//else {
+			//	xDistance = ((entity2->getFRect()->x + entity2->getFRect()->w) - entity1->getFRect()->x);
+			//	xLeftSide = false; // player is coming from right side
+			//}
+
+			//if (entity1->getFRect()->y < entity2->getFRect()->y) {
+			//	yDistance = ((entity1->getFRect()->y + entity1->getFRect()->h) - entity2->getFRect()->y);
+			//	yTopSide = true;
+			//}
+			//else {
+			//	yDistance = ((entity2->getFRect()->y + entity2->getFRect()->h) - entity1->getFRect()->y);
+			//	yTopSide = false;
+			//}
+
+			/*if (xDistance > yDistance) {
+				entity2->getFRect()->y -= yDistance;
+			}
+			else {
+				entity2->getFRect()->x -= xDistance;
+			}*/
+
+			// move the enemy a fixed distance from the player every frame if they're colliding.
+			// if the x/y distance is lesx than this fixed distance, just move them far enough
+			// that they are no longer colliding with the player.
+			//if (!xLeftSide) {
+			//	// enemy go to the right by fixed amount
+			//	entity2->getFRect()->x += .01;
+			//}
+			//else {
+			//	// go to the left by fixed amount
+			//	entity2->getFRect()->x -= .01;
+			//}

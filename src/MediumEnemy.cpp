@@ -36,11 +36,6 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 	float xVel = xUnitVector * MOVE_SPEED;
 	float yVel = yUnitVector * MOVE_SPEED;
 
-	if (vectorMagnitude < 250) {
-		xVel *= 2;
-		yVel *= 2;
-	}
-
 	rect.x += xVel * dt;
 	rect.y += yVel * dt;
 
