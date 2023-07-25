@@ -21,6 +21,9 @@ std::vector<Entity*> entities; // TODO: change to fixed sized array maybe
 std::unordered_map<Uint16, Entity*> entityIdMap;
 QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
 
+// for imgui
+int enemySpawnLevel = 1;
+
 // normal shit
 float dt = 0;
 Uint32 lastUpdate = 0;
@@ -364,7 +367,8 @@ void spawnEnemyTesting(int x, int y) {
 	else {
 		newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
 	}*/
-	newEnemy = new SmallEnemy(xWorldPos, yWorldPos, (rand() % 6)+1);
+	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, (rand() % 6)+1);
+	newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });

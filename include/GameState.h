@@ -22,6 +22,8 @@ extern SDL_FRect camera;
 extern std::vector<Entity*> entities;
 extern std::unordered_map<Uint16, Entity*> entityIdMap;
 extern QuadTree* qTree;
+// imgui stuff
+extern int enemySpawnLevel;
 
 // Call this before calling any sort of 
 // simulate function or else shit will break fast.

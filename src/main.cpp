@@ -139,6 +139,8 @@ void showImGui() {
 	ImGui::Text(std::to_string(frameLength).c_str());
 	ImGui::Text("How long it can take w/ current framerate cap:");
 	ImGui::Text(std::to_string(1000.f / fpsCap).c_str());
+	ImGui::Text("Adjust level to spawn enemy.");
+	ImGui::SliderInt("Adjust enemy level:", &enemySpawnLevel, 1, 10);
 	ImGui::End();
 
 	ImGui::Render();
