@@ -8,6 +8,12 @@ SmallEnemy::SmallEnemy(float x, float y) : Enemy(x,y)
 	maxHp = 3;
 }
 
+SmallEnemy::SmallEnemy(float x, float y, int level) : Enemy(x,y,level) {
+	rect.w = SIZE;
+	rect.h = SIZE;
+	hp = 2 + level;
+	maxHp = hp;
+}
 
 SmallEnemy::~SmallEnemy() {
 
@@ -36,9 +42,16 @@ void SmallEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 	float xVel = xUnitVector * MOVE_SPEED;
 	float yVel = yUnitVector * MOVE_SPEED;
 
-	if (vectorMagnitude < 250) {
+	float amp = level * .25;
+
+	if (vectorMagnitude < 250 * amp) {
 		xVel *= 2;
 		yVel *= 2;
+	}
+
+	if (level > 1) {
+		xVel *= amp;
+		yVel *= amp;
 	}
 
 	rect.x += xVel * dt;

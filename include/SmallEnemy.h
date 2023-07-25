@@ -5,6 +5,7 @@
 class SmallEnemy : public Enemy {
 public:
 	SmallEnemy(float x, float y);
+	SmallEnemy(float x, float y, int level);
 	~SmallEnemy();
 
 	void simulate(float dt, SDL_FPoint playerPosition);

@@ -60,6 +60,7 @@ void renderGameState(Player* player) {
 	drawQuadTree(qTree);
 }
 
+// also now level of entity
 void renderEntityHealthBar(Entity* entity) {
 	SDL_FRect* currRect = entity->getFRect();
 	// draw enemy health bar
@@ -70,6 +71,13 @@ void renderEntityHealthBar(Entity* entity) {
 	fillMultiplier *= entity->hp;
 	healthBarFill.w = fillMultiplier;
 	renderTextureRelativeToCamera(healthBarTexture, &healthBarFill);
+
+	if (entity->getEntityType() == ENEMY) {
+		for (int i = 0; i < ((Enemy*)entity)->level; i++) {
+			SDL_FRect* rect = entity->getFRect();
+			drawRectRelativeToCamera({ rect->x + (i * 15), rect->y + rect->h, 5, 5 });
+		}
+	}
 }
 
 ///
@@ -92,15 +100,6 @@ void renderEnemies(std::vector<Enemy*> enemies) {
 				case 0: renderTextureRelativeToCamera(sEnemyTexture, currRect); break;
 				case 1: renderTextureRelativeToCamera(mEnemyTexture, currRect); break;
 			}
-
-			// draw enemy health bar
-			/*SDL_FRect healthbar = { currRect->x, currRect->y + currRect->h, currRect->w, 5};
-			SDL_FRect healthBarFill = healthbar;
-			float fillMultiplier = healthBarFill.w / enemies.at(i)->maxHp;
-			fillMultiplier *= enemies.at(i)->hp;
-			healthBarFill.w = fillMultiplier;
-			renderTextureRelativeToCamera(healthBarTexture, &healthBarFill);
-			drawRectRelativeToCamera(healthbar);*/
 			renderEntityHealthBar(enemies.at(i));
 
 			renderedEnemiesThisFrame++;

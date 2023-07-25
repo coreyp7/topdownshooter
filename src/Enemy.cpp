@@ -3,6 +3,12 @@
 Enemy::Enemy(float x, float y) {
 	//this->manager = manager;
 	rect = { x, y, 0, 0 }; // width/height set in subclasses
+	level = 0;
+}
+
+Enemy::Enemy(float x, float y, int level) {
+	rect = { x, y, 0, 0 }; // width/height set in subclasses
+	this->level = level;
 }
 
 Enemy::~Enemy() {

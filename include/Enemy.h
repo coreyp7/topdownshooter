@@ -6,11 +6,13 @@
 class Enemy : public Entity {
 public:
 	SDL_FRect rect;
+	int level;
 	//const int MOVE_SPEED = 100; // @temporary, @testing
 	//const int MOVE_SPEED = 50; // @temporary, @testing
 	//EnemyManager* manager;
 
 	Enemy(float x, float y);
+	Enemy(float x, float y, int level);
 	~Enemy();
 
 	virtual void simulate(float dt, SDL_FPoint playerPosition) = 0;

@@ -358,12 +358,14 @@ void spawnEnemyTesting(int x, int y) {
 	int yWorldPos = y + camera.y;
 	Enemy* newEnemy;
 	// TODO: have functions for creating enemies inside the enemymanager so we don't have to worry about it in here.
-	if (rand() % 2) {
-		newEnemy = new SmallEnemy(xWorldPos, yWorldPos);
+	/*if (rand() % 2) {
+		newEnemy = new SmallEnemy(xWorldPos, yWorldPos, rand() % 6);
 	}
 	else {
 		newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
-	}
+	}*/
+	newEnemy = new SmallEnemy(xWorldPos, yWorldPos, (rand() % 6)+1);
+
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
 
