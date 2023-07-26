@@ -294,8 +294,11 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 			}
 		}
 		else if (entity2->getEntityType() == ENEMY) {
-		//	// Prevent these two from colliding; fix their position to stay out of each other
-		//	// @todo: move into function this is massive.
+			// If they're different types of enemies, then ignore it entirely.
+			if (((Enemy*)entity1)->getEnemyType() != ((Enemy*)entity2)->getEnemyType()) {
+				return -4;
+			}
+
 			float xDistance, yDistance;
 			if (entity1->getFRect()->x < entity2->getFRect()->x) {
 				xDistance = ((entity1->getFRect()->x + entity1->getFRect()->w) - entity2->getFRect()->x);
@@ -361,14 +364,14 @@ void spawnEnemyTesting(int x, int y) {
 	int yWorldPos = y + camera.y;
 	Enemy* newEnemy;
 	// TODO: have functions for creating enemies inside the enemymanager so we don't have to worry about it in here.
-	/*if (rand() % 2) {
-		newEnemy = new SmallEnemy(xWorldPos, yWorldPos, rand() % 6);
+	if (rand() % 2) {
+		newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 	}
 	else {
 		newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
-	}*/
+	}
 	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, (rand() % 6)+1);
-	newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
+	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 
 	entities.push_back(newEnemy);
 	entityIdMap.insert({ newEnemy->id, newEnemy });
