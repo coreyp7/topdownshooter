@@ -42,16 +42,16 @@ void SmallEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 	float xVel = xUnitVector * MOVE_SPEED;
 	float yVel = yUnitVector * MOVE_SPEED;
 
-	float amp = level * .25;
-
-	if (vectorMagnitude < 250 * amp) {
-		xVel *= 2;
-		yVel *= 2;
-	}
+	float amp = level * .75;
 
 	if (level > 1) {
 		xVel *= amp;
 		yVel *= amp;
+
+		if (vectorMagnitude < (85 * level-1)) {
+			xVel *= 2;
+			yVel *= 2;
+		}
 	}
 
 	rect.x += xVel * dt;
