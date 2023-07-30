@@ -4,7 +4,7 @@
 
 class MediumEnemy : public Enemy {
 public:
-	MediumEnemy(float x, float y);
+	MediumEnemy(float x, float y, int level);
 	~MediumEnemy();
 
 	void simulate(float dt, SDL_FPoint playerPosition);

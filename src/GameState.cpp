@@ -368,7 +368,7 @@ void spawnEnemyTesting(int x, int y) {
 		newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 	}
 	else {
-		newEnemy = new MediumEnemy(xWorldPos, yWorldPos);
+		newEnemy = new MediumEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 	}
 	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, (rand() % 6)+1);
 	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
