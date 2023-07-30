@@ -19,6 +19,7 @@ public:
 
 	// 0 = smallenemy
 	// 1 = medium enemy
+	// 2 = large enemy
 	virtual int getEnemyType() = 0;
 
 	// Entity stuff

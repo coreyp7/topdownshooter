@@ -5,6 +5,7 @@ SDL_Renderer* renderer;
 SDL_Texture* playerTexture;
 SDL_Texture* sEnemyTexture;
 SDL_Texture* mEnemyTexture;
+SDL_Texture* lEnemyTexture;
 SDL_Texture* testbg;
 SDL_Texture* healthBarTexture;
 int renderedEnemiesThisFrame = 0;
@@ -36,6 +37,11 @@ void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
 	healthBarTexture = IMG_LoadTexture(renderer, "assets/health.png");
 	if (healthBarTexture == NULL) {
 		printf("healthBarTexture not loaded %s", IMG_GetError());
+	}
+	
+	lEnemyTexture = IMG_LoadTexture(renderer, "assets/rock3.png");
+	if (lEnemyTexture == NULL) {
+		printf("rock not loaded %s", IMG_GetError());
 	}
 }
 
@@ -99,6 +105,7 @@ void renderEnemies(std::vector<Enemy*> enemies) {
 			switch (enemies.at(i)->getEnemyType()) {
 				case 0: renderTextureRelativeToCamera(sEnemyTexture, currRect); break;
 				case 1: renderTextureRelativeToCamera(mEnemyTexture, currRect); break;
+				case 2: renderTextureRelativeToCamera(lEnemyTexture, currRect); break;
 			}
 			renderEntityHealthBar(enemies.at(i));
 

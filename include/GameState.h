@@ -14,6 +14,7 @@
 #include "Enemy.h"
 #include "SmallEnemy.h"
 #include "MediumEnemy.h"
+#include "LargeEnemy.h"
 #include "EnemyManager.h"
 
 // All extern variables are used by the renderer.
