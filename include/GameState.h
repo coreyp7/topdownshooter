@@ -5,6 +5,8 @@
 #include <unordered_map>
 #include <tuple>
 #include <cmath>
+#include <iostream>
+#include <fstream>
 
 #include "Player.h"
 #include "Projectile.h"

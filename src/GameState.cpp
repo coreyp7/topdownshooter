@@ -14,6 +14,8 @@ void addEntity(Entity* entity);
 Entity* getEntityById(Uint16 id);
 void removeEntity(Entity* entity);
 
+int HARDCODED_SPAWN_COUNT = 1;
+
 // externs
 Player player = Player(SDL_FPoint{ 250, 250 });
 SDL_FRect camera = { 0, 0, 1280, 720 };
@@ -28,8 +30,51 @@ int enemySpawnLevel = 1;
 float dt = 0;
 Uint32 lastUpdate = 0;
 
+std::vector<Enemy*> enemySpawnList;
+
 void setupGameState() {
 	entityIdMap.insert({ player.id, &player });
+
+	int data = -1;
+	Enemy* newEnemy;
+
+	// Load in enemy spawn file
+	std::ifstream spawnFile("assets/spawn.info");
+	if (spawnFile.is_open()) {
+		// Safe to go through this file
+		printf("Loaded spawn.info\n");
+
+
+		for (int i = 0; i < HARDCODED_SPAWN_COUNT; i++) {
+			spawnFile >> data;
+			int type = data;
+			spawnFile >> data;
+			int level = data;
+			spawnFile >> data;
+			int xpos = data;
+			spawnFile >> data;
+			int ypos = data;
+			spawnFile >> data;
+			int spawntime = data;
+
+			if (type == 0) {
+				newEnemy = new SmallEnemy(xpos, ypos, level);
+			}
+			else if (type == 1) {
+				newEnemy = new MediumEnemy(xpos, ypos, level);
+			}
+			else {
+				newEnemy = new LargeEnemy(xpos, ypos, level);
+			}
+			enemySpawnList.push_back(newEnemy);
+		}
+		
+	}
+	else {
+		printf("Problem with loading spawn.info\n");
+	}
+
+	printf("%i\n", enemySpawnList[0]->level);
 }
 
 void simulateWorld() {
@@ -364,14 +409,14 @@ void spawnEnemyTesting(int x, int y) {
 	int yWorldPos = y + camera.y;
 	Enemy* newEnemy;
 	// TODO: have functions for creating enemies inside the enemymanager so we don't have to worry about it in here.
-	/*if (rand() % 2) {
+	if (rand() % 2) {
 		newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 	}
 	else {
 		newEnemy = new MediumEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
-	}*/
+	}
 
-	newEnemy = new LargeEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
+	//newEnemy = new LargeEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, (rand() % 6)+1);
 	//newEnemy = new SmallEnemy(xWorldPos, yWorldPos, enemySpawnLevel);
 
