@@ -14,7 +14,7 @@ void addEntity(Entity* entity);
 Entity* getEntityById(Uint16 id);
 void removeEntity(Entity* entity);
 
-int HARDCODED_SPAWN_COUNT = 1;
+int HARDCODED_SPAWN_COUNT = 3;
 
 // externs
 Player player = Player(SDL_FPoint{ 250, 250 });
