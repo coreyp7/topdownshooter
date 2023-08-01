@@ -30,7 +30,7 @@ int enemySpawnLevel = 1;
 float dt = 0;
 Uint32 lastUpdate = 0;
 
-std::vector<Enemy*> enemySpawnList;
+std::queue<Enemy*> enemySpawnList;
 
 void setupGameState() {
 	entityIdMap.insert({ player.id, &player });
@@ -66,7 +66,8 @@ void setupGameState() {
 			else {
 				newEnemy = new LargeEnemy(xpos, ypos, level);
 			}
-			enemySpawnList.push_back(newEnemy);
+			newEnemy->spawnTime = spawntime;
+			enemySpawnList.push(newEnemy);
 		}
 		
 	}
@@ -74,7 +75,7 @@ void setupGameState() {
 		printf("Problem with loading spawn.info\n");
 	}
 
-	printf("%i\n", enemySpawnList[0]->level);
+	//printf("%i\n", enemySpawnList[0]->level);
 }
 
 void simulateWorld() {
@@ -93,6 +94,18 @@ void simulateWorld() {
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself (this is hard)
 	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded
 	qTree->insert(&player);
+
+	// Spawn enemies which are ready to be spawned
+	// TODO: make this behavior more complicated just incase we go over
+	// the spawn time of an enemy.
+	if (!enemySpawnList.empty()) {
+		if (enemySpawnList.front()->spawnTime < SDL_GetTicks()) {
+			// spawn it and remove from vec
+			addEntity(enemySpawnList.front());
+			enemySpawnList.pop();
+			printf("Spawned enemy.\n");
+		}
+	}
 
 	simulateEnemies();
 	simulateProjectiles();

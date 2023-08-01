@@ -7,6 +7,7 @@ class Enemy : public Entity {
 public:
 	SDL_FRect rect;
 	int level;
+	Uint32 spawnTime;
 	//const int MOVE_SPEED = 100; // @temporary, @testing
 	//const int MOVE_SPEED = 50; // @temporary, @testing
 	//EnemyManager* manager;

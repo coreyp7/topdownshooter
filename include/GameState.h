@@ -7,6 +7,7 @@
 #include <cmath>
 #include <iostream>
 #include <fstream>
+#include <queue>
 
 #include "Player.h"
 #include "Projectile.h"
