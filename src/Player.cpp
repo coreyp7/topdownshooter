@@ -5,6 +5,8 @@ Player::Player(SDL_FPoint pos) {
 	this->pos = pos;
 	xVel = 0;
 	yVel = 0;
+	hp = 3;
+	maxHp = 3;
 }
 
 void Player::startMoving(Direction direction) {

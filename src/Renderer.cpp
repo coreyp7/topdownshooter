@@ -61,7 +61,9 @@ void renderGameState(Player* player) {
 
 	renderEnemies(getEnemies());
 	renderProjectiles(getProjectiles());
+
 	renderPlayer(player);
+	renderEntityHealthBar(player);
 
 	drawQuadTree(qTree);
 }

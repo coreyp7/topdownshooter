@@ -361,6 +361,8 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 		else if (entity2->getEntityType() == ENEMY_PROJECTILE) {
 			entity2->dead = true;
 		}
+
+		entity1->hp--; // TODO: more advanced behavior when player dies/gets hit
 		break;
 	case ENEMY:
 		if (entity2->getEntityType() == PROJECTILE) {

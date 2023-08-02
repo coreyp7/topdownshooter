@@ -40,3 +40,5 @@ void drawRectRelativeToCamera(SDL_FRect rect);
 
 void drawQuadTree(QuadTree* qTree);
 
+void renderEntityHealthBar(Entity* entity);
+
