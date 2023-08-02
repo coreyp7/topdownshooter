@@ -44,7 +44,8 @@ void MediumEnemy::simulate(float dt, SDL_FPoint playerPosition) {
 	}
 
 	if (nextShotTicks < SDL_GetTicks()) {
-		nextShotTicks += nextShotDelay;
+		// extra, but fixes bug when spawning all shots as soon as it spawns
+		nextShotTicks = SDL_GetTicks() + nextShotDelay;
 		shootProjectile(ourPosition.x, ourPosition.y, 
 			xUnitVector*PROJECTILE_SPEED*amp, yUnitVector * PROJECTILE_SPEED*amp, 
 			PROJECTILE_SIZE);
