@@ -14,6 +14,8 @@ void addEntity(Entity* entity);
 Entity* getEntityById(Uint16 id);
 void removeEntity(Entity* entity);
 
+void loadSpawnFile(int wave);
+
 int HARDCODED_SPAWN_COUNT = 3;
 
 // externs
@@ -30,19 +32,27 @@ int enemySpawnLevel = 1;
 float dt = 0;
 Uint32 lastUpdate = 0;
 
+// getting spawning / waves shit done
 std::queue<Enemy*> enemySpawnList;
+int wave = 1;
+Uint32 currentWaveStartTicks;
+Uint32 currentWaveTicks; // how long this wave has been going on
 
 void setupGameState() {
 	entityIdMap.insert({ player.id, &player });
 
+	loadSpawnFile(1); // load first wave queue
+}
+
+void loadSpawnFile(int wave) {
 	int data = -1;
 	Enemy* newEnemy;
 
 	// Load in enemy spawn file
-	std::ifstream spawnFile("assets/spawn.info");
+	std::ifstream spawnFile("assets/spawn"+std::to_string(wave)+".info");
 	if (spawnFile.is_open()) {
 		// Safe to go through this file
-		printf("Loaded spawn.info\n");
+		printf("Loaded spawn%i.info\n", wave);
 
 
 		for (int i = 0; i < HARDCODED_SPAWN_COUNT; i++) {
@@ -69,16 +79,19 @@ void setupGameState() {
 			newEnemy->spawnTime = spawntime;
 			enemySpawnList.push(newEnemy);
 		}
-		
 	}
 	else {
 		printf("Problem with loading spawn.info\n");
 	}
 
-	//printf("%i\n", enemySpawnList[0]->level);
+	// Reset wave tick counters
+	currentWaveTicks = 0;
+	currentWaveStartTicks = SDL_GetTicks();
 }
 
 void simulateWorld() {
+	currentWaveTicks = SDL_GetTicks() - currentWaveStartTicks;
+
 	// This approach to handling time is appropriate for this game.
 	// Physics is simple and there's no networking.
 	// If it becomes too inconsistent or gross later, then I will attempt
@@ -99,7 +112,7 @@ void simulateWorld() {
 	// TODO: make this behavior more complicated just incase we go over
 	// the spawn time of an enemy.
 	if (!enemySpawnList.empty()) {
-		if (enemySpawnList.front()->spawnTime < SDL_GetTicks()) {
+		if (enemySpawnList.front()->spawnTime < currentWaveTicks) {
 			// spawn it and remove from vec
 			addEntity(enemySpawnList.front());
 			enemySpawnList.pop();
@@ -112,11 +125,20 @@ void simulateWorld() {
 
 	resolveCollisions();
 
+	bool noMoreEnemies = true;
+
 	// @lazy fix that adds extra O(n). delete stuff thats dead.
 	// If I ever start having performance problems, I'm going
 	// to change these to contiguous arrays.
 	for (int i = 0; i < entities.size(); i++) {
 		Entity* curr = entities[i];
+
+		// Mark if there's an enemy still alive, used for determining
+		// if the wave is complete or not.
+		if (curr->getEntityType() == ENEMY) {
+			noMoreEnemies = false;
+		}
+
 		if (curr->dead) {
 			entities.erase(entities.begin() + i);
 			entityIdMap.erase(curr->id);
@@ -126,6 +148,12 @@ void simulateWorld() {
 			i--;
 
 		}
+	}
+
+	if (enemySpawnList.empty() && noMoreEnemies) {
+		// wave complete, start next wave
+		wave++;
+		loadSpawnFile(wave);
 	}
 }
 

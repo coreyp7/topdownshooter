@@ -8,6 +8,7 @@
 #include <iostream>
 #include <fstream>
 #include <queue>
+#include <string>
 
 #include "Player.h"
 #include "Projectile.h"
