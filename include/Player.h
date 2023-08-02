@@ -26,6 +26,8 @@ public:
 
 	Player(SDL_FPoint pos);
 
+	Uint32 invulTime;
+
 	//int bulletSpeed = 500; // @idea: default speed, could be changed by powerup.
 
 	void startMoving(Direction direction);
