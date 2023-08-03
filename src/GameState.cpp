@@ -214,31 +214,32 @@ QuadTree* getQuadTree() {
 }
 
 void moveCameraWithPlayer(Player* player) {
-	int offset = 150;
+	int xoffset = 450;
+	int yoffset = 300;
 
 	// x axis
-	if (player->pos.x > camera.x + camera.w - offset) {
+	if (player->pos.x > camera.x + camera.w - xoffset) {
 		float newRight;
-		newRight = player->pos.x + offset;
+		newRight = player->pos.x + xoffset;
 		camera.x = newRight - camera.w;
 	}
-	else if (player->pos.x < camera.x + offset) {
+	else if (player->pos.x < camera.x + xoffset) {
 		float newLeft;
-		newLeft = player->pos.x - offset;
+		newLeft = player->pos.x - xoffset;
 		camera.x = newLeft;
 	}
 
 	// y axis
-	if (player->pos.y > camera.y + camera.h - offset) {
+	if (player->pos.y > camera.y + camera.h - yoffset) {
 		// bottom
 		float newBottom;
-		newBottom = player->pos.y + offset;
+		newBottom = player->pos.y + yoffset;
 		camera.y = newBottom - camera.h;
 	}
-	else if (player->pos.y < camera.y + offset) {
+	else if (player->pos.y < camera.y + yoffset) {
 		// top
 		float newTop;
-		newTop = player->pos.y - offset;
+		newTop = player->pos.y - yoffset;
 		camera.y = newTop;
 	}
 }
@@ -309,25 +310,17 @@ bool checkCollision(SDL_FRect* entity1, SDL_FRect* entity2) {
 int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 	switch (entity1->getEntityType()) {
 	case PLAYER: {
-			// call function for player behavior
-			// will handle ENEMY, ENEMY_PROJECTILE
-			//bool lethalHit = false;
-			if (entity2->getEntityType() == ENEMY) {
-				// Currently, there is no colliding resolution for player vs enemy, 
-				// because it was breaking things and might not actually be neccessary.
-				// Old code is at bottom of file.
-
-				//TODO: damage player from here, and start an invulerability phase.
-			}
-			else if (entity2->getEntityType() == ENEMY_PROJECTILE) {
+			if (entity2->getEntityType() == ENEMY_PROJECTILE) {
 				entity2->dead = true;
 			}
 
-			// deal damage
-			if (((Player*)entity1)->invulTime < SDL_GetTicks()) {
-				printf("PLAYER HIT\n");
-				entity1->hp--; // TODO: more advanced behavior when player dies/gets hit
-				((Player*)entity1)->invulTime = SDL_GetTicks() + 1500;
+			if (entity2->getEntityType() == ENEMY || entity2->getEntityType() == ENEMY_PROJECTILE) {
+				// deal damage
+				if (((Player*)entity1)->invulTime < SDL_GetTicks()) {
+					printf("PLAYER HIT\n");
+					entity1->hp--; // TODO: more advanced behavior when player dies/gets hit
+					((Player*)entity1)->invulTime = SDL_GetTicks() + 1500;
+				}
 			}
 		}
 		break;

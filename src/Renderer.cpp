@@ -55,7 +55,7 @@ void showBackbufferClear() {
 // Renders entire game state. Utilizes functions for rendering
 // specific things below this.
 void renderGameState(Player* player) {
-	SDL_FRect bg = { 0, 0, 1000, 1500 }; //@hardcoded
+	SDL_FRect bg = { 0, 0, 1500, 1500 }; //@hardcoded
 	
 	renderTextureRelativeToCamera(testbg, &bg); // test background to be replaced/improved later
 
