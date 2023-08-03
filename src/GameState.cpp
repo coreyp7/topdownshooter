@@ -1,5 +1,7 @@
 #include "GameState.h"
 
+#define WORLD_SIZE 1500
+
 // Here's stuff that are only visible in this file.
 void moveCameraWithPlayer(Player* player);
 
@@ -16,6 +18,9 @@ void removeEntity(Entity* entity);
 
 void loadSpawnFile(int wave);
 
+// Marks how many enemies are in a spawn file.
+// May have to change to handle in loadSpawnFile, so we can have any
+// different number of enemies.
 int HARDCODED_SPAWN_COUNT = 3;
 
 // externs
@@ -23,7 +28,7 @@ Player player = Player(SDL_FPoint{ 250, 250 });
 SDL_FRect camera = { 0, 0, 1280, 720 };
 std::vector<Entity*> entities; // TODO: change to fixed sized array maybe
 std::unordered_map<Uint16, Entity*> entityIdMap;
-QuadTree* qTree = new QuadTree(0, 0, 1000, 1500);
+QuadTree* qTree = new QuadTree(0, 0, WORLD_SIZE, WORLD_SIZE);
 
 // for imgui
 int enemySpawnLevel = 1;
@@ -44,51 +49,6 @@ void setupGameState() {
 	loadSpawnFile(1); // load first wave queue
 }
 
-void loadSpawnFile(int wave) {
-	int data = -1;
-	Enemy* newEnemy;
-
-	// Load in enemy spawn file
-	std::ifstream spawnFile("assets/spawn"+std::to_string(wave)+".info");
-	if (spawnFile.is_open()) {
-		// Safe to go through this file
-		printf("Loaded spawn%i.info\n", wave);
-
-
-		for (int i = 0; i < HARDCODED_SPAWN_COUNT; i++) {
-			spawnFile >> data;
-			int type = data;
-			spawnFile >> data;
-			int level = data;
-			spawnFile >> data;
-			int xpos = data;
-			spawnFile >> data;
-			int ypos = data;
-			spawnFile >> data;
-			int spawntime = data;
-
-			if (type == 0) {
-				newEnemy = new SmallEnemy(xpos, ypos, level);
-			}
-			else if (type == 1) {
-				newEnemy = new MediumEnemy(xpos, ypos, level);
-			}
-			else {
-				newEnemy = new LargeEnemy(xpos, ypos, level);
-			}
-			newEnemy->spawnTime = spawntime;
-			enemySpawnList.push(newEnemy);
-		}
-	}
-	else {
-		printf("Problem with loading spawn.info\n");
-	}
-
-	// Reset wave tick counters
-	currentWaveTicks = 0;
-	currentWaveStartTicks = SDL_GetTicks();
-}
-
 void simulateWorld() {
 	currentWaveTicks = SDL_GetTicks() - currentWaveStartTicks;
 
@@ -105,7 +65,7 @@ void simulateWorld() {
 
 	// Update QuadTree (for now, deleting it and rebuilding it every frame).
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself (this is hard)
-	qTree = new QuadTree(0, 0, 1000, 1500); // @hardcoded
+	qTree = new QuadTree(0, 0, WORLD_SIZE, WORLD_SIZE); // @hardcoded
 	qTree->insert(&player);
 
 	// Spawn enemies which are ready to be spawned
@@ -190,7 +150,7 @@ void resolveCollisions() { //TODO: optimize; we don't need to be doing this for 
 }
 
 void simulateEnemies() {
-	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
+	SDL_FRect qTreeRect = { 0, 0, WORLD_SIZE, WORLD_SIZE }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() == ENEMY) {
 			Enemy* enemy = (Enemy*)entities[i];
@@ -201,7 +161,7 @@ void simulateEnemies() {
 }
 
 void simulateProjectiles() {
-	SDL_FRect qTreeRect = { 0, 0, 1000, 1500 }; // @hardcoded
+	SDL_FRect qTreeRect = { 0, 0, WORLD_SIZE, WORLD_SIZE }; // @hardcoded
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() != PROJECTILE && entities[i]->getEntityType() != ENEMY_PROJECTILE) continue;
 
@@ -367,7 +327,7 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 			if (((Player*)entity1)->invulTime < SDL_GetTicks()) {
 				printf("PLAYER HIT\n");
 				entity1->hp--; // TODO: more advanced behavior when player dies/gets hit
-				((Player*)entity1)->invulTime = SDL_GetTicks() + 3000;
+				((Player*)entity1)->invulTime = SDL_GetTicks() + 1500;
 			}
 		}
 		break;
@@ -479,6 +439,52 @@ void spawnEnemyTesting(int x, int y) {
 void addEntity(Entity* entity) {
 	entities.push_back(entity);
 	entityIdMap.insert({ entity->id, entity });
+}
+
+// Loads the spawn file corresponding to the wave provided.
+void loadSpawnFile(int wave) {
+	int data = -1;
+	Enemy* newEnemy;
+
+	// Load in enemy spawn file
+	std::ifstream spawnFile("assets/spawn" + std::to_string(wave) + ".info");
+	if (spawnFile.is_open()) {
+		while (spawnFile.good()) {
+			// Safe to go through this file
+			//for (int i = 0; i < HARDCODED_SPAWN_COUNT; i++) {
+			spawnFile >> data;
+			int type = data;
+			spawnFile >> data;
+			int level = data;
+			spawnFile >> data;
+			int xpos = data;
+			spawnFile >> data;
+			int ypos = data;
+			spawnFile >> data;
+			int spawntime = data;
+
+			if (type == 0) {
+				newEnemy = new SmallEnemy(xpos, ypos, level);
+			}
+			else if (type == 1) {
+				newEnemy = new MediumEnemy(xpos, ypos, level);
+			}
+			else {
+				newEnemy = new LargeEnemy(xpos, ypos, level);
+			}
+			newEnemy->spawnTime = spawntime;
+			enemySpawnList.push(newEnemy);
+			//}
+		}
+		printf("Loaded spawn%i.info\n", wave);
+	}
+	else {
+		printf("Problem with loading spawn.info\n");
+	}
+
+	// Reset wave tick counters
+	currentWaveTicks = 0;
+	currentWaveStartTicks = SDL_GetTicks();
 }
 
 /* old code for resolving player vs enemy
