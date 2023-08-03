@@ -369,9 +369,6 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 				entity1->hp--; // TODO: more advanced behavior when player dies/gets hit
 				((Player*)entity1)->invulTime = SDL_GetTicks() + 3000;
 			}
-			else {
-				printf("%i>%i\n", ((Player*)entity1)->invulTime, SDL_GetTicks());
-			}
 		}
 		break;
 	case ENEMY:
