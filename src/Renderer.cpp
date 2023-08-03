@@ -8,6 +8,7 @@ SDL_Texture* mEnemyTexture;
 SDL_Texture* lEnemyTexture;
 SDL_Texture* testbg;
 SDL_Texture* healthBarTexture;
+SDL_Texture* paperTexture;
 int renderedEnemiesThisFrame = 0;
 
 void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
@@ -19,9 +20,14 @@ void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
 		printf("Couldn't load player texture. %s", IMG_GetError());
 	}
 
-	testbg = IMG_LoadTexture(renderer, "assets/bg2.jpg");
+	testbg = IMG_LoadTexture(renderer, "assets/border.png");
 	if (testbg == NULL) {
 		printf("bg not loaded %s", IMG_GetError());
+	}
+
+	paperTexture = IMG_LoadTexture(renderer, "assets/paper.jpg");
+	if (paperTexture == NULL) {
+		printf("paperTexture not loaded %s", IMG_GetError());
 	}
 
 	sEnemyTexture = IMG_LoadTexture(renderer, "assets/enemy.png");
@@ -55,9 +61,11 @@ void showBackbufferClear() {
 // Renders entire game state. Utilizes functions for rendering
 // specific things below this.
 void renderGameState(Player* player) {
-	SDL_FRect bg = { 0, 0, 1500, 1500 }; //@hardcoded
+	SDL_FRect bg = { -10, -10, 1515, 1520 }; //@hardcoded
+	SDL_FRect paper = { -1000, -1000, 3000, 3000 };
 	
-	renderTextureRelativeToCamera(testbg, &bg); // test background to be replaced/improved later
+	renderTextureRelativeToCamera(paperTexture, &paper);
+	renderTextureRelativeToCamera(testbg, &bg);
 
 	renderEnemies(getEnemies());
 	renderProjectiles(getProjectiles());
