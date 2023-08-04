@@ -66,7 +66,7 @@ void simulateWorld() {
 
 	// Update QuadTree (for now, deleting it and rebuilding it every frame).
 	qTree->~QuadTree(); // @todo: have quadtree maintain itself (this is hard)
-	qTree = new QuadTree(0, 0, WORLD_SIZE, WORLD_SIZE); // @hardcoded
+	qTree = new QuadTree(-1000, -1000, 3000, 3000); // @hardcoded
 	qTree->insert(&player);
 
 	// Spawn enemies which are ready to be spawned
@@ -162,7 +162,8 @@ void simulateEnemies() {
 }
 
 void simulateProjectiles() {
-	SDL_FRect qTreeRect = { 0, 0, WORLD_SIZE, WORLD_SIZE }; // @hardcoded
+	SDL_FRect qTreeRect = { -1000, -1000, 3000, 3000 }; // @hardcoded
+
 	for (int i = 0; i < entities.size(); i++) {
 		if (entities[i]->getEntityType() != PROJECTILE && entities[i]->getEntityType() != ENEMY_PROJECTILE) continue;
 
