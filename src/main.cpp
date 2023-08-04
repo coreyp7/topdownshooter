@@ -63,24 +63,34 @@ void gameLoop() {
 		frameStart = SDL_GetTicks();
 		startTime = SDL_GetPerformanceCounter();
 
-		// capture user inputs
-		while (SDL_PollEvent(&event)) {
-			ImGui_ImplSDL2_ProcessEvent(&event);
-			//inputManager.handleEvent(event);
-			handleEvent(&event, &player);
-			if (event.type == SDL_QUIT) {
-				quit = true;
-			}
-		}
-
 		switch (state) {
 		case(MAIN_MENU): {
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT) {
+					quit = true;
+				}
+				if (event.key.keysym.sym == SDLK_RETURN) {
+					state = GAMEPLAY;
+					loadSpawnFile(1); // load first wave queue
+				}
+			}
+
 			// render text
 			renderExampleText(exampleText);
 			showBackbufferClear();
 			break;
 		}
 		case(GAMEPLAY): {
+			// capture user inputs
+			while (SDL_PollEvent(&event)) {
+				ImGui_ImplSDL2_ProcessEvent(&event);
+				//inputManager.handleEvent(event);
+				handleEvent(&event, &player);
+				if (event.type == SDL_QUIT) {
+					quit = true;
+				}
+			}
+
 			// Simulate entire gamestate
 			simulateWorld();
 

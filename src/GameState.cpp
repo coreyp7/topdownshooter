@@ -16,7 +16,6 @@ void addEntity(Entity* entity);
 Entity* getEntityById(Uint16 id);
 void removeEntity(Entity* entity);
 
-void loadSpawnFile(int wave);
 
 // Marks how many enemies are in a spawn file.
 // May have to change to handle in loadSpawnFile, so we can have any
@@ -46,7 +45,7 @@ Uint32 currentWaveTicks; // how long this wave has been going on
 void setupGameState() {
 	entityIdMap.insert({ player.id, &player });
 
-	loadSpawnFile(1); // load first wave queue
+	//loadSpawnFile(1); // load first wave queue
 }
 
 void simulateWorld() {

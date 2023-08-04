@@ -57,3 +57,5 @@ void addEntity(Entity* entity);
 
 // Testing stuff go down here.
 void spawnEnemyTesting(int, int);
+
+void loadSpawnFile(int wave);
