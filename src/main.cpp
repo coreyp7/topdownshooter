@@ -2,6 +2,7 @@
 // sdl/imgui
 #include <SDL.h>
 #include <SDL_image.h>
+#include <SDL_ttf.h>
 #include "imgui.h"
 #include "imgui_impl_sdl2.h"
 #include "imgui_impl_sdlrenderer.h"
@@ -13,6 +14,14 @@
 #include "Renderer.h"
 #include "Player.h"
 #include "Direction.h"
+
+enum Mode {
+	MAIN_MENU,
+	GAMEPLAY,
+	DEATH_SCREEN
+};
+
+Mode state = MAIN_MENU;
 
 //const int DEFAULT_COUNT = 500;
 const int DEFAULT_COUNT = 1500;
@@ -28,6 +37,9 @@ double frameLength;
 ImGuiIO io; // idk what this is for rn, but imgui needs it
 
 extern Player player; // from gamestate
+
+TTF_Font* font = NULL;
+SDL_Texture* exampleText = NULL;
 
 int setup();
 void gameLoop();
@@ -61,13 +73,24 @@ void gameLoop() {
 			}
 		}
 
-		// Simulate entire gamestate
-		simulateWorld();
+		switch (state) {
+		case(MAIN_MENU): {
+			// render text
+			renderExampleText(exampleText);
+			showBackbufferClear();
+			break;
+		}
+		case(GAMEPLAY): {
+			// Simulate entire gamestate
+			simulateWorld();
 
-		// Render current gamestate
-		renderGameState(&player);
-		showImGui();
-		showBackbufferClear();
+			// Render current gamestate
+			renderGameState(&player);
+			showImGui();
+			showBackbufferClear();
+			break;
+		}
+		}
 
 		endTime = SDL_GetPerformanceCounter();
 		frameLength = (endTime - startTime) / static_cast<double>(SDL_GetPerformanceFrequency());
@@ -182,6 +205,19 @@ int setup() {
 		printf("SDL_image Error: %s\n", IMG_GetError());
 		return 2;
 	}
+
+	if (TTF_Init() == -1) {
+		printf("ttf couldn't setup\n");
+		return 3;
+	}
+	font = TTF_OpenFont("assets/Lato-Black.ttf", 26);
+	if (font == NULL) {
+		printf("problem loading font\n");
+		return 4;
+	}
+	SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, "hello game3", { 255, 0, 0, 255 });
+	exampleText = SDL_CreateTextureFromSurface(renderer, textSurface);
+	SDL_FreeSurface(textSurface);
 
 	// Setup Dear ImGui context
 	IMGUI_CHECKVERSION();
