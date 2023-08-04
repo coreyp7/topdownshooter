@@ -43,6 +43,6 @@ void drawQuadTree(QuadTree* qTree);
 
 void renderEntityHealthBar(Entity* entity);
 
-void renderExampleText(SDL_Texture* exampleText);
+void renderExampleText(SDL_Texture* exampleText, int width, int height);
 
 void renderGameOverText(SDL_Texture* gameOverText);

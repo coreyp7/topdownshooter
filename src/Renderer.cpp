@@ -11,8 +11,8 @@ SDL_Texture* healthBarTexture;
 SDL_Texture* paperTexture;
 int renderedEnemiesThisFrame = 0;
 
-void renderExampleText(SDL_Texture* exampleText) {
-	SDL_Rect rect = { 0, 0, 1280, 720 };
+void renderExampleText(SDL_Texture* exampleText, int width, int height) {
+	SDL_Rect rect = { 690-width/2, 50, width, height };
 	SDL_RenderCopyEx(renderer, exampleText, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
 }
 

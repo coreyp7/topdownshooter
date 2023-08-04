@@ -40,6 +40,8 @@ extern Player player; // from gamestate
 
 TTF_Font* font = NULL;
 SDL_Texture* exampleText = NULL;
+SDL_Texture* gameOverText = NULL;
+int textW, textH;
 
 int setup();
 void gameLoop();
@@ -76,7 +78,7 @@ void gameLoop() {
 			}
 
 			// render text
-			renderExampleText(exampleText);
+			renderExampleText(exampleText, textW, textH);
 			showBackbufferClear();
 			break;
 		}
@@ -116,7 +118,7 @@ void gameLoop() {
 			}
 
 			// render text
-			renderExampleText(exampleText);
+			renderExampleText(gameOverText, textW, textH);
 			showBackbufferClear();
 			break;
 		}
@@ -245,8 +247,13 @@ int setup() {
 		printf("problem loading font\n");
 		return 4;
 	}
-	SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, "hello game3", { 255, 0, 0, 255 });
+	SDL_Surface* textSurface = TTF_RenderUTF8_Solid(font, "sCrapbook demo: press enter to start", { 255, 0, 0, 255 });
 	exampleText = SDL_CreateTextureFromSurface(renderer, textSurface);
+	textW = textSurface->w;
+	textH = textSurface->h;
+	SDL_FreeSurface(textSurface);
+	textSurface = TTF_RenderUTF8_Solid(font, "Game Over: press enter to restart", { 255, 0, 0, 255 });
+	gameOverText = SDL_CreateTextureFromSurface(renderer, textSurface);
 	SDL_FreeSurface(textSurface);
 
 	// Setup Dear ImGui context
