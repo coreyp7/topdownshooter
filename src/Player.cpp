@@ -44,9 +44,24 @@ void Player::stopMoving(Direction direction) {
 	}
 }
 
-void Player::simulate(float dt) {
-	pos.x += xVel * dt;
-	pos.y += yVel * dt;
+void Player::simulate(float dt, SDL_FRect bounds) {
+	/*pos.x += xVel * dt;
+	pos.y += yVel * dt;*/
+
+	/*float xnew = pos.x + (xVel * dt);
+	float ynew = pos.y + (yVel * dt);*/
+
+	getFRect();
+	float xnew = rect.x + (xVel * dt);
+	float ynew = rect.y + (yVel * dt);
+
+	if (!(xnew < bounds.x || xnew+rect.w > bounds.x + bounds.w)) {
+		pos.x += xVel * dt;
+	}
+	
+	if (!(ynew < bounds.y || ynew+rect.h > bounds.y + bounds.h)) {
+		pos.y += yVel * dt;
+	}
 }
 
 SDL_FRect* Player::getFRect() {

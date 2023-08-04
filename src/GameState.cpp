@@ -60,7 +60,8 @@ void simulateWorld() {
 	lastUpdate = SDL_GetTicks();
 
 	// Simulate entire game for dt seconds.
-	player.simulate(dt);
+	SDL_FRect playerArea = { 0, 0, WORLD_SIZE, WORLD_SIZE };
+	player.simulate(dt, playerArea);
 	moveCameraWithPlayer(&player);
 
 	// Update QuadTree (for now, deleting it and rebuilding it every frame).

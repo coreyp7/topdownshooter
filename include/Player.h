@@ -33,7 +33,7 @@ public:
 	void startMoving(Direction direction);
 	void stopMoving(Direction direction);
 
-	void simulate(float dt); // TODO pass dt to this
+	void simulate(float dt, SDL_FRect bounds);
 
 	SDL_FRect* getFRect();
 	SDL_FPoint getPosition();
