@@ -93,10 +93,30 @@ void gameLoop() {
 
 			// Simulate entire gamestate
 			simulateWorld();
+			if (gameOver()) {
+				state = DEATH_SCREEN;
+			}
 
 			// Render current gamestate
 			renderGameState(&player);
 			showImGui();
+			showBackbufferClear();
+			break;
+		}
+		case(DEATH_SCREEN): {
+			// capture user inputs
+			while (SDL_PollEvent(&event)) {
+				if (event.type == SDL_QUIT) {
+					quit = true;
+				}
+			}
+			if (event.key.keysym.sym == SDLK_RETURN) {
+				state = GAMEPLAY;
+				// resume/restart gameplay
+			}
+
+			// render text
+			renderExampleText(exampleText);
 			showBackbufferClear();
 			break;
 		}

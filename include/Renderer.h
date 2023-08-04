@@ -44,3 +44,5 @@ void drawQuadTree(QuadTree* qTree);
 void renderEntityHealthBar(Entity* entity);
 
 void renderExampleText(SDL_Texture* exampleText);
+
+void renderGameOverText(SDL_Texture* gameOverText);

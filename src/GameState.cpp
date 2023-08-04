@@ -42,6 +42,18 @@ int wave = 1;
 Uint32 currentWaveStartTicks;
 Uint32 currentWaveTicks; // how long this wave has been going on
 
+//bool gameOver = false;
+Uint32 gameOverTicks = 0;
+
+bool gameOver() {
+	if (gameOverTicks != 0) {
+		if ((gameOverTicks + 1000) < SDL_GetTicks()) {
+			return true;
+		}
+	}
+	return false;
+}
+
 void setupGameState() {
 	entityIdMap.insert({ player.id, &player });
 
@@ -321,6 +333,10 @@ int resolveEntityCollision(Entity* entity1, Entity* entity2) {
 					printf("PLAYER HIT\n");
 					entity1->hp--; // TODO: more advanced behavior when player dies/gets hit
 					((Player*)entity1)->invulTime = SDL_GetTicks() + 1500;
+
+					if (entity1->hp < 1) {
+						gameOverTicks = SDL_GetTicks();
+					}
 				}
 			}
 		}

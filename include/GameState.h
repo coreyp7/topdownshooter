@@ -59,3 +59,5 @@ void addEntity(Entity* entity);
 void spawnEnemyTesting(int, int);
 
 void loadSpawnFile(int wave);
+
+bool gameOver();

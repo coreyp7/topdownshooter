@@ -16,6 +16,12 @@ void renderExampleText(SDL_Texture* exampleText) {
 	SDL_RenderCopyEx(renderer, exampleText, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
 }
 
+void renderGameOverText(SDL_Texture* gameOverText) {
+	SDL_Rect rect = { 0, 0, 300, 300 };
+	SDL_RenderCopyEx(renderer, gameOverText, NULL, &rect, 0, NULL, SDL_FLIP_NONE);
+	SDL_RenderPresent(renderer);
+}
+
 void setupRenderer(SDL_Renderer* newRenderer, SDL_Window* newWindow) {
 	renderer = newRenderer;
 	window = newWindow;
